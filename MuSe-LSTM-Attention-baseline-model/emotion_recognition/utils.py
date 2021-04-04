@@ -593,7 +593,6 @@ class CCCLoss(nn.Module):
         ccc = torch.mean(2.0 * cov / (y_true_var + y_pred_var + (y_true_mean - y_pred_mean) ** 2), dim=0)  # (1,*)
         ccc = ccc.squeeze(0)  # (*,) if necessary
         ccc_loss = 1.0 - ccc
-
         return ccc_loss
 
 class MSELoss(nn.Module):
