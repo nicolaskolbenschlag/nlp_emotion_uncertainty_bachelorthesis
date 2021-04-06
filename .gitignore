@@ -4,5 +4,7 @@ c1_muse_wild/
 MuSe-LSTM-Attention-baseline-model/extracted_features/
 MuSe-Wild.zip
 
+**/__pycache__/
+
 # *.out
 MuSe-LSTM-Attention-baseline-model/output/
