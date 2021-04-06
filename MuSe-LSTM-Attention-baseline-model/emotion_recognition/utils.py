@@ -699,7 +699,7 @@ class L1LossWithStd(nn.Module):
 
 def eval(full_preds, full_labels):
     full_preds = np.row_stack(full_preds)
-    full_labels = np.row_stack(full_labels)
+    full_labels = np.row_stack(full_labels)    
     assert full_preds.shape == full_labels.shape
     n_targets = full_preds.shape[1]
     val_ccc, val_pcc, val_rmse = [], [], []

@@ -1,37 +1,52 @@
 import numpy as np
 import torch
 import sklearn.isotonic
+import scipy.optimize
 
 def expected_normalized_calibration_error(y_real: np.ndarray, y_pred_mean: np.ndarray, y_pred_var: np.ndarray, bins: int = 10) -> float:
     """
     https://arxiv.org/abs/1905.11659
     """
     ence = 0.
-    bin_indicies = np.digitize(y_pred_var, np.linspace(y_pred_var.min(), y_pred_var.max(), bins))
+    bin_indicies = np.digitize(y_pred_var, np.linspace(y_pred_var.min(), y_pred_var.max(), bins))    
     for j in range(1, bins + 1):
         mask = bin_indicies == j
-        # rmv = np.sqrt(y_pred_var[mask].sum() / mask.sum())
+        
+        if not len(y_pred_var[mask]) > 0:
+            continue
+
         rmv = np.sqrt(np.mean(y_pred_var[mask]))
-        # rmse = np.sqrt(np.power(y_real[mask] - y_pred_mean[mask], 2).sum() / mask.sum())
         rmse = np.sqrt(np.mean((y_real[mask] - y_pred_mean[mask]) ** 2))
-        ence += np.abs(rmv - rmse) / rmv
+        
+        ence_ = np.abs(rmv - rmse)
+        if rmv != 0.:
+            ence_ /= rmv
+
+        ence += ence_
+
     ence /= bins
     return ence
 
 def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
     mean_of_var = np.mean(y_pred_var)
     cv = np.sqrt(np.power(y_pred_var - mean_of_var, 2).sum() / (len(y_pred_var) - 1)) / mean_of_var
-    # cv = np.sqrt(np.mean((y_pred_var - mean_of_var) ** 2)) / np.mean(y_pred_var)
     return cv
 
-def calibrate(val_uncalibrated: np.ndarray, val_calibrated: np.ndarray, test_uncalibrated: np.ndarray) -> np.ndarray:
-    calibrator = sklearn.isotonic.IsotonicRegression().fit(val_uncalibrated, val_calibrated)
-    test_pred = calibrator.predict(test_uncalibrated)
-    return test_pred
-
+def calibrate(val_uncalibrated: np.ndarray, val_calibrated: np.ndarray, test_uncalibrated: np.ndarray, method: str = "scalar_fitting") -> np.ndarray:
+    if method == "isotonic_regression":
+        calibrator = sklearn.isotonic.IsotonicRegression().fit(val_uncalibrated, val_calibrated)
+        return calibrator.predict(test_uncalibrated)
+    elif method == "scalar_fitting":
+        opt = scipy.optimize.minimize_scalar(lambda x: ((val_calibrated - x * val_uncalibrated) ** 2).mean())
+        s = opt.x
+        return s * test_uncalibrated
+    else:
+        raise NotImplementedError
+    
 def evaluate_mc_dropout_calibration(model, test_loader, val_loader, params, n_ensemble_members = 10):
     num_bins = 10
 
+    # NOTE make predictions for uncalibrated scores and as features to become calibrated later
     model.train()
     full_means, full_vars, full_labels = [], [], []
     with torch.no_grad():
@@ -50,11 +65,7 @@ def evaluate_mc_dropout_calibration(model, test_loader, val_loader, params, n_en
             full_vars.append(vars)
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
 
-    full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
-        
-    # NOTE measurement of metrics uncalibrated
-    ence_uncalibrated = expected_normalized_calibration_error(full_labels, full_means, full_vars, num_bins)
-    cv_uncalibrated = stds_coefficient_of_variation(full_vars)
+        full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
         
     # NOTE prepare recalibration
     full_means_val, full_vars_val, full_labels_val = [], [], []
@@ -74,22 +85,29 @@ def evaluate_mc_dropout_calibration(model, test_loader, val_loader, params, n_en
             full_vars_val.append(vars)
             full_labels_val.append(labels.cpu().detach().squeeze(0).numpy())
 
-    full_means_val, full_vars_val, full_labels_val = np.row_stack(full_means_val), np.row_stack(full_vars_val), np.row_stack(full_labels_val)
+        full_means_val, full_vars_val, full_labels_val = np.row_stack(full_means_val), np.row_stack(full_vars_val), np.row_stack(full_labels_val)
 
-    # NOTE rmse of validaiton set as calibration target
-    rmse_val = np.sqrt(np.mean((full_labels_val - full_means_val) ** 2))
-    # NOTE recalibration
-    full_vars_calibrated = calibrate(full_vars_val, rmse_val, full_vars)
+    # NOTE calculate metrics
+    ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal = [], [], [], []
+    for i in range(full_means.shape[1]):
 
-    # NOTE measurement of metrics calibrated
-    ence_calibrated = expected_normalized_calibration_error(full_labels, full_means, full_vars_calibrated, num_bins)
-    cv_calibrated = stds_coefficient_of_variation(full_vars_calibrated)
+        # NOTE measurement of metrics uncalibrated
+        ence_uncalibrated = expected_normalized_calibration_error(full_labels[:, i], full_means[:, i], full_vars[:, i], num_bins)
+        cv_uncalibrated = stds_coefficient_of_variation(full_vars[:, i])
 
-    return ence_uncalibrated, cv_uncalibrated, ence_calibrated, cv_calibrated
+        ENCEs_uncal.append(ence_uncalibrated)
+        Cvs_uncal.append(cv_uncalibrated)
 
-if __name__ == "__main__":
-    y_pred = np.array([1,1,1,1,1,1,1,1,1])
-    y_var = np.array([1,5,4,2,6,2,9,1,4])
-    y_true = np.array([1,1,1,1,1,1,1,1,1])
-    e = expected_normalized_calibration_error(y_true, y_pred, y_var, 3)
-    print(e)
+        # NOTE rmse of validaiton set as calibration target
+        rmse_val = np.sqrt(np.mean((full_labels_val[:, i] - full_means_val[:, i]) ** 2))
+        # NOTE recalibration
+        full_vars_calibrated = calibrate(full_vars_val[:, i], rmse_val, full_vars[:, i])
+
+        # NOTE measurement of metrics calibrated
+        ence_calibrated = expected_normalized_calibration_error(full_labels[:, i], full_means[:, i], full_vars_calibrated, num_bins)
+        cv_calibrated = stds_coefficient_of_variation(full_vars_calibrated)
+
+        ENCEs_cal.append(ence_calibrated)
+        Cvs_cal.append(cv_calibrated)
+
+    return ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal

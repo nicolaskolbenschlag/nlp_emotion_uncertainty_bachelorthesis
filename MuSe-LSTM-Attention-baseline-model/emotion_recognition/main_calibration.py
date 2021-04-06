@@ -235,13 +235,12 @@ def main(params):
         import calibration_utilities
 
         if params.uncertainty_approach == "monte_carlo_dropout":
-            ence_uncal, _, _, _ = calibration_utilities.evaluate_mc_dropout_calibration(model, data_loader["test"], data_loader["val"], params)
-            print("On Test: ENCE (unc.) {:7.4f} | ENCE (cal.) {:7.4f} | Cv (uncal.) {:7.4f} | Cv (cal.) {:7.4f}".format(ence_uncal, 0, 0, 0))
+            ence_uncal, ence_cal, cv_uncal, cv_cal = calibration_utilities.evaluate_mc_dropout_calibration(model, data_loader["test"], data_loader["devel"], params)
         else:
-            raise NotImplementedError()
+            raise NotImplementedError
+        
+        print("On Test: ENCE (unc.) {:.4f} | ENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
         ########################################
-
-
 
         val_losses.append(val_loss)
         val_cccs.append(val_ccc)
