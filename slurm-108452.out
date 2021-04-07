@@ -5,3 +5,27 @@ Samples in partitions: (3122, 62, 64)
 Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4582 [' 0.4582']| Loss: 0.5678 | PCC: 0.4587 ['0.4587'] | RMSE: 0.4170 ['0.4170']
+On Test: ENCE (unc.) 3600429.7500 | ENCE (cal.) 2225187.5625 | Cv (uncal.) 1.4870 | Cv (cal.) 1.4870
+On Test: CCC  0.5852 | PCC  0.5863 | RMSE  0.3884
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4463 [' 0.4463']| Loss: 0.5702 | PCC: 0.4471 ['0.4471'] | RMSE: 0.4176 ['0.4176']
+On Test: ENCE (unc.) 3472779.7000 | ENCE (cal.) 2146295.6375 | Cv (uncal.) 1.5509 | Cv (cal.) 1.5509
+On Test: CCC  0.5673 | PCC  0.5688 | RMSE  0.3953
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.4294 [' 0.4294']| Loss: 0.5766 | PCC: 0.4361 ['0.4361'] | RMSE: 0.4440 ['0.4440']
+On Test: ENCE (unc.) 3543407.3750 | ENCE (cal.) 2189946.1750 | Cv (uncal.) 1.7011 | Cv (cal.) 1.7011
+On Test: CCC  0.5525 | PCC  0.5691 | RMSE  0.3987
+==================================================
+Training model... [seed 317]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 317 | Best [Val CCC]: 0.4215 [' 0.4215']| Loss: 0.5720 | PCC: 0.4216 ['0.4216'] | RMSE: 0.4342 ['0.4342']
+On Test: ENCE (unc.) 3564296.6500 | ENCE (cal.) 2202856.3000 | Cv (uncal.) 1.7243 | Cv (cal.) 1.7243
+On Test: CCC  0.5459 | PCC  0.5659 | RMSE  0.3996
+==================================================
+Training model... [seed 318]
