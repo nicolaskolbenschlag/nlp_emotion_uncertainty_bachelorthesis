@@ -55,18 +55,28 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     time = range(len(labels))
     plt.figure(figsize=(20, 10))
     plt.plot(time, labels, "red", label="target")
+    plt.plot(time, pred_mean, "blue", label="prediction")
     plt.fill_between(time, pred_mean - pred_confidence, pred_mean + pred_confidence, color="lightblue", alpha=.5)
-    plt.plot(time, pred_mean, "blue", label=f"prediction")
 
     plt.title(f"{title} [{partition}]", fontsize=24)
     plt.legend(prop={"size": 24})
     plt.xlabel("time", fontsize=24)
     plt.ylabel(emo_dim, fontsize=24)
-    plt.grid()
+    # plt.grid()
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
+
     dir = config.PREDICTION_FOLDER
     if params.save_dir is not None: dir = os.path.join(dir, params.save_dir)
-    dir = os.path.join(dir, "img_calibration", emo_dim, "seed" + str(params.current_seed))
+    dir = os.path.join(dir, "img_calibration")
     if not os.path.exists(dir): os.mkdir(dir)
+    dir = os.path.join(dir, emo_dim)
+    if not os.path.exists(dir): os.mkdir(dir)
+    dir = os.path.join(dir, params.uncertainty_approach)
+    if not os.path.exists(dir): os.mkdir(dir)
+    dir = os.path.join(dir, "seed" + str(params.current_seed))
+    if not os.path.exists(dir): os.mkdir(dir)
+    
     title = title.replace(" ", "_")
     plt.savefig(os.path.join(dir, f"{title}.jpg"))
     plt.close()
@@ -92,8 +102,8 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
 
         full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
-        
-    # NOTE prepare recalibration
+            
+    # NOTE prepare recalibration (by providing validation data as training data for calibration-model)
     full_means_val, full_vars_val, full_labels_val = [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(val_loader, 1):
@@ -116,7 +126,6 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
     return full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val
 
 def outputs_quantile_regression(model, test_loader, val_loader, params):
-    # NOTE make predictions for uncalibrated scores and as features to become calibrated later
     full_means, full_vars, full_labels = [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
@@ -127,8 +136,9 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            means = preds[:,1]
-            vars = preds[:,2] - preds[:,0]# NOTE use difference between upper and lower quantile as measurement for uncalibrated confidence
+            means = preds[:, 1:2]
+            # NOTE use difference between upper and lower quantile as measurement for uncalibrated confidence
+            vars = preds[:, 2:3] - preds[:, 0:1]
             
             full_means.append(means)
             full_vars.append(vars)
@@ -136,7 +146,6 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
 
         full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
         
-    # NOTE prepare recalibration
     full_means_val, full_vars_val, full_labels_val = [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(val_loader, 1):
@@ -147,8 +156,8 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            means = preds[:,1]
-            vars = preds[:,2] - preds[:,0]
+            means = preds[:, 1:2]
+            vars = preds[:, 2:3] - preds[:, 0:1]
 
             full_means_val.append(means)
             full_vars_val.append(vars)
