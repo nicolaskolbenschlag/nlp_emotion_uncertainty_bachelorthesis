@@ -493,6 +493,34 @@ class TiltedCCCLoss(nn.Module):
     def __init__(self):
         super(TiltedCCCLoss, self).__init__()
 
+    def forward_not_dyn(self, y_pred, y_true, seq_lens=None, label_smooth=None):
+        """
+        :param y_pred: (batch_size, seq_len)
+        :param y_true: (batch_size, seq_len)
+        :param seq_lens: (batch_size,)
+        :return:
+        """
+        # make padding mask
+        if seq_lens is not None:
+            mask = torch.ones_like(y_true, device=y_true.device)
+            for i, seq_len in enumerate(seq_lens): mask[i, seq_len:] = 0
+        else:
+            mask = torch.ones_like(y_true, device=y_true.device)
+
+        lambda_ = .5# TODO compute lamba dynamically
+        quantiles = [.1, .5, .9]
+        losses = []
+        loss = 0.
+        for i, q in enumerate(quantiles):
+
+            error = TiltedCCCLoss.compute_ccc(y_pred[:, :, i], y_true, mask)
+            error = error - lambda_
+            tilted = torch.max((q - 1) * error, q * error)#.unsqueeze(1).mean(dim=-1)
+            losses.append(tilted)
+        
+        loss = torch.mean(torch.cat(losses))
+        return loss
+    
     def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None):
         """
         :param y_pred: (batch_size, seq_len)
@@ -503,32 +531,26 @@ class TiltedCCCLoss(nn.Module):
         # make padding mask
         if seq_lens is not None:
             mask = torch.ones_like(y_true, device=y_true.device)
-            for i, seq_len in enumerate(seq_lens):
-                mask[i, seq_len:] = 0
+            for i, seq_len in enumerate(seq_lens): mask[i, seq_len:] = 0
         else:
             mask = torch.ones_like(y_true, device=y_true.device)
-        # smooth label by average pooling
-        if label_smooth is not None:
-            y_true = torch.nn.functional.avg_pool1d(y_true.unsqueeze(1), kernel_size=label_smooth,
-                                                    stride=1, padding=(label_smooth - 1) // 2,
-                                                    count_include_pad=False)
-            y_true = y_true.squeeze(1)
 
-        lambda_ = .5# TODO compute lamba dynamically
         quantiles = [.1, .5, .9]
-        # losses = []
+        losses = []
         loss = 0.
         for i, q in enumerate(quantiles):
 
-
             error = TiltedCCCLoss.compute_ccc(y_pred[:, :, i], y_true, mask)
+            print(f"error: {error.shape}")
+            lambda_ = torch.mean(error)
+            print(f"lambda_: {lambda_.shape}")
             error = error - lambda_
             tilted = torch.max((q - 1) * error, q * error)#.unsqueeze(1).mean(dim=-1)
-            # losses.append(tilted)
-            loss += tilted
+            print(f"tilted: {tilted.shape}")
+            losses.append(tilted)
         
-        # loss = torch.mean(torch.cat(losses))
-        loss = loss / len(quantiles)
+        print(f"torch.cat(losses): {torch.cat(losses).shape}")
+        loss = torch.mean(torch.cat(losses))
         return loss
     
     @staticmethod
