@@ -537,20 +537,22 @@ class TiltedCCCLoss(nn.Module):
 
         quantiles = [.1, .5, .9]
         losses = []
-        loss = 0.
         for i, q in enumerate(quantiles):
 
             error = TiltedCCCLoss.compute_ccc(y_pred[:, :, i], y_true, mask)
-            print(f"error: {error.shape}")
+            print(f"q={q}")
+            print(f"y_pred: {y_pred.shape} - y_true: {y_true.shape} - CCC: {error.shape}")
             lambda_ = torch.mean(error)
-            print(f"lambda_: {lambda_.shape}")
+            print(f"lambda: {lambda_}")
             error = error - lambda_
             tilted = torch.max((q - 1) * error, q * error)#.unsqueeze(1).mean(dim=-1)
-            print(f"tilted: {tilted.shape}")
-            losses.append(tilted)
+            print(f"tilted: {tilted}\n")
+            losses += [tilted]
         
-        print(f"torch.cat(losses): {torch.cat(losses).shape}")
+        # loss = losses / len(quantiles)
         loss = torch.mean(torch.cat(losses))
+        print(f"loss: {loss}")
+        print("-" * 40)
         return loss
     
     @staticmethod
@@ -558,20 +560,15 @@ class TiltedCCCLoss(nn.Module):
         y_true_mean = torch.sum(y_true * mask, dim=1, keepdim=True) / torch.sum(mask, dim=1, keepdim=True)
         y_pred_mean = torch.sum(y_pred * mask, dim=1, keepdim=True) / torch.sum(mask, dim=1, keepdim=True)
         # biased variance
-        y_true_var = torch.sum(mask * (y_true - y_true_mean) ** 2, dim=1, keepdim=True) / torch.sum(mask, dim=1,
-                                                                                                    keepdim=True)
-        y_pred_var = torch.sum(mask * (y_pred - y_pred_mean) ** 2, dim=1, keepdim=True) / torch.sum(mask, dim=1,
-                                                                                                    keepdim=True)
+        y_true_var = torch.sum(mask * (y_true - y_true_mean) ** 2, dim=1, keepdim=True) / torch.sum(mask, dim=1, keepdim=True)
+        y_pred_var = torch.sum(mask * (y_pred - y_pred_mean) ** 2, dim=1, keepdim=True) / torch.sum(mask, dim=1, keepdim=True)
 
-        cov = torch.sum(mask * (y_true - y_true_mean) * (y_pred - y_pred_mean), dim=1, keepdim=True) / torch.sum(mask,
-                                                                                                                 dim=1,
-                                                                                                                 keepdim=True)
+        cov = torch.sum(mask * (y_true - y_true_mean) * (y_pred - y_pred_mean), dim=1, keepdim=True) / torch.sum(mask, dim=1, keepdim=True)
 
-        ccc = torch.mean(2.0 * cov / (y_true_var + y_pred_var + (y_true_mean - y_pred_mean) ** 2), dim=0)  # (1,*)
-        # TODO tilt loss per sample and not per whole batch?!
-        ccc = ccc.squeeze(0)  # (*,) if necessary
+        ccc = 2.0 * cov / (y_true_var + y_pred_var + (y_true_mean - y_pred_mean) ** 2)
+
+        # ccc = ccc.squeeze(0)  # (*,) if necessary
         ccc_loss = 1.0 - ccc
-
         return ccc_loss
 
 
