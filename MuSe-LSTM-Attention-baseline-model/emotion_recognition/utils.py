@@ -540,19 +540,25 @@ class TiltedCCCLoss(nn.Module):
         for i, q in enumerate(quantiles):
 
             error = TiltedCCCLoss.compute_ccc(y_pred[:, :, i], y_true, mask)
-            print(f"q={q}")
-            print(f"y_pred: {y_pred.shape} - y_true: {y_true.shape} - CCC: {error.shape}")
+            
             lambda_ = torch.mean(error)
-            print(f"lambda: {lambda_}")
-            error = error - lambda_
-            tilted = torch.max((q - 1) * error, q * error)#.unsqueeze(1).mean(dim=-1)
-            print(f"tilted: {tilted}\n")
+
+            tilted = error
+            if i == 0:
+                quanties_mask = (error - lambda_) < 0
+                tilted[quanties_mask] *= (1 - q)
+                tilted[~quanties_mask] *= q
+            elif i == 2:
+                quanties_mask = (error - lambda_) > 0
+                tilted[quanties_mask] *= q
+                tilted[~quanties_mask] *= (1 - q)
+            else:# NOTE i == 1:
+                pass
+            
+            tilted = tilted.unsqueeze(1).mean(dim=-1)
             losses += [tilted]
         
-        # loss = losses / len(quantiles)
         loss = torch.mean(torch.cat(losses))
-        print(f"loss: {loss}")
-        print("-" * 40)
         return loss
     
     @staticmethod

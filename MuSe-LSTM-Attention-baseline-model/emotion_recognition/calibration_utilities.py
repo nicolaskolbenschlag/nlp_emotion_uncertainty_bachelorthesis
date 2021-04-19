@@ -16,7 +16,7 @@ def expected_normalized_calibration_error(y_real: np.ndarray, y_pred_mean: np.nd
     for j in range(1, bins + 1):
         mask = bin_indicies == j
         
-        if not len(y_pred_var[mask]) > 0:
+        if not mask.sum() > 0:
             continue
 
         rmv = np.sqrt(np.mean(y_pred_var[mask]))
