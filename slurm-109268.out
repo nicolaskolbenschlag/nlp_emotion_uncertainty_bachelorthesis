@@ -1,0 +1,37 @@
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 10 --seed 314 --predict --attn --rnn_bi --loss tiltedCCC --uncertainty_approach quantile_regression
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4401 [' 0.4401']| Loss: 0.2299 | PCC: 0.4404 ['0.4404'] | RMSE: 0.4245 ['0.4245']
+On Test: ENCE (unc.) 0.2919 | ENCE (cal.) 0.5373 | Cv (uncal.) 0.8195 | Cv (cal.) 0.8195
+On Test: CCC  0.5879 | PCC  0.5965 | RMSE  0.3694
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4068 [' 0.4068']| Loss: 0.2468 | PCC: 0.4186 ['0.4186'] | RMSE: 0.4112 ['0.4112']
+On Test: ENCE (unc.) 0.4184 | ENCE (cal.) 0.5139 | Cv (uncal.) 0.7768 | Cv (cal.) 0.7768
+On Test: CCC  0.5581 | PCC  0.5694 | RMSE  0.3776
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.4343 [' 0.4343']| Loss: 0.2329 | PCC: 0.4356 ['0.4356'] | RMSE: 0.4362 ['0.4362']
+On Test: ENCE (unc.) 0.4683 | ENCE (cal.) 0.5590 | Cv (uncal.) 0.7787 | Cv (cal.) 0.7787
+On Test: CCC  0.5785 | PCC  0.5820 | RMSE  0.3845
+==================================================
+Training model... [seed 317]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 317 | Best [Val CCC]: 0.4196 [' 0.4196']| Loss: 0.2384 | PCC: 0.4204 ['0.4204'] | RMSE: 0.4513 ['0.4513']
+On Test: ENCE (unc.) 0.3588 | ENCE (cal.) 0.4650 | Cv (uncal.) 0.7343 | Cv (cal.) 0.7343
+On Test: CCC  0.5362 | PCC  0.5481 | RMSE  0.4032
+==================================================
+Training model... [seed 318]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 318 | Best [Val CCC]: 0.4322 [' 0.4322']| Loss: 0.2344 | PCC: 0.4340 ['0.4340'] | RMSE: 0.4184 ['0.4184']
+On Test: ENCE (unc.) 0.5452 | ENCE (cal.) 0.4957 | Cv (uncal.) 0.7215 | Cv (cal.) 0.7215
+On Test: CCC  0.5516 | PCC  0.5573 | RMSE  0.3973
+==================================================
+Training model... [seed 319]

@@ -12,7 +12,7 @@ def expected_normalized_calibration_error(y_real: np.ndarray, y_pred_mean: np.nd
     https://arxiv.org/abs/1905.11659
     """
     ence = 0.
-    bin_indicies = np.digitize(y_pred_var, np.linspace(y_pred_var.min(), y_pred_var.max(), bins))    
+    bin_indicies = np.digitize(y_pred_var, np.linspace(y_pred_var.min(), y_pred_var.max(), bins))
     for j in range(1, bins + 1):
         mask = bin_indicies == j
         
@@ -137,8 +137,10 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
                 labels = labels.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
             means = preds[:, 1:2]
+            
             # NOTE use difference between upper and lower quantile as measurement for uncalibrated confidence
             vars = preds[:, 2:3] - preds[:, 0:1]
+            vars = np.abs(vars)
             
             full_means.append(means)
             full_vars.append(vars)
@@ -157,7 +159,9 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
                 labels = labels.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
             means = preds[:, 1:2]
+            
             vars = preds[:, 2:3] - preds[:, 0:1]
+            vars = np.abs(vars)
 
             full_means_val.append(means)
             full_vars_val.append(vars)

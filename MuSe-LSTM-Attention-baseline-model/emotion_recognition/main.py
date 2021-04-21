@@ -60,7 +60,7 @@ def parse_params():
                         help='dimension of output layer (default: 64)')
     parser.add_argument('--out_biases', type=float, nargs='+',
                         help='biases of output layer')
-    parser.add_argument('--loss', type=str, default='ccc', choices=['ccc', 'mse', 'l1', "tilted", "tilted_dyn", "tiltedCCC", "cwCCC"],
+    parser.add_argument('--loss', type=str, default='ccc', choices=['ccc', 'mse', 'l1', "tilted", "tiltedCCC"],
                         help='loss function (default: ccc)')
     parser.add_argument('--loss_weights', nargs='+', type=float,
                         help='loss weights for total loss calculation')
@@ -130,7 +130,7 @@ def parse_params():
 
     
     # NOTE: choose uncertainty approach
-    parser.add_argument('--uncertainty_approach', type=str, choices=[None, 'quantile_regression', 'monte_carlo_dropout', 'cw_ccc'])
+    parser.add_argument('--uncertainty_approach', type=str, choices=[None, 'quantile_regression', 'monte_carlo_dropout'])
 
     # parse
     args = parser.parse_args()
@@ -143,11 +143,9 @@ def get_dataloaders(data, predict=False):
     for partition in data.keys():
         set_ = MyDataset(data, partition)
         sample_counts.append(len(set_))
-
         batch_size = params.batch_size if partition == 'train' and not predict else 1
         shuffle = True if partition == 'train' else False
-        data_loader[partition] = torch.utils.data.DataLoader(set_, batch_size=batch_size, shuffle=shuffle,
-                                                             num_workers=4)
+        data_loader[partition] = torch.utils.data.DataLoader(set_, batch_size=batch_size, shuffle=shuffle, num_workers=4)
     print(f'Samples in partitions: {*sample_counts,}')
     return data_loader
 
@@ -157,22 +155,18 @@ def main(params):
     print('Constructing dataset and data loader ...')
 
     ########################################
-    if params.uncertainty_approach == 'cw_ccc':
-        data_loader, data_loader_gt, data = correlation_among_annotators.get_correlations_data_loader(params)
+    data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
+    data_loader = get_dataloaders(data)
     
-    else:
-        data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc,
-                            params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache,
-                            refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
-        data_loader = get_dataloaders(data)
-        if params.annotator is not None:
-            data_gt = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc,
-                                    params.norm_opts, 'None', params.win_len, params.hop_len, save=params.cache,
-                                    refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=None)
-            data_loader_gt = get_dataloaders(data_gt, True)
-            print('-' * 50)
-        else:
-            data_loader_gt = None
+    # if params.annotator is not None:
+    #     data_gt = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc,
+    #                             params.norm_opts, 'None', params.win_len, params.hop_len, save=params.cache,
+    #                             refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=None)
+    #     data_loader_gt = get_dataloaders(data_gt, True)
+    #     print('-' * 50)
+    # else:
+    #     data_loader_gt = None
+    data_loader_gt = None
     ########################################
 
     # check params
@@ -220,7 +214,7 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
-        if params.uncertainty_approach == None or params.uncertainty_approach == 'cw_ccc':
+        if params.uncertainty_approach == None:
             test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
         
         elif params.uncertainty_approach == "quantile_regression":
@@ -282,7 +276,7 @@ def main(params):
         best_model = torch.load(best_model_files[best_idx])
         
         ########################################
-        if params.uncertainty_approach == None or params.uncertainty_approach == 'cw_ccc':
+        if params.uncertainty_approach == None:
             predict(best_model, data_loader['test'], params)
         
         elif params.uncertainty_approach == "quantile_regression":
