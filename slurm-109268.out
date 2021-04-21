@@ -35,3 +35,4 @@ On Test: ENCE (unc.) 0.5452 | ENCE (cal.) 0.4957 | Cv (uncal.) 0.7215 | Cv (cal.
 On Test: CCC  0.5516 | PCC  0.5573 | RMSE  0.3973
 ==================================================
 Training model... [seed 319]
+slurmstepd: *** JOB 109268 ON eihw-gpu1 CANCELLED AT 2021-04-21T15:24:44 ***

@@ -355,7 +355,7 @@ def evaluate_quantile_regression(model, test_loader, params):
     full_preds, full_labels = [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta = batch_data
+            features, feature_lens, labels, meta, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -377,7 +377,7 @@ def predict_quantile_regression(model, data_loader, params):
 
         full_preds, full_metas, full_labels = [], [], []
         for _, batch_data in enumerate(data_loader, 1):
-            features, feature_lens, labels, metas = batch_data
+            features, feature_lens, labels, metas, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -482,7 +482,7 @@ def evaluate_mc_dropout(model, test_loader, params):
     full_preds, full_labels = [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta = batch_data
+            features, feature_lens, labels, meta, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -504,7 +504,7 @@ def predict_mc_dropout(model, data_loader, params):
     full_preds, full_metas, full_labels = [], [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(data_loader, 1):
-            features, feature_lens, labels, metas = batch_data
+            features, feature_lens, labels, metas, _ = batch_data
             # move to gpu if use gpu
             if params.gpu is not None:
                 model.cuda()

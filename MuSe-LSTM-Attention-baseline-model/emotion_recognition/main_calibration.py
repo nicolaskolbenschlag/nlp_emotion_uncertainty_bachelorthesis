@@ -15,7 +15,6 @@ import config
 
 import train
 
-import correlation_among_annotators
 import calibration_utilities
 
 
@@ -224,7 +223,7 @@ def main(params):
             raise NotImplementedError()
         ########################################
         ence_uncal, ence_cal, cv_uncal, cv_cal = calibration_utilities.evaluate_calibration(model, data_loader["test"], data_loader["devel"], params)
-        print("On Test: ENCE (unc.) {:.4f} | ENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
+        print("On Test: sbENCE (unc.) {:.4f} | sbENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
         ########################################
 
         val_losses.append(val_loss)
