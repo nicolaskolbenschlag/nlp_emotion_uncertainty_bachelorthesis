@@ -77,24 +77,32 @@ def calibrate(val_uncalibrated: np.ndarray, val_calibrated: np.ndarray, test_unc
     else:
         raise NotImplementedError
 
-def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_confidence: np.ndarray, emo_dim: str, title: str, partition: str, timesteps: typing.Tuple[int, int] = (0, 100)) -> None:
+def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_confidence: np.ndarray, subjectivety: np.ndarray, emo_dim: str, title: str, partition: str, timesteps: typing.Tuple[int, int] = (0, 100)) -> None:
     labels = labels[timesteps[0] : timesteps[1]]
     pred_mean = pred_mean[timesteps[0] : timesteps[1]]
     pred_confidence = pred_confidence[timesteps[0] : timesteps[1]]
+    
+    subjectivety = subjectivety[timesteps[0] : timesteps[1]]
 
     time = range(len(labels))
-    plt.figure(figsize=(20, 10))
-    plt.plot(time, labels, "red", label="target")
-    plt.plot(time, pred_mean, "blue", label="prediction")
-    plt.fill_between(time, pred_mean - pred_confidence, pred_mean + pred_confidence, color="lightblue", alpha=.5)
+    fig, axs = plt.subplots(2, 1, figsize=(20,10))
 
-    plt.title(f"{title} [{partition}]", fontsize=24)
-    plt.legend(prop={"size": 24})
-    plt.xlabel("time", fontsize=24)
-    plt.ylabel(emo_dim, fontsize=24)
-    # plt.grid()
-    plt.xticks(fontsize=18)
-    plt.yticks(fontsize=18)
+    fig.suptitle(f"{title} [{partition}]", fontsize=24)
+
+    axs[0].plot(time, labels, "red", label="target")
+    axs[0].plot(time, pred_mean, "blue", label="prediction")
+    axs[0].fill_between(time, pred_mean - pred_confidence, pred_mean + pred_confidence, color="lightblue", alpha=.5)
+    
+    axs[0].legend(prop={"size": 24})
+    axs[0].xlabel("time", fontsize=24)
+    axs[0].ylabel(emo_dim, fontsize=24)
+    axs[0].xticks(fontsize=18)
+    axs[0].yticks(fontsize=18)
+
+    axs[1].plot(time, subjectivety, "red", label="subjectivety")
+
+    axs[1].legend(prop={"size": 24})
+    axs[1].xlabel("time", fontsize=24)
 
     dir = config.PREDICTION_FOLDER
     if params.save_dir is not None: dir = os.path.join(dir, params.save_dir)
@@ -108,8 +116,8 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     if not os.path.exists(dir): os.mkdir(dir)
     
     title = title.replace(" ", "_")
-    plt.savefig(os.path.join(dir, f"{title}.jpg"))
-    plt.close()
+    fig.savefig(os.path.join(dir, f"{title}.jpg"))
+    fig.close()
 
 def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_members = 10):
     # NOTE make predictions for uncalibrated scores and as features to become calibrated later
@@ -231,7 +239,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         ENCEs_uncal.append(ence_uncalibrated)
         Cvs_uncal.append(cv_uncalibrated)
 
-        plot_confidence(params, full_labels[:, i], full_means[:, i], full_vars[:, i], params.emo_dim_set[i], title + " UNCALIBRATED", test_loader.dataset.partition)
+        plot_confidence(params, full_labels[:, i], full_means[:, i], full_vars[:, i], full_subjectivities, params.emo_dim_set[i], title + " UNCALIBRATED", test_loader.dataset.partition)
 
         ##########################
         # NOTE rmse of validaiton set as calibration target
@@ -252,6 +260,6 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         ENCEs_cal.append(ence_calibrated)
         Cvs_cal.append(cv_calibrated)
         
-        plot_confidence(params, full_labels[:, i], full_means[:, i], full_vars_calibrated, params.emo_dim_set[i], title + " CALIBRATED", test_loader.dataset.partition)
+        plot_confidence(params, full_labels[:, i], full_means[:, i], full_vars_calibrated, full_subjectivities, params.emo_dim_set[i], title + " CALIBRATED", test_loader.dataset.partition)
         
     return ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal

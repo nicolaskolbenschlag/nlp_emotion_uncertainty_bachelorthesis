@@ -197,7 +197,7 @@ def validate(model, val_loader, criterion, params):
         val_size = 0
         for batch, batch_data in enumerate(val_loader, 1):
             
-            features, feature_lens, labels, _ = batch_data
+            features, feature_lens, labels, metas, subjectivity = batch_data
             
             batch_size = features.size(0)
             # move to gpu if use gpu

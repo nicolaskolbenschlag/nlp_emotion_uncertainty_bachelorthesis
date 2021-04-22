@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --mem=20000
+#SBATCH --mem=30000
 #SBATCH -J sbENCE
 
 export START_HERE=/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit

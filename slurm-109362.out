@@ -1,0 +1,93 @@
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --predict --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .3 --out_dr .3
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/dataset.py:42: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
+Traceback (most recent call last):
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py", line 323, in <module>
+    main(params)
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py", line 210, in main
+    train_model(model, data_loader, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 48, in train_model
+    train_loss = train(model, train_loader, criterion, optimizer, epoch, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 113, in train
+    preds = model(features, feature_lens)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/model.py", line 149, in forward
+    x = self.attn(x, mask)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/model.py", line 42, in forward
+    x = layer(x, src_key_padding_mask=x_padding_mask)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/model.py", line 28, in forward
+    key_padding_mask=src_key_padding_mask)[0]
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/modules/activation.py", line 985, in forward
+    attn_mask=attn_mask)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/functional.py", line 4314, in multi_head_attention_forward
+    attn_output_weights = dropout(attn_output_weights, p=dropout_p, training=training)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/nn/functional.py", line 983, in dropout
+    else _VF.dropout(input, p, training))
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 19183) is killed by signal: Killed. 
+slurmstepd: Exceeded step memory limit at some point.
