@@ -33,9 +33,6 @@ def calculate_rolling_subjectivities(params):
                     if partition == "train":
                         first_timestamp = meta[0][1]
                         vid_id = f"{vid_id}_{first_timestamp}"
-                        
-                        if vid_id.split("_")[0] == "85": print(vid_id)
-                        
                     else:
                         vid_id = str(vid_id)
 

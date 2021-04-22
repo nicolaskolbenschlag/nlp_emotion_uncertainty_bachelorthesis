@@ -35,9 +35,9 @@ class MyDataset(Dataset):
             # NOTE for train, samples get split up, so we had to specify the id to distinguish between sub-samples from a video
             if partition == "train":
                 first_timestamp = meta[0][1]
-                vid_id = f"{sample_id}_{first_timestamp}"
+                sample_id = f"{sample_id}_{first_timestamp}"
             else:
-                vid_id = str(vid_id)
+                sample_id = str(sample_id)
 
             subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
             subjectivities += [subjectivity]
