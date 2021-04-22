@@ -132,18 +132,35 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
                 features = features.cuda()
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
+                subjectivities = subjectivities.cuda()
             preds = [model(features, feature_lens).cpu().detach().squeeze(0).numpy() for _ in range(n_ensemble_members)]
             means = np.mean(preds, axis=0)
-            vars = np.var(preds, axis=0)
+            vars_ = np.var(preds, axis=0)
             
             # vars = pd.Series(vars).rolling(10).mean()
-            for i in range(vars.shape[1]):
-                vars_tmp = pd.Series(vars[:,i]).rolling(10).mean()
-                vars_tmp.fillna(vars_tmp.max() / 2)
-                vars[:,i] = vars_tmp
+            # for i in range(vars_.shape[2]):# vars_ of shape (batch_size, seq_len, emo_dims)?
+            #     vars_tmp = pd.Series(vars_[:,:,i]).rolling(10).mean()
+            #     vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
+            #     vars_[:,:,i] = vars_tmp
+            vars_of_sample_smooth = []
+            for vars_of_sample in vars_:
+                for i_emo_dim in range(vars_of_sample.shape[1]):
+                    vars_tmp = pd.Series(vars_of_sample[:,i_emo_dim]).rolling(10).mean()
+                    vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
+                    vars_of_sample[:,i_emo_dim] = vars_tmp
+                vars_of_sample_smooth += [vars_of_sample]
+            vars_ = npa.array(vars_of_sample_smooth)
+            ###########################
+
+            print("-"*20)
+            print(labels.shape)
+            print(labels[0].shape)
+            print(subjectivities.shape)
+            print(subjectivities[0].shape)
+            print("-"*20)
             
             full_means.append(means)
-            full_vars.append(vars)
+            full_vars.append(vars_)
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
             full_subjectivities.append(subjectivities.cpu().detach().squeeze(0).numpy())
 
@@ -159,18 +176,28 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
                 features = features.cuda()
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
+                subjectivities = subjectivities.cuda()
             preds = [model(features, feature_lens).cpu().detach().squeeze(0).numpy() for _ in range(n_ensemble_members)]
             means = np.mean(preds, axis=0)
-            vars = np.var(preds, axis=0)
+            vars_ = np.var(preds, axis=0)
 
             # vars = pd.Series(vars).rolling(10).mean()
-            for i in range(vars.shape[1]):
-                vars_tmp = pd.Series(vars[:,i]).rolling(10).mean()
-                vars_tmp.fillna(vars_tmp.max() / 2)
-                vars[:,i] = vars_tmp
+            # for i in range(vars_.shape[1]):
+            #     vars_tmp = pd.Series(vars_[:,i]).rolling(10).mean()
+            #     vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
+            #     vars_[:,i] = vars_tmp
+            vars_of_sample_smooth = []
+            for vars_of_sample in vars_:
+                for i_emo_dim in range(vars_of_sample.shape[1]):
+                    vars_tmp = pd.Series(vars_of_sample[:,i_emo_dim]).rolling(10).mean()
+                    vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
+                    vars_of_sample[:,i_emo_dim] = vars_tmp
+                vars_of_sample_smooth += [vars_of_sample]
+            vars_ = npa.array(vars_of_sample_smooth)
+            ###########################
 
             full_means_val.append(means)
-            full_vars_val.append(vars)
+            full_vars_val.append(vars_)
             full_labels_val.append(labels.cpu().detach().squeeze(0).numpy())
             full_subjectivities_val.append(subjectivities.cpu().detach().squeeze(0).numpy())
 

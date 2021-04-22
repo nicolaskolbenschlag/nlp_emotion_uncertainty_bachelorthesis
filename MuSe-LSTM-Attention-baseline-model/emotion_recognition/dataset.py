@@ -43,6 +43,7 @@ class MyDataset(Dataset):
             subjectivity = subjectivities_per_sample[sample_id]
 
             subjectivities += [subjectivity]
+        
         if partition == "train":
             subjectivities = pad_sequence(subjectivities, batch_first=True)
         self.subjectivities = subjectivities
