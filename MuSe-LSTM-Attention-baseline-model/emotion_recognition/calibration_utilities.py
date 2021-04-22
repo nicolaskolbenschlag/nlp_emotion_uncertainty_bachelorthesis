@@ -6,6 +6,7 @@ import sklearn.isotonic
 import scipy.optimize
 import config
 import typing
+import pandas as pd
 
 def expected_normalized_calibration_error(y_real: np.ndarray, y_pred_mean: np.ndarray, y_pred_var: np.ndarray, bins: int = 10) -> float:
     """

@@ -59,6 +59,7 @@ def calculate_rolling_subjectivities(params):
                         for i in range(rolling_window, len(annotation_1) + 1)
                     ]
                 subjectivity = pd.Series(subjectivity).fillna(.0)# NOTE [0,0,0].corr([0,0,0]) = nan
+                # TODO maybe use rolling mean over subjectivity, that measurement becomes smoother
                 subjectivity_of_sample += [subjectivity]
         
         ################################
