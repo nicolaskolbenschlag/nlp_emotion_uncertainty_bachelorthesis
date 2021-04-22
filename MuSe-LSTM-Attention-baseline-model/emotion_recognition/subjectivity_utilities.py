@@ -58,23 +58,16 @@ def calculate_rolling_subjectivities(params):
                     pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i]))
                         for i in range(rolling_window, len(annotation_1) + 1)
                     ]
-                subjectivity = pd.Series(subjectivity).fillna(.0)# NOTE [0,0,0].corr([0,0,0]) = nan
-                # TODO maybe use rolling mean over subjectivity, that measurement becomes smoother
+                
+                # NOTE [0,0,0].corr([0,0,0]) = nan; therefore...
+                subjectivity = pd.Series(subjectivity).fillna(.0)
+                
+                # NOTE maybe use rolling mean over subjectivity, that measurement becomes smoother
+                subjectivity = subjectivity.rolling(3).mean()
+
                 subjectivity_of_sample += [subjectivity]
-        
-        ################################
+                        
         assert len(subjectivity_of_sample) >= 1, f"too less annotations for sample {vid_id}"
-        # err = False
-        # for a in subjectivity_of_sample:
-        #     if len(a) != len(subjectivity_of_sample[0]):
-        #         err = True
-        #         break
-        # if err:
-        #     print(f"vid{vid_id}: {len(annotations)} - 1st: {len(annotations[0])}")
-        #     # print(f"vid{vid_id}: {subjectivity_of_sample[0]}")
-        #     tmp = [len(s) for s in subjectivity_of_sample]
-        #     print(f"vid{vid_id}: {tmp}")
-        # ################################
         
         # NOTE calculate element-wise mean to get average subjectivity at each timestep
         subjectivity_of_sample = np.stack(subjectivity_of_sample).mean(axis=0)

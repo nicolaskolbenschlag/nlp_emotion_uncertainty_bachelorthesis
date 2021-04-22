@@ -136,8 +136,11 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             means = np.mean(preds, axis=0)
             vars = np.var(preds, axis=0)
             
-            vars = pd.Series(vars).rolling(10).mean()
-            vars.fillna(vars.max() / 2)
+            # vars = pd.Series(vars).rolling(10).mean()
+            for i in range(vars.shape[1]):
+                vars_tmp = pd.Series(vars[:,i]).rolling(10).mean()
+                vars_tmp.fillna(vars_tmp.max() / 2)
+                vars[:,i] = vars_tmp
             
             full_means.append(means)
             full_vars.append(vars)
@@ -160,8 +163,11 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             means = np.mean(preds, axis=0)
             vars = np.var(preds, axis=0)
 
-            vars = pd.Series(vars).rolling(10).mean()
-            vars.fillna(vars.max() / 2)
+            # vars = pd.Series(vars).rolling(10).mean()
+            for i in range(vars.shape[1]):
+                vars_tmp = pd.Series(vars[:,i]).rolling(10).mean()
+                vars_tmp.fillna(vars_tmp.max() / 2)
+                vars[:,i] = vars_tmp
 
             full_means_val.append(means)
             full_vars_val.append(vars)

@@ -39,7 +39,9 @@ class MyDataset(Dataset):
             else:
                 sample_id = str(sample_id)
 
-            subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
+            # subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
+            subjectivity = subjectivities_per_sample[sample_id]
+
             subjectivities += [subjectivity]
         if partition == "train":
             subjectivities = pad_sequence(subjectivities, batch_first=True)
