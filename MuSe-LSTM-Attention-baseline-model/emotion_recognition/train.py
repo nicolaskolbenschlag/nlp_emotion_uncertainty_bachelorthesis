@@ -101,7 +101,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
     report_loss, report_size = 0, 0
     total_loss, total_size = 0, 0
     for batch, batch_data in enumerate(train_loader, 1):
-        features, feature_lens, labels, metas = batch_data
+        features, feature_lens, labels, metas, _ = batch_data
         batch_size = features.size(0)
         # move to gpu if use gpu
         if params.gpu is not None:

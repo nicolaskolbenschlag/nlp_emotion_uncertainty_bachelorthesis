@@ -1,6 +1,6 @@
 # Calibrated and Uncertainty-aware Multimodal Emotion Recognition
 
-This repository contais the code for my bachelor thesis at University of Augsburg.
+This repository contais the code for my bachelorthesis at University of Augsburg.
 
 ## MuSe 2021
 
