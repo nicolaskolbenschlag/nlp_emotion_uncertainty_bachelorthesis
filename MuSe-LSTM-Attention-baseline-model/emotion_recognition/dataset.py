@@ -3,7 +3,6 @@ import torch
 from torch.utils.data.dataset import Dataset
 from torch.nn.utils.rnn import pad_sequence
 
-
 class MyDataset(Dataset):
     def __init__(self, data, partition, subjectivities_per_sample):
         super(MyDataset, self).__init__()
@@ -30,13 +29,22 @@ class MyDataset(Dataset):
         
         # NOTE incorporate subjecities among annotations
         subjectivities = []
-        for meta in metas:
+        for meta in self.metas:
             sample_id = meta[0][0]
+
+            # NOTE for train, samples get split up, so we had to specify the id to distinguish between sub-samples from a video
+            if partition == "train":
+                first_timestamp = meta[0][1]
+                vid_id = f"{sample_id}_{first_timestamp}"
+            else:
+                vid_id = str(vid_id)
+
             subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
             subjectivities += [subjectivity]
         if partition == "train":
             subjectivities = pad_sequence(subjectivities, batch_first=True)
         self.subjectivities = subjectivities
+
 
     def get_feature_dim(self):
         return self.feature_dim
