@@ -30,11 +30,11 @@ class MyDataset(Dataset):
         # NOTE incorporate subjecities among annotations
         subjectivities = []
         for meta in self.metas:
-            sample_id = meta[0][0]
+            sample_id = int(meta[0][0])
 
             # NOTE for train, samples get split up, so we had to specify the id to distinguish between sub-samples from a video
             if partition == "train":
-                first_timestamp = meta[0][1]
+                first_timestamp = int(meta[0][1])
                 sample_id = f"{sample_id}_{first_timestamp}"
             else:
                 sample_id = str(sample_id)

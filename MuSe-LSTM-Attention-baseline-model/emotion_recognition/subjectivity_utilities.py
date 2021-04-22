@@ -10,7 +10,7 @@ def calculate_rolling_subjectivities(params):
         try:
             data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=annotator)
         except Exception as e:
-            print(f"Annotator {annotator}: {e}")
+            print(f"Exception for annotator {annotator}: {e}")
             continue
 
         for partition in ["train", "devel", "test"]:
@@ -24,18 +24,18 @@ def calculate_rolling_subjectivities(params):
                 # NOTE iterate over samples and store them by their id
                 for i, meta in enumerate(metas):
 
-                    # NOTE meta has shape of (seq_len, 3); with 2nd dim: [vid_id,timestamp,segment_id]
-                    vid_id = meta[0][0]
+                    # NOTE meta list of shape (seq_len, 3); with 2nd dim: [vid_id,timestamp,segment_id]
+                    vid_id = int(meta[0][0])
 
                     label_series = labels[i]
 
                     # NOTE for training, samples get split up, so if we would not specify id, we would get multiple sub-series per sample and per annotator
                     if partition == "train":
-                        first_timestamp = meta[0][1]
+                        first_timestamp = int(meta[0][1])
                         vid_id = f"{vid_id}_{first_timestamp}"
                     else:
                         vid_id = str(vid_id)
-
+                    
                     if vid_id not in annotations_per_vid.keys():
                         annotations_per_vid[vid_id] = []
                     
@@ -54,7 +54,10 @@ def calculate_rolling_subjectivities(params):
                 # NOTE calculate rolling measuremt of subjectivity between each available annotation
                 rolling_window = 10
                 subjectivity = [0.] * (rolling_window - 1)
-                subjectivity += [pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i])) for i in range(rolling_window, len(annotation_1) + 1)]
+                subjectivity += [
+                    pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i]))
+                        for i in range(rolling_window, len(annotation_1) + 1)
+                    ]
                 subjectivity = pd.Series(subjectivity).fillna(.0)# NOTE [0,0,0].corr([0,0,0]) = nan
                 subjectivity_of_sample += [subjectivity]
         
