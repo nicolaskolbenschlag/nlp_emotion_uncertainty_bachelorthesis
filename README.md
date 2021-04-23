@@ -3,7 +3,7 @@
 This repository contais the code for my bachelorthesis at University of Augsburg.
 
 Uncalibrated confidence | Calibrated confidence
-:-------------------------:|:-------------------------:
+--- | ---
 ![uncalibrated](https://github.com/nicolaskolbenchlag/nlp_emotion_uncertainty_bachelorthesis/tree/master/images/Quantile_Regression_UNCALIBRATED.jpg) | ![calibrated](https://github.com/nicolaskolbenchlag/nlp_emotion_uncertainty_bachelorthesis/tree/master/images/Quantile_Regression_CALIBRATED.jpg)
 
 ## MuSe 2021
