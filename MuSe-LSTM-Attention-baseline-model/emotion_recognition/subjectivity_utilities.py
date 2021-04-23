@@ -56,14 +56,15 @@ def calculate_rolling_subjectivities(params):
                     
                     # NOTE calculate rolling measuremt of subjectivity between each available annotation
                     rolling_window = 10
-                    subjectivity = [0.] * (rolling_window - 1)
-                    subjectivity += [
+                    # TODO calculate subjectivity with value from rolling at center
+                    subjectivity = [
                         pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i]))
                             for i in range(rolling_window, len(annotation_1) + 1)
                         ]
+                    subjectivity = [subjectivity[0]] * (rolling_window - 1) + subjectivity
                     
                     # NOTE [0,0,0].corr([0,0,0]) = nan; therefore...
-                    subjectivity = pd.Series(subjectivity).fillna(.0)
+                    subjectivity = pd.Series(subjectivity).fillna(subjectivity.mean())
                     
                     # NOTE maybe use rolling mean over subjectivity, that measurement becomes smoother
                     subjectivity = subjectivity.rolling(3).mean()

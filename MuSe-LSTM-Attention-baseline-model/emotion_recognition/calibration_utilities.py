@@ -95,15 +95,17 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     axs[0].fill_between(time, pred_mean - pred_confidence, pred_mean + pred_confidence, color="lightblue", alpha=.5)
     
     axs[0].legend(prop={"size": 24})
-    axs[0].xlabel("time", fontsize=24)
-    axs[0].ylabel(emo_dim, fontsize=24)
-    axs[0].xticks(fontsize=18)
-    axs[0].yticks(fontsize=18)
 
-    axs[1].plot(time, subjectivety, "red", label="subjectivety")
+    axs[0].set_xlabel("time", fontsize=24)
+    axs[0].set_ylabel(emo_dim, fontsize=24)
+    
+    # axs[0].set_xticks(fontsize=18)
+    # axs[0].set_yticks(fontsize=18)
 
-    axs[1].legend(prop={"size": 24})
-    axs[1].xlabel("time", fontsize=24)
+    axs[1].plot(time, subjectivety, "red")
+
+    axs[1].set_xlabel("time", fontsize=24)
+    axs[1].set_ylabel("true uncertainty", fontsize=24)
 
     dir = config.PREDICTION_FOLDER
     if params.save_dir is not None: dir = os.path.join(dir, params.save_dir)
@@ -118,8 +120,8 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     
     title = title.replace(" ", "_")
     fig.savefig(os.path.join(dir, f"{title}.jpg"))
-    fig.close()
-
+    plt.close()
+    
 def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_members = 10):
     # NOTE make predictions for uncalibrated scores and as features to become calibrated later
     model.train()
@@ -137,7 +139,6 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             means = np.mean(preds, axis=0)
             vars_ = np.var(preds, axis=0)
             
-            print("vars_:", vars_.shape)
             # vars = pd.Series(vars).rolling(10).mean()
             # for i in range(vars_.shape[2]):# vars_ of shape (batch_size, seq_len, emo_dims)?
             #     vars_tmp = pd.Series(vars_[:,:,i]).rolling(10).mean()
@@ -159,8 +160,7 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
             full_subjectivities.append(subjectivities.cpu().detach().squeeze(0).numpy())
 
-        full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
-        full_subjectivities = np.row_stack(full_subjectivities)
+        full_means, full_vars, full_labels, full_subjectivities = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels), np.row_stack(full_subjectivities)
             
     # NOTE prepare recalibration (by providing validation data as training data for calibration-model)
     full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = [], [], [], []
@@ -265,6 +265,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         # NOTE measurement of metrics uncalibrated
         # ence_uncalibrated = expected_normalized_calibration_error(full_labels[:,i], full_means[:,i], full_vars[:,i], num_bins)
         ence_uncalibrated = subjectivity_based_ence(full_subjectivities[:,i], full_vars[:,i])
+        print("ence_uncalibrated:", ence_uncalibrated)
         
         cv_uncalibrated = stds_coefficient_of_variation(full_vars[:,i])
         ENCEs_uncal.append(ence_uncalibrated)
@@ -279,6 +280,11 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         # full_vars_calibrated = calibrate(full_vars_val[:,i], rmse_val, full_vars[:,i])
         ##########################
         # NOTE adjust calibration mechanism: rmse doesn't mak sense anymore as calibration target, because true uncertainty is measured as subjectivity now
+        
+        assert full_subjectivities.shape == full_vars.shape
+        assert full_subjectivities_val.shape == full_vars_val.shape
+        ence_uncalibrated = subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i])# TODO only for debugging
+        
         opt = scipy.optimize.minimize_scalar(lambda x: subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i] * x))
         full_vars_calibrated = opt.x * full_vars[:,i]
         ##########################
