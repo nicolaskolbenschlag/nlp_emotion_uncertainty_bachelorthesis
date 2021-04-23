@@ -81,7 +81,7 @@ def calculate_rolling_subjectivities(params):
             subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
     
         # NOTE concatenate all dims of emotion (i.e. valence and arousal)
-        subjectivity_of_sample_all_emo_dims = torch.column_stack(subjectivity_of_sample_all_emo_dims)
+        subjectivity_of_sample_all_emo_dims = torch.Tensor(np.column_stack(subjectivity_of_sample_all_emo_dims))
         subjectivities[vid_id] = subjectivity_of_sample_all_emo_dims
     
     return subjectivities

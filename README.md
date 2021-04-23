@@ -1,6 +1,6 @@
 # Calibrated and Uncertainty-aware Multimodal Emotion Recognition
 
-This repository contais the code for my bachelorthesis at University of Augsburg.
+This repository contains the code for my bachelorthesis at University of Augsburg.
 
 Uncalibrated confidence | Calibrated confidence
 --- | ---
