@@ -38,7 +38,7 @@ def calculate_rolling_subjectivities(params):
                     if vid_id not in annotations_per_vid.keys():
                         annotations_per_vid[vid_id] = {}
                     if emo_dim not in annotations_per_vid[vid_id].keys():
-                        annotations_per_vid[vid_id] = []
+                        annotations_per_vid[vid_id][emo_dim] = []
                     
                     annotations_per_vid[vid_id][emo_dim] += [label_series]
     
