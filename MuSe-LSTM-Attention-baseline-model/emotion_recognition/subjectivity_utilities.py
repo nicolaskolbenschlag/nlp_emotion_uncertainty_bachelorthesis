@@ -17,7 +17,6 @@ def calculate_rolling_subjectivities(params):
             metas = data[partition]["meta"]
             labels_ = data[partition]["label"]
 
-            assert labels_[0].shape[1] == 1# NOTE currently only one emo dim supported
             for emo_dim in range(labels_[0].shape[1]):
                 labels = [l[:,emo_dim] for l in labels_]
 
@@ -37,42 +36,52 @@ def calculate_rolling_subjectivities(params):
                         vid_id = str(vid_id)
                     
                     if vid_id not in annotations_per_vid.keys():
+                        annotations_per_vid[vid_id] = {}
+                    if emo_dim not in annotations_per_vid[vid_id].keys():
                         annotations_per_vid[vid_id] = []
                     
-                    annotations_per_vid[vid_id] += [label_series]
+                    annotations_per_vid[vid_id][emo_dim] += [label_series]
     
     subjectivities = {}
-    for vid_id, annotations in annotations_per_vid.items():
+    for vid_id, emo_dims in annotations_per_vid.items():
 
-        subjectivity_of_sample = []
+        subjectivity_of_sample_all_emo_dims = []
+        for emo_dim, annotations in emo_dims.items():
 
-        for i, annotation_1 in enumerate(annotations):
-            for j, annotation_2 in enumerate(annotations[i:]):
-                if i == j:
-                    continue
-                
-                # NOTE calculate rolling measuremt of subjectivity between each available annotation
-                rolling_window = 10
-                subjectivity = [0.] * (rolling_window - 1)
-                subjectivity += [
-                    pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i]))
-                        for i in range(rolling_window, len(annotation_1) + 1)
-                    ]
-                
-                # NOTE [0,0,0].corr([0,0,0]) = nan; therefore...
-                subjectivity = pd.Series(subjectivity).fillna(.0)
-                
-                # NOTE maybe use rolling mean over subjectivity, that measurement becomes smoother
-                subjectivity = subjectivity.rolling(3).mean()
+            subjectivity_of_sample = []
+            for i, annotation_1 in enumerate(annotations):
+                for j, annotation_2 in enumerate(annotations[i:]):
+                    if i == j:
+                        continue
+                    
+                    # NOTE calculate rolling measuremt of subjectivity between each available annotation
+                    rolling_window = 10
+                    subjectivity = [0.] * (rolling_window - 1)
+                    subjectivity += [
+                        pd.Series(annotation_1[i - rolling_window : i]).corr(pd.Series(annotation_2[i - rolling_window : i]))
+                            for i in range(rolling_window, len(annotation_1) + 1)
+                        ]
+                    
+                    # NOTE [0,0,0].corr([0,0,0]) = nan; therefore...
+                    subjectivity = pd.Series(subjectivity).fillna(.0)
+                    
+                    # NOTE maybe use rolling mean over subjectivity, that measurement becomes smoother
+                    subjectivity = subjectivity.rolling(3).mean()
 
-                subjectivity_of_sample += [subjectivity]
-                        
-        assert len(subjectivity_of_sample) >= 1, f"too less annotations for sample {vid_id}"
-        
-        # NOTE calculate element-wise mean to get average subjectivity at each timestep
-        subjectivity_of_sample = np.stack(subjectivity_of_sample).mean(axis=0)
-        # NOTE convert to tensor and store to return
-        subjectivity_of_sample = torch.Tensor(subjectivity_of_sample).float()
-        subjectivities[vid_id] = subjectivity_of_sample
+                    subjectivity_of_sample += [subjectivity]
+                            
+            assert len(subjectivity_of_sample) >= 1, f"too less annotations for sample {vid_id}"
+            
+            # NOTE calculate element-wise mean to get average subjectivity at each timestep
+            subjectivity_of_sample = np.stack(subjectivity_of_sample).mean(axis=0)
+            # NOTE convert to tensor and store to return
+            subjectivity_of_sample = torch.Tensor(subjectivity_of_sample).float()
+            
+            # subjectivities[vid_id] = subjectivity_of_sample
+            subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
+    
+        # NOTE concatenate all dims of emotion (i.e. valence and arousal)
+        subjectivity_of_sample_all_emo_dims = np.column_stack(subjectivity_of_sample_all_emo_dims)
+        subjectivities[vid_id] = subjectivity_of_sample_all_emo_dims
     
     return subjectivities
