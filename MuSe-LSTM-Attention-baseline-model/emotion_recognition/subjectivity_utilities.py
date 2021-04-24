@@ -64,7 +64,7 @@ def calculate_rolling_subjectivities(params):
                     subjectivity = [subjectivity[0]] * (rolling_window - 1) + subjectivity
                     
                     # NOTE [0,0,0].corr([0,0,0]) = nan; therefore...
-                    subjectivity = pd.Series(subjectivity).fillna(subjectivity.mean())
+                    subjectivity = pd.Series(subjectivity).fillna(np.array(subjectivity).mean())
                     
                     # NOTE maybe use rolling mean over subjectivity, that measurement becomes smoother
                     subjectivity = subjectivity.rolling(3).mean()

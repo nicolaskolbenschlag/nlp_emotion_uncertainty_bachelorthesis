@@ -99,13 +99,18 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     axs[0].set_xlabel("time", fontsize=24)
     axs[0].set_ylabel(emo_dim, fontsize=24)
     
-    # axs[0].set_xticks(fontsize=18)
-    # axs[0].set_yticks(fontsize=18)
+    try:
+        axs[0].set_xticklabels(fontsize=18)
+        axs[0].set_yticklabels(fontsize=18)
+        axs[1].set_xticklabels(fontsize=18)
+        axs[1].set_yticklabels(fontsize=18)
+    except:
+        print("Cant do set_xticklabels")
 
-    axs[1].plot(time, subjectivety, "red")
+    axs[1].plot(time, subjectivety, "orange")
 
     axs[1].set_xlabel("time", fontsize=24)
-    axs[1].set_ylabel("true uncertainty", fontsize=24)
+    axs[1].set_ylabel("true confidence", fontsize=24)
 
     dir = config.PREDICTION_FOLDER
     if params.save_dir is not None: dir = os.path.join(dir, params.save_dir)
