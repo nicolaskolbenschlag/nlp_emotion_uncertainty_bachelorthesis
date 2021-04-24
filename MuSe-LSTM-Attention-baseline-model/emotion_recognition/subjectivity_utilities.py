@@ -27,6 +27,10 @@ def calculate_rolling_subjectivities(params):
                     vid_id = int(meta[0][0])
 
                     label_series = labels[i]
+                    
+                    # NOTE only at the validation set: for any reason, the raw annotations are always exactly by 3 timesteps longer than the fusioned annotations; therefore we have to cut it down, so that later the shapes of variances and subjectivites match
+                    if partition == "devel":
+                        label_series = label_series[:-3]
 
                     # NOTE for training, samples get split up, so if we would not specify id, we would get multiple sub-series per sample and per annotator
                     if partition == "train":
