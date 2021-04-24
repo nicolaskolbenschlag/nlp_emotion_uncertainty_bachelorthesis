@@ -81,13 +81,7 @@ def calibrate(val_uncalibrated: np.ndarray, val_calibrated: np.ndarray, test_unc
     else:
         raise NotImplementedError
 
-def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_confidence: np.ndarray, subjectivety: np.ndarray, emo_dim: str, title: str, partition: str, timesteps: typing.Tuple[int, int] = (0, 100)) -> None:
-    labels = labels[timesteps[0] : timesteps[1]]
-    pred_mean = pred_mean[timesteps[0] : timesteps[1]]
-    pred_confidence = pred_confidence[timesteps[0] : timesteps[1]]
-    
-    subjectivety = subjectivety[timesteps[0] : timesteps[1]]
-
+def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_confidence: np.ndarray, subjectivety: np.ndarray, emo_dim: str, title: str, partition: str) -> None:
     time = range(len(labels))
     fig, axs = plt.subplots(2, 1, figsize=(20,10))
 
@@ -143,22 +137,6 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             means = np.mean(preds, axis=0)
             vars_ = np.var(preds, axis=0)
             
-            # vars = pd.Series(vars).rolling(10).mean()
-            # for i in range(vars_.shape[2]):# vars_ of shape (batch_size, seq_len, emo_dims)?
-            #     vars_tmp = pd.Series(vars_[:,:,i]).rolling(10).mean()
-            #     vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
-            #     vars_[:,:,i] = vars_tmp
-
-            # vars_of_sample_smooth = []
-            # for vars_of_sample in vars_:
-            #     for i_emo_dim in range(vars_of_sample.shape[1]):
-            #         vars_tmp = pd.Series(vars_of_sample[:,i_emo_dim]).rolling(10).mean()
-            #         vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
-            #         vars_of_sample[:,i_emo_dim] = vars_tmp
-            #     vars_of_sample_smooth += [vars_of_sample]
-            # vars_ = npa.array(vars_of_sample_smooth)
-            ###########################
-            
             full_means.append(means)
             full_vars.append(vars_)
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
@@ -180,22 +158,6 @@ def outputs_mc_dropout(model, test_loader, val_loader, params, n_ensemble_member
             preds = [model(features, feature_lens).cpu().detach().squeeze(0).numpy() for _ in range(n_ensemble_members)]
             means = np.mean(preds, axis=0)
             vars_ = np.var(preds, axis=0)
-
-            # vars = pd.Series(vars).rolling(10).mean()
-            # for i in range(vars_.shape[1]):
-            #     vars_tmp = pd.Series(vars_[:,i]).rolling(10).mean()
-            #     vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
-            #     vars_[:,i] = vars_tmp
-
-            # vars_of_sample_smooth = []
-            # for vars_of_sample in vars_:
-            #     for i_emo_dim in range(vars_of_sample.shape[1]):
-            #         vars_tmp = pd.Series(vars_of_sample[:,i_emo_dim]).rolling(10).mean()
-            #         vars_tmp = vars_tmp.fillna(vars_tmp.max() / 2)
-            #         vars_of_sample[:,i_emo_dim] = vars_tmp
-            #     vars_of_sample_smooth += [vars_of_sample]
-            # vars_ = npa.array(vars_of_sample_smooth)
-            ###########################
 
             full_means_val.append(means)
             full_vars_val.append(vars_)
@@ -287,6 +249,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         ##########################
         # NOTE adjust calibration mechanism: rmse doesn't mak sense anymore as calibration target, because true uncertainty is measured as subjectivity now        
         opt = scipy.optimize.minimize_scalar(lambda x: subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i] * x))
+        print(f"Calibration scalar: {opt.x}")
         full_vars_calibrated = full_vars[:,i] * opt.x
         ##########################
 
@@ -298,6 +261,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         Cvs_cal.append(cv_calibrated)
         
         for j in range(0, max_plot, step_plot):
-            plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars_calibrated[j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} CALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition, (j,j+step_plot))
+            plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars_calibrated[j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} CALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition)
+            print(full_means[:,i][j+j+step_plot])
         
     return ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal

@@ -4,7 +4,7 @@ This repository contains the code for my bachelorthesis at University of Augsbur
 
 Uncalibrated confidence | Calibrated confidence
 --- | ---
-![uncalibrated](images/Quantile_Regression_UNCALIBRATED.jpg) | ![calibrated](images/Quantile_Regression_CALIBRATED.jpg)
+![uncalibrated](images/MC_Dropout_CALIBRATED_(0-100).jpg) | ![calibrated](images/MC_Dropout_UNCALIBRATED_(0-100).jpg)
 
 ## MuSe 2021
 
