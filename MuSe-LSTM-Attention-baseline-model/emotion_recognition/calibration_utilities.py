@@ -271,7 +271,6 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         # ence_uncalibrated = expected_normalized_calibration_error(full_labels[:,i], full_means[:,i], full_vars[:,i], num_bins)
         ence_uncalibrated = subjectivity_based_ence(full_subjectivities[:,i], full_vars[:,i])
         print("ence_uncalibrated:", ence_uncalibrated)
-        
         cv_uncalibrated = stds_coefficient_of_variation(full_vars[:,i])
         ENCEs_uncal.append(ence_uncalibrated)
         Cvs_uncal.append(cv_uncalibrated)
@@ -280,27 +279,25 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         step_plot = 100
         for j in range(0, max_plot, step_plot):
             plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} UNCALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition)
-
+        
+        assert full_subjectivities.shape == full_vars.shape
+        assert full_subjectivities_val.shape == full_vars_val.shape
+        ence_uncalibrated = subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i])# TODO only for debugging
+        
         ##########################
         # NOTE rmse of validaiton set as calibration target
         # rmse_val = np.sqrt(np.mean((full_labels_val[:,i] - full_means_val[:,i]) ** 2))        
         # NOTE recalibration
         # full_vars_calibrated = calibrate(full_vars_val[:,i], rmse_val, full_vars[:,i])
         ##########################
-        # NOTE adjust calibration mechanism: rmse doesn't mak sense anymore as calibration target, because true uncertainty is measured as subjectivity now
-        
-        assert full_subjectivities.shape == full_vars.shape
-        assert full_subjectivities_val.shape == full_vars_val.shape
-        ence_uncalibrated = subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i])# TODO only for debugging
-        
+        # NOTE adjust calibration mechanism: rmse doesn't mak sense anymore as calibration target, because true uncertainty is measured as subjectivity now        
         opt = scipy.optimize.minimize_scalar(lambda x: subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i] * x))
-        full_vars_calibrated = opt.x * full_vars[:,i]
+        full_vars_calibrated = full_vars[:,i] * opt.x
         ##########################
 
         # NOTE measurement of metrics calibrated
         # ence_calibrated = expected_normalized_calibration_error(full_labels[:,i], full_means[:,i], full_vars_calibrated, num_bins)
         ence_calibrated = subjectivity_based_ence(full_subjectivities[:,i], full_vars_calibrated)
-
         cv_calibrated = stds_coefficient_of_variation(full_vars_calibrated)
         ENCEs_cal.append(ence_calibrated)
         Cvs_cal.append(cv_calibrated)

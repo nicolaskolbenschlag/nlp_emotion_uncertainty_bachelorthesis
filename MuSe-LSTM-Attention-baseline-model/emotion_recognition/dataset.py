@@ -41,11 +41,15 @@ class MyDataset(Dataset):
 
             # subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
             subjectivity = subjectivities_per_sample[sample_id]
+            
+            if partition != "train":
+                assert len(subjectivity) == len(meta), f"lengths don't match for sample {sample_id} from {partition}"
 
             subjectivities += [subjectivity]
         
         if partition == "train":
             subjectivities = pad_sequence(subjectivities, batch_first=True)
+
         self.subjectivities = subjectivities
 
 

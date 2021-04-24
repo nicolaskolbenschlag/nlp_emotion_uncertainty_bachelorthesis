@@ -210,6 +210,10 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
+        ence_uncal, ence_cal, cv_uncal, cv_cal = calibration_utilities.evaluate_calibration(model, data_loader["test"], data_loader["devel"], params)
+        print("On Test: sbENCE (uncal.) {:.4f} | sbENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
+        
+        ########################################
         if params.uncertainty_approach == None:
             test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
         
@@ -222,10 +226,6 @@ def main(params):
         else:
             raise NotImplementedError()
         ########################################
-        ence_uncal, ence_cal, cv_uncal, cv_cal = calibration_utilities.evaluate_calibration(model, data_loader["test"], data_loader["devel"], params)
-        print("On Test: sbENCE (unc.) {:.4f} | sbENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
-        ########################################
-
         val_losses.append(val_loss)
         val_cccs.append(val_ccc)
         val_pccs.append(val_pcc)
