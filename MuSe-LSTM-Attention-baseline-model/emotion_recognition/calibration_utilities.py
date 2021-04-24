@@ -262,6 +262,5 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         
         for j in range(0, max_plot, step_plot):
             plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars_calibrated[j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} CALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition)
-            print(full_means[:,i][j+j+step_plot])
         
     return ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal
