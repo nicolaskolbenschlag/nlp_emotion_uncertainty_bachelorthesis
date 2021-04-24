@@ -2,9 +2,15 @@
 
 This repository contains the code for my bachelorthesis at University of Augsburg.
 
-Uncalibrated confidence | Calibrated confidence
---- | ---
-![uncalibrated](images/MC_Dropout_CALIBRATED_(0-100).jpg) | ![calibrated](images/MC_Dropout_UNCALIBRATED_(0-100).jpg)
+## Examples
+
+### Uncalibrated confidence
+
+![uncalibrated](images/MC_Dropout_UNCALIBRATED_(0-100).jpg)
+
+### Calibrated confidence
+
+![calibrated](images/MC_Dropout_CALIBRATED_(0-100).jpg)
 
 ## MuSe 2021
 
