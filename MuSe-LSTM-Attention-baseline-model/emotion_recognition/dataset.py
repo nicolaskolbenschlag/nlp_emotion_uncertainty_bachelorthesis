@@ -39,11 +39,7 @@ class MyDataset(Dataset):
             else:
                 sample_id = str(sample_id)
 
-            # subjectivity = torch.tensor(subjectivities_per_sample[sample_id], dtype=torch.float)
             subjectivity = subjectivities_per_sample[sample_id]
-            
-            if partition != "train":
-                assert len(subjectivity) == len(meta), f"lengths don't match for sample {sample_id} from {partition}"
 
             subjectivities += [subjectivity]
         
@@ -64,7 +60,6 @@ class MyDataset(Dataset):
         feature_len = self.feature_lens[idx]
         label = self.labels[idx]
         meta = self.metas[idx]
-        # return feature, feature_len, label, meta
         
         subjectivity = self.subjectivities[idx]
         return feature, feature_len, label, meta, subjectivity

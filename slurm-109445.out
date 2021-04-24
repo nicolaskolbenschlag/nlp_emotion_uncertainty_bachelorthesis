@@ -1,0 +1,91 @@
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --predict --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .3 --out_dr .3
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Seed 314 | Best [Val CCC]: 0.1594 [' 0.1594']| Loss: 0.8540 | PCC: 0.1640 ['0.1640'] | RMSE: 0.5667 ['0.5667']
+ence_uncalibrated: nan
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+Cant do set_xticklabels
+On Test: sbENCE (uncal.) nan | sbENCE (cal.) nan | Cv (uncal.) 0.5909 | Cv (cal.) 0.5909
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/calibration_utilities.py:54: RuntimeWarning: invalid value encountered in float_scalars
+  rmv /= max_uncertainty# NOTE scale rmv (=measurement of predicted uncertainty) to [0,1], because our true subjectivity (here: rmse) is also limited to [0,1]
+On Test: CCC  0.2293 | PCC  0.2305 | RMSE  0.5542
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.1594
+On ground-truth labels:		[Test CCC] for seed "314":	 0.2293
+----------------------------------------------------------------------------------------------------
+Predict val & test videos...
+...done.
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-04-24-17-07_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.3_0.3]_None_[1_314_None_None].pth".

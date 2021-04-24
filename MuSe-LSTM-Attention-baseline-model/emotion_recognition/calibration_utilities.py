@@ -47,11 +47,14 @@ def subjectivity_based_ence(y_real_subjecivities: np.ndarray, y_pred_var: np.nda
         # rmse = np.sqrt(np.mean((y_real[mask] - y_pred_mean[mask]) ** 2))# NOTE this line is usually in ENCE
         rmse = np.mean(y_real_subjecivities[mask])
         # NOTE both pearson correlation and CCC range from -1 to +1; we want large uncertainty quantification from the model if true subjectivity goes towards -1 and lower if toward +1; therefore...
-        rmse = np.abs(rmse - 1) / 2# NOTE now 0 is perfectly corrlelated (so zero subjectivity), so we expect small rmv, and +1 (because of abs) is huge true subjectivity and we want rmv to be large
+        # NOTE now 0 is perfectly corrlelated (so zero subjectivity), so we expect small rmv, and +1 (because of abs) is huge true subjectivity and we want rmv to be large
+        rmse = np.abs(rmse - 1) / 2
 
         # rmv = np.sqrt(np.mean(y_pred_var[mask]))
         rmv = np.mean(y_pred_var[mask])
-        rmv /= max_uncertainty# NOTE scale rmv (=measurement of predicted uncertainty) to [0,1], because our true subjectivity (here: rmse) is also limited to [0,1]
+        
+        # NOTE scale rmv (=measurement of predicted uncertainty) to [0,1], because our true subjectivity (here: rmse) is also limited to [0,1]
+        rmv /= max_uncertainty
 
         ence_ = np.abs(rmv - rmse)
         if rmv != 0.:
@@ -98,19 +101,15 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
 
     axs[0].set_xlabel("time", fontsize=24)
     axs[0].set_ylabel(emo_dim, fontsize=24)
-    
-    try:
-        axs[0].set_xticklabels(fontsize=18)
-        axs[0].set_yticklabels(fontsize=18)
-        axs[1].set_xticklabels(fontsize=18)
-        axs[1].set_yticklabels(fontsize=18)
-    except:
-        print("Cant do set_xticklabels")
 
     axs[1].plot(time, subjectivety, "orange")
 
     axs[1].set_xlabel("time", fontsize=24)
     axs[1].set_ylabel("true confidence", fontsize=24)
+    axs[1].set_ylim(-1., 1.)
+
+    for tick in axs[0].xaxis.get_major_ticks() + axs[0].yaxis.get_major_ticks() + axs[1].xaxis.get_major_ticks() + axs[1].yaxis.get_major_ticks():
+        tick.label.set_fontsize(14)
 
     dir = config.PREDICTION_FOLDER
     if params.save_dir is not None: dir = os.path.join(dir, params.save_dir)
@@ -279,11 +278,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         step_plot = 100
         for j in range(0, max_plot, step_plot):
             plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} UNCALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition)
-        
-        assert full_subjectivities.shape == full_vars.shape
-        assert full_subjectivities_val.shape == full_vars_val.shape
-        ence_uncalibrated = subjectivity_based_ence(full_subjectivities_val[:,i], full_vars_val[:,i])# TODO only for debugging
-        
+
         ##########################
         # NOTE rmse of validaiton set as calibration target
         # rmse_val = np.sqrt(np.mean((full_labels_val[:,i] - full_means_val[:,i]) ** 2))        
