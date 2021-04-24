@@ -256,10 +256,10 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
 def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
     if params.uncertainty_approach == "monte_carlo_dropout":
         full_means, full_vars, full_labels, full_subjectivities, full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = outputs_mc_dropout(model, test_loader, val_loader, params)
-        title = "MC Dropout"
+        method = "MC Dropout"
     elif params.uncertainty_approach == "quantile_regression":
         full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val = outputs_quantile_regression(model, test_loader, val_loader, params)
-        title = "Quantile Regression"
+        method = "Quantile Regression"
     else:
         raise NotImplementedError
 
@@ -276,7 +276,10 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         ENCEs_uncal.append(ence_uncalibrated)
         Cvs_uncal.append(cv_uncalibrated)
 
-        plot_confidence(params, full_labels[:,i], full_means[:,i], full_vars[:,i], full_subjectivities[:,i], params.emo_dim_set[i], title + " UNCALIBRATED", test_loader.dataset.partition)
+        max_plot = 1000#len(full_labels)
+        step_plot = 100
+        for j in range(0, max_plot, step_plot):
+            plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} UNCALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition)
 
         ##########################
         # NOTE rmse of validaiton set as calibration target
@@ -302,6 +305,7 @@ def evaluate_calibration(model, test_loader, val_loader, params, num_bins = 10):
         ENCEs_cal.append(ence_calibrated)
         Cvs_cal.append(cv_calibrated)
         
-        plot_confidence(params, full_labels[:,i], full_means[:,i], full_vars_calibrated, full_subjectivities[:,i], params.emo_dim_set[i], title + " CALIBRATED", test_loader.dataset.partition)
+        for j in range(0, max_plot, step_plot):
+            plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars_calibrated[j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} CALIBRATED ({j}-{j+step_plot})", test_loader.dataset.partition, (j,j+step_plot))
         
     return ENCEs_uncal, ENCEs_cal, Cvs_uncal, Cvs_cal
