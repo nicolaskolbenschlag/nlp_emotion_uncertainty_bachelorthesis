@@ -1,0 +1,328 @@
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_calibration.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --predict --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b125538000dbfa4'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b125536000dbfa2'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b12553a000dbfa3'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b125534000dbfa5'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260125000dbfa9'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260122000dbfa6'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260127000dbfa8'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260128000dbfa7'
+Seed 314 | Best [Val CCC]: 0.1422 [' 0.1422']| Loss: 0.8789 | PCC: 0.1789 ['0.1789'] | RMSE: 0.6693 ['0.6693']
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b26012b000dbfac'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260129000dbfaa'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b26012a000dbfab'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b26012d000dbfad'
+max_uncertainty: 0.23629602789878845
+rmv: 0.02948344685137272
+max_uncertainty: 0.23629602789878845
+rmv: 0.0737883448600769
+max_uncertainty: 0.23629602789878845
+rmv: 0.13476313650608063
+max_uncertainty: 0.23629602789878845
+rmv: 0.18856537342071533
+max_uncertainty: 0.23629602789878845
+rmv: 0.23629602789878845
+max_uncertainty: 0.23629602789878845
+rmv: 0.02948344685137272
+max_uncertainty: 0.23629602789878845
+rmv: 0.0737883448600769
+max_uncertainty: 0.23629602789878845
+rmv: 0.13476313650608063
+max_uncertainty: 0.23629602789878845
+rmv: 0.18856537342071533
+max_uncertainty: 0.23629602789878845
+rmv: 0.23629602789878845
+On Test: sbUME 0.6216 | pedUME 0.9450 | Cv 0.5346
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260186000dbfb0'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260181000dbfae'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260183000dbfaf'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b260187000dbfb1'
+On Test: CCC  0.2230 | PCC  0.2429 | RMSE  0.5985
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.1422
+On ground-truth labels:		[Test CCC] for seed "314":	 0.2230
+----------------------------------------------------------------------------------------------------
+Predict val & test videos...
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b2601c9000dbfb4'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b2601c4000dbfb3'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b2601c6000dbfb2'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000b2601ca000dbfb5'
+...done.
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-04-25-22-45_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.5_0.5]_None_[1_314_None_None].pth".

@@ -210,7 +210,7 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
-        sbUMEs, pedUMEs, Cvs = calibration_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], data_loader["devel"], params)
+        sbUMEs, pedUMEs, Cvs = calibration_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params)
         print("On Test: sbUME {:.4f} | pedUME {:.4f} | Cv {:.4f}".format(sbUMEs[0], pedUMEs[0], Cvs[0]))
         
         ########################################

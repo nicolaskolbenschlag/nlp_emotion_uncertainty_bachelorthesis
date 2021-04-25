@@ -26,7 +26,7 @@ Further, the yellow line represents the true, or at least expected, uncertainty,
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smalles yellow values.
 
-We also developed a metric to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe disagreement among annotators, which is noise at the end, should be a main driver. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty.
+We also developed a metric to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe disagreement among annotators, should be a main driver. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty.
 
 ### Calibrated confidence
 

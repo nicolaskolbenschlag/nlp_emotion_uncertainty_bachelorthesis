@@ -24,9 +24,7 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
 
         rmv = np.mean(predicted_uncertainty[mask])
         
-        print(f"max_uncertainty: {max_uncertainty}")
-        print(f"rmv: {rmv}")
-        np.seterr("raise")
+        np.seterr("raise")# NOTE sometimes in next line numpy error: 'invalid value encountered'
         rmv /= max_uncertainty
 
         ume_ = np.abs(rmv - rmse)
@@ -107,7 +105,7 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 10):
     
     return full_means, full_vars, full_labels, full_subjectivities
 
-def outputs_random(model, test_loader, params, n_ensemble_members = 10):
+def outputs_random(model, test_loader, params):
     model.train()
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
@@ -119,8 +117,8 @@ def outputs_random(model, test_loader, params, n_ensemble_members = 10):
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
                 subjectivities = subjectivities.cuda()
-            preds = [model(features, feature_lens).cpu().detach().squeeze(0).numpy() for _ in range(n_ensemble_members)]
-            means = np.mean(preds, axis=0)
+            preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
+            means = preds[:, 1:2]
             # NOTE random vector as guessed uncertainty
             vars_ = np.random.uniform(size=means.shape)
             
@@ -191,15 +189,15 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
     error = pd.Series(error).interpolate().to_numpy()
     return error
 
-def evaluate_uncertainty_measurement(model, test_loader, val_loader, params, num_bins = 10):
+def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
     if params.uncertainty_approach == "monte_carlo_dropout":
         full_means, full_vars, full_labels, full_subjectivities = outputs_mc_dropout(model, test_loader, params)
         method = "MC Dropout"
     
     elif params.uncertainty_approach == "quantile_regression":
         raise NotImplementedError
-        full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val = outputs_quantile_regression(model, test_loader, val_loader, params)
-        method = "Quantile Regression"
+        # full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val = outputs_quantile_regression(model, test_loader, val_loader, params)
+        # method = "Quantile Regression"
     
     elif params.uncertainty_approach == None:# NOTE random uncertainty generation
         full_means, full_vars, full_labels, full_subjectivities = outputs_random(model, test_loader, params)
