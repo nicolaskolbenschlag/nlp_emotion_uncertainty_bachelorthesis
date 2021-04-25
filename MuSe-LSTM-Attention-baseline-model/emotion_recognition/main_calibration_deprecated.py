@@ -15,7 +15,7 @@ import config
 
 import train
 
-import calibration_utilities
+import calibration_utilities_deprecated
 
 
 # parse parameters
@@ -210,8 +210,8 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
-        sbUMEs, pedUMEs, Cvs = calibration_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], data_loader["devel"], params)
-        print("On Test: sbUME {:.4f} | pedUME {:.4f} | Cv {:.4f}".format(sbUMEs[0], pedUMEs[0], Cvs[0]))
+        ence_uncal, ence_cal, cv_uncal, cv_cal = calibration_utilities_deprecated.evaluate_calibration(model, data_loader["test"], data_loader["devel"], params)
+        print("On Test: sbENCE (uncal.) {:.4f} | sbENCE (cal.) {:.4f} | Cv (uncal.) {:.4f} | Cv (cal.) {:.4f}".format(ence_uncal[0], ence_cal[0], cv_uncal[0], cv_cal[0]))
         
         ########################################
         if params.uncertainty_approach == None:
