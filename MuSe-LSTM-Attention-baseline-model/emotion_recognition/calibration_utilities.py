@@ -54,6 +54,9 @@ def subjectivity_based_ence(y_real_subjecivities: np.ndarray, y_pred_var: np.nda
         rmv = np.mean(y_pred_var[mask])
         
         # NOTE scale rmv (=measurement of predicted uncertainty) to [0,1], because our true subjectivity (here: rmse) is also limited to [0,1]
+        print(f"max_uncertainty: {max_uncertainty}")
+        print(f"rmv: {rmv}")
+        np.seterr("raise")
         rmv /= max_uncertainty
 
         ence_ = np.abs(rmv - rmse)
