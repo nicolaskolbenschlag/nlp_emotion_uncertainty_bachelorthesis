@@ -177,7 +177,7 @@ def outputs_quantile_regression(model, test_loader, val_loader, params):
     
     return full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val
 
-def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_window: int = 5) -> np.array:
+def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_window: int) -> np.array:
     error = [
         pd.Series(y_true[i - rolling_window : i]).corr(pd.Series(y_pred[i - rolling_window : i]))
             for i in range(rolling_window, len(y_true) + 1)
@@ -206,12 +206,17 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
     else:
         raise NotImplementedError
 
-    sbUMEs, pedUMEs, Cvs = [], [], []
+    sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(full_means.shape[1]):
 
         # NOTE calculate metrics
         sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
-        pedUMEs += [uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i]), full_vars[:,i])]
+        pebUMEs += [
+            {
+                window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i]), full_vars[:,i], window)
+                for window in [5, 50, 200, 500]
+            }
+        ]
         Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
 
         # NOTE plot
@@ -221,4 +226,4 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
             for j in range(0, max_plot, step_plot):
                 plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} ({j}-{j+step_plot})", test_loader.dataset.partition)
         
-    return  sbUMEs, pedUMEs, Cvs
+    return  sbUMEs, pebUMEs, Cvs
