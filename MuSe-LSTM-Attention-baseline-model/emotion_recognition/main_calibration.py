@@ -212,7 +212,7 @@ def main(params):
         ########################################
         sbUMEs, pebUMEs, Cvs = calibration_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params)
         
-        pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs.items()])
+        pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
         print("On Test: sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
         
         ########################################

@@ -14,9 +14,7 @@ The first step for getting appropriate measuremets of predictive uncertainty. Th
 
 Additionally we developed an approach for confirming the feasibility of quantifying predictive uncertainty by such a method.
 
-## Example
-
-### Uncalibrated confidence
+### The UME
 
 This plot shows the model's prediction (blue) and the quantified uncertainty (lightblue). As larger the lightblue area, as less confident was the model in its prediction. In this particular situation we used [Monte Carlo Dropout](https://arxiv.org/abs/1506.02142) to make the model quantifying its confidence.
 
@@ -26,10 +24,6 @@ Further, the yellow line represents the true, or at least expected, uncertainty,
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smalles yellow values.
 
-We also developed a metric to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe disagreement among annotators, should be a main driver. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty.
+We also developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty.
 
-### Calibrated confidence
-
-We used a simple calibration method to optimize the model's quantification of uncertainty. Therefore, we just scale it with a single scalar value, which was found by optimizing it on the validation set.
-
-![calibrated](images/MC_Dropout_CALIBRATED_(700-800).jpg)
+We can also calculate to UME between the quantified/predicted uncertianty and the **prediction error** (which then acts as measurement for true uncertainty). This might be useful, because the prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers.

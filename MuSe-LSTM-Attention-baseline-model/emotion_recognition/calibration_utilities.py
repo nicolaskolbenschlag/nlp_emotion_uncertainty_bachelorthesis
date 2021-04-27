@@ -213,7 +213,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
         sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
         pebUMEs += [
             {
-                window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i]), full_vars[:,i], window)
+                window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], full_vars[:,i], window))
                 for window in [5, 50, 200, 500]
             }
         ]
