@@ -15,7 +15,7 @@ import config
 
 import train
 
-import calibration_utilities
+import uncertainty_utilities
 
 
 # parse parameters
@@ -210,7 +210,7 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
-        sbUMEs, pebUMEs, Cvs = calibration_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params)
+        sbUMEs, pebUMEs, Cvs = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params)
         
         pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
         print("On Test: sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
