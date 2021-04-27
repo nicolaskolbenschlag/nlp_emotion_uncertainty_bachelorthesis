@@ -211,12 +211,20 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
 
         # NOTE calculate metrics
         sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
-        pebUMEs += [
-            {
-                window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], full_vars[:,i], window))
-                for window in [5, 50, 200, 500]
-            }
-        ]
+        print(f"sbUME: {sbUMEs[i]}")
+        # pebUMEs += [
+        #     {
+        #         window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
+        #         for window in [5,50,200,500]
+        #     }
+        # ]
+        tmp = {}
+        for window in [5,50,200,500]:
+            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
+            print(f"pebUME({window}): {pebUME}")
+            tmp[window] = pebUME
+        pebUMEs += [tmp]
+
         Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
 
         # NOTE plot

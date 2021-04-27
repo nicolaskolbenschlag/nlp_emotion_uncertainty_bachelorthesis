@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --mem=30000
+#SBATCH --mem=25000
 #SBATCH -J UME_random
 
 export START_HERE=/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit
