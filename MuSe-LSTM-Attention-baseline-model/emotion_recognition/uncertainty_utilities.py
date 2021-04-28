@@ -118,7 +118,7 @@ def outputs_random(model, test_loader, params):
                 labels = labels.cuda()
                 subjectivities = subjectivities.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            means = preds[:, 1:2]
+            means = preds
             # NOTE random vector as guessed uncertainty
             vars_ = np.random.uniform(size=means.shape)
             
@@ -207,6 +207,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
         raise NotImplementedError
 
     sbUMEs, pebUMEs, Cvs = [], [], []
+    # print(f"full_means: {full_means.shape}")
     for i in range(full_means.shape[1]):
 
         # NOTE calculate metrics
@@ -226,6 +227,9 @@ def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
         pebUMEs += [tmp]
 
         Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
+
+        # NOTE for sbUME and pebUME, there is no need for calibration, because we scale uncertainty quantifications to [0,1] and subjectivity as well as rolling correlation measurement become scaled to [0,1]
+        # NOTE further we arrume that any uncertainty quantifications in the whole test set has 100%, so 1) uncertainty; so we can normalize all uncertainty quantifications by dividing by maximum
 
         # NOTE plot
         if params.uncertainty_approach != None:

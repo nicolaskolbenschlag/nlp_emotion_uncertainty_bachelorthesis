@@ -265,7 +265,7 @@ def evaluate(model, test_loader, params):
     full_preds, full_labels = [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta = batch_data
+            features, feature_lens, labels, meta, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
