@@ -53,9 +53,28 @@ The exact definition and computation of true uncertainty heavily depends on the 
 | Avg. | 0. | 0. | 0. |
 
 <table>
-  <th>
-    <td>Seed</td>
-    <td colspan="3">Random</td>
-    <td colspan="3">Monte Carlo Dropout</td>
-  </th>
+    <tr>
+        <th>Seed</th>
+        <th colspan="3">Random</th>
+        <th colspan="3">Monte Carlo Dropout</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td>CCC</td>
+        <td>sbUME</td>
+        <td>pebUME</td>
+        <td>CCC</td>
+        <td>sbUME</td>
+        <td>pebUME</td>
+    </tr>
+    <tr>
+        <td>314</td>
+        <td>0.5833</td>
+        <td>0.6906</td>
+        <td>0.6906</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
 </table>
