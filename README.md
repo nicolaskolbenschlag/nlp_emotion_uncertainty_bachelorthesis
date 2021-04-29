@@ -24,6 +24,23 @@ Further, the yellow line represents the true, or at least expected, uncertainty,
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smaller yellow values.
 
+#### Multiple definitions for true uncertainty
+
 We also developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in a prediction task.
 
-We can also calculate to UME between the quantified/predicted uncertianty and the **prediction error** (which then acts as measurement for true uncertainty). This might be useful, because the prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers. It is crucial in any applications, because you need to know, if you can trust your model's confidence.
+We can also calculate to UME between the quantified/predicted uncertianty and the **prediction error** (which then acts as measurement for true uncertainty). This might be useful, because the prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers. It is crucial in any application, because you need to know, if you can trust your model's confidence.
+
+The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks, but this framework can be transferred.
+
+#### Results
+
+##### Randomly quantified uncertainty
+
+| Seed | CCC | sbUME | pebUME |
+| --- | -- | - | - |
+| 314 | 0,5833 | 0,6906 | |
+| 315 | 0,5820 | 0,6959 | |
+| 316 | | | |
+| Avg. | | | |
+
+##### Monte Carlo Dropout
