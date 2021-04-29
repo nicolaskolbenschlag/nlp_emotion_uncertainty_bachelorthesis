@@ -8,35 +8,35 @@ The [dataset](https://www.muse-challenge.org/) used in this project.
 
 ## Quantification of predictive uncertainty
 
-The first step for getting appropriate measuremets of predictive uncertainty. Therefore we provide a extensive overview about recent approaches.
+The first step for getting appropriate measuremets of predictive uncertainty. Therefore we provide an extensive overview about recent approaches.
 
-## Measurement of predictive uncertainty with the Uncertainty Measurement Error (UME)
+## The Uncertainty Measurement Error (UME)
 
 Additionally we developed an approach for confirming the feasibility of quantifying predictive uncertainty by such a method.
 
 We developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. It is based on the ENCE proposed by Levi et al. in [this paper](https://arxiv.org/abs/1905.11659). They use RMSE as measurement for true uncertainty in single target regression tasks. But the RMSE is not a suitable metric for our data. Mostly, corrleations measured over a certain period of time is a much more suitable performance metric for time series prediction tasks, than just the distance at each timestep considered separately.
 
+The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks. But the basic framework can be transferred.
+
 ### Multiple understandings of uncertainty
 
-Therefore, we adapted the idea of comparing true uncertainty and predicted/quantified uncertainty and thought about ways to properly quantify true uncertainty for task of continuous emotion recognition.
+Therefore, we adapted the idea of comparing true uncertainty and predicted/quantified uncertainty and thought about ways for properly quantification of true uncertainty for the task of continuous emotion recognition.
 
 #### The subjectivity-based-UME (sbUME)
 
 Of course, there can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in this particular prediction task.
 
+![uncalibrated](images/MC_Dropout_UNCALIBRATED_(700-800).jpg)
+
 This plot shows the model's prediction (blue) and the quantified uncertainty (lightblue). As larger the lightblue area, as less confident was the model in its prediction. In this particular situation we used [Monte Carlo Dropout](https://arxiv.org/abs/1506.02142) to make the model quantifying its confidence.
 
 Further, the yellow line represents the true, or at least expected, uncertainty, which is defined as the average pearson correlation coefficient between multiple annotations. A correlation of +1 means that all annotators did perfectly agree (zero subjectivity/total objectivity) about the sample's annotation, as while -1 means negative correlation, so they absolutely disagreed (total subjectivity/zero objectivity).
-
-![uncalibrated](images/MC_Dropout_UNCALIBRATED_(700-800).jpg)
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smaller yellow values.
 
 #### The prediction-error-based-UME (pebUME)
 
 We can also calculate to UME between the quantified/predicted uncertianty and the **prediction error** (which than acts as measurement for true uncertainty). This might be useful, because the prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers. It is crucial in any application, because you need to know, if you can trust your model's confidence.
-
-The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks. But the basic framework can be transferred.
 
 #### Results
 
