@@ -43,32 +43,41 @@ The exact definition and computation of true uncertainty heavily depends on the 
 | 316 | 0. | 0. | 0. |
 | Avg. | 0. | 0. | 0. |
 
-##### Monte Carlo Dropout
-
-| Seed | CCC | sbUME | pebUME |
-| - | - | - | - |
-| 314 | 0. | 0. | 0. |
-| 315 | 0. | 0. | 0. |
-| 316 | 0. | 0. | 0. |
-| Avg. | 0. | 0. | 0. |
-
 <table>
     <tr>
         <th>Seed</th>
-        <th colspan="3">Random</th>
+        <th colspan="3">Randomly quantified uncertainty</th>
         <th colspan="3">Monte Carlo Dropout</th>
     </tr>
     <tr>
-        <td></td>
-        <td>CCC</td>
-        <td>sbUME</td>
-        <td>pebUME</td>
-        <td>CCC</td>
-        <td>sbUME</td>
-        <td>pebUME</td>
+        <th></th>
+        <th>CCC</th>
+        <th>sbUME</th>
+        <th>pebUME</th>
+        <th>CCC</th>
+        <th>sbUME</th>
+        <th>pebUME</th>
     </tr>
     <tr>
         <td>314</td>
+        <td>0.5833</td>
+        <td>0.6906</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>315</td>
+        <td>0.5820</td>
+        <td>0.6959</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>316</td>
         <td>0.5833</td>
         <td>0.6906</td>
         <td>0.6906</td>
@@ -76,5 +85,13 @@ The exact definition and computation of true uncertainty heavily depends on the 
         <td></td>
         <td></td>
     </tr>
-
+    <tr>
+        <td>Avg.</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
