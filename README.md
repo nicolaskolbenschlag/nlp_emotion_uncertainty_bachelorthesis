@@ -16,8 +16,6 @@ Additionally we developed an approach for confirming the feasibility of quantify
 
 We developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. It is based on the ENCE proposed by Levi et al. in [this paper](https://arxiv.org/abs/1905.11659). They use RMSE as measurement for true uncertainty in single target regression tasks. But the RMSE is not a suitable metric for our data. Mostly, corrleations measured over a certain period of time is a much more suitable performance metric for time series prediction tasks, than just the distance at each timestep considered separately.
 
-The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks. But the basic framework can be transferred.
-
 ### Multiple understandings of uncertainty
 
 Therefore, we adapted the idea of comparing true uncertainty and predicted/quantified uncertainty and thought about ways for properly quantification of true uncertainty for the task of continuous emotion recognition.
@@ -92,3 +90,7 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
         <td></td>
     </tr>
 </table>
+
+#### Residuals
+
+The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks. But the basic framework can be transferred.
