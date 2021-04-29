@@ -78,3 +78,15 @@ On Test: sbUME 0.6959 | pebUME(5) 0.8114 | pebUME(50) 0.7507 | pebUME(200) 0.713
 On Test: CCC  0.5820 | PCC  0.5928 | RMSE  0.1708
 ==================================================
 Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.4612 [' 0.4612']| Loss: 0.5942 | PCC: 0.4671 ['0.4671'] | RMSE: 0.1778 ['0.1778']
+sbUME: 0.7158786686135543
+pebUME(5): 0.8361780588448342
+pebUME(50): 0.7297314810832394
+pebUME(200): 0.6936223119322247
+pebUME(500): 0.6814693607844728
+On Test: sbUME 0.7159 | pebUME(5) 0.8362 | pebUME(50) 0.7297 | pebUME(200) 0.6936 | pebUME(500) 0.6815 | Cv 0.5758
+On Test: CCC  0.5900 | PCC  0.5965 | RMSE  0.1647
+==================================================
+Training model... [seed 317]
+slurmstepd: *** JOB 109658 ON eihw-gpu4 CANCELLED AT 2021-04-29T13:25:29 ***

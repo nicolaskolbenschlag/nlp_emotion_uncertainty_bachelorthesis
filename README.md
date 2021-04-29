@@ -26,11 +26,11 @@ What we expect (or at least hope) to observe is that, the model's uncertainty co
 
 #### Multiple understandings of uncertainty
 
-We also developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in a prediction task.
+We also developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. Of course, there can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in this particular prediction task.
 
 We can also calculate to UME between the quantified/predicted uncertianty and the **prediction error** (which then acts as measurement for true uncertainty). This might be useful, because the prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers. It is crucial in any application, because you need to know, if you can trust your model's confidence.
 
-The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks, but this framework can be transferred.
+The exact definition and computation of true uncertainty heavily depends on the actual data and its natrue, so this implementation can't be generalized from the current stand immediately to other datasets and prediction tasks, but the basic framework can be transferred.
 
 #### Results
 
@@ -69,8 +69,8 @@ The exact definition and computation of true uncertainty heavily depends on the 
     </tr>
     <tr>
         <td>316</td>
-        <td></td>
-        <td></td>
+        <td>0.5900</td>
+        <td>0.7159</td>
         <td></td>
         <td></td>
         <td></td>
@@ -78,8 +78,8 @@ The exact definition and computation of true uncertainty heavily depends on the 
     </tr>
     <tr>
         <td>&#8709;</td>
-        <td></td>
-        <td></td>
+        <td>0.5851</td>
+        <td>0.7008</td>
         <td></td>
         <td></td>
         <td></td>
