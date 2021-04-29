@@ -34,23 +34,14 @@ The exact definition and computation of true uncertainty heavily depends on the 
 
 #### Results
 
-##### Randomly quantified uncertainty
-
-| Seed | CCC | sbUME | pebUME |
-| - | - | - | - |
-| 314 | 0.5833 | 0.6906 | 0. |
-| 315 | 0.5820 | 0.6959 | 0. |
-| 316 | 0. | 0. | 0. |
-| Avg. | 0. | 0. | 0. |
-
 <table>
     <tr>
-        <th>Seed</th>
+        <th></th>
         <th colspan="3">Randomly quantified uncertainty</th>
         <th colspan="3">Monte Carlo Dropout</th>
     </tr>
     <tr>
-        <th></th>
+        <th>Seed</th>
         <th>CCC</th>
         <th>sbUME</th>
         <th>pebUME</th>
@@ -78,15 +69,15 @@ The exact definition and computation of true uncertainty heavily depends on the 
     </tr>
     <tr>
         <td>316</td>
-        <td>0.5833</td>
-        <td>0.6906</td>
-        <td>0.6906</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>Avg.</td>
+        <td>&#8709;</td>
         <td></td>
         <td></td>
         <td></td>
