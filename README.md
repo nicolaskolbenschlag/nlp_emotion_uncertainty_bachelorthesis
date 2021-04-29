@@ -50,39 +50,39 @@ The exact definition and computation of true uncertainty heavily depends on the 
         <th>pebUME</th>
     </tr>
     <tr>
-        <td style="text-align: center;">314</td>
-        <td style="text-align: center;">0.5833</td>
-        <td style="text-align: center;">0.6906</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
+        <td>314</td>
+        <td>0.5833</td>
+        <td>0.6906</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
-        <td style="text-align: center;">315</td>
-        <td style="text-align: center;">0.5820</td>
-        <td style="text-align: center;">0.6959</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
+        <td>315</td>
+        <td>0.5820</td>
+        <td>0.6959</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
-        <td style="text-align: center;">316</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
+        <td>316</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
-        <td style="text-align: center;">&#8709;</td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
-        <td style="text-align: center;"></td>
+        <td>&#8709;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
 </table>
