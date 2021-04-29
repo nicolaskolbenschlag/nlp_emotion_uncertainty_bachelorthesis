@@ -24,7 +24,7 @@ Further, the yellow line represents the true, or at least expected, uncertainty,
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smaller yellow values.
 
-#### Multiple definitions for true uncertainty
+#### Multiple understandings of uncertainty
 
 We also developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. Of course can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in a prediction task.
 
@@ -34,7 +34,7 @@ The exact definition and computation of true uncertainty heavily depends on the 
 
 #### Results
 
-<table>
+<table style="text-align: center;">
     <tr>
         <th></th>
         <th colspan="3">Randomly quantified uncertainty</th>
