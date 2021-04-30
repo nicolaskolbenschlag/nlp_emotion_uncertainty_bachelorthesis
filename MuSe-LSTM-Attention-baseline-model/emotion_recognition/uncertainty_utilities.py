@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import torch
-import sklearn.isotonic
-import scipy.optimize
 import config
 import typing
 import pandas as pd
+
+import calibration_utilities_deprecated
+
 
 def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
     max_uncertainty = predicted_uncertainty.max()
@@ -36,11 +37,11 @@ def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncert
     ume /= bins
     return ume
 
-def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 10) -> float:
+def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 20) -> float:
     predicted_uncertainty /= predicted_uncertainty.max()
 
     ume = 0.
-    bin_indicies = np.digitize(real_uncertainty, np.linspace(0., 1., bins))
+    bin_indicies = np.digitize(real_uncertainty, np.linspace(-1., 1., bins))
     for j in range(1, bins + 1):
         mask = bin_indicies == j
         if not mask.sum() > 0:
@@ -210,53 +211,88 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
     error = pd.Series(error).interpolate().to_numpy()
     return error
 
-def evaluate_uncertainty_measurement(model, test_loader, params, num_bins = 10):
+def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True):
+    sbUMEs, pebUMEs, Cvs = [], [], []
+    for i in range(full_means.shape[1]):
+
+        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
+ 
+        tmp = {}
+        for window in [5,50,200,500]:
+            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+            tmp[window] = pebUME
+        pebUMEs += [tmp]
+
+        Cvs += [stds_coefficient_of_variation(vars_[:,i])]
+
+        if plot:
+            max_plot = 1000#len(labels)
+            step_plot = 100
+            for j in range(0, max_plot, step_plot):
+                plot_confidence(
+                    params,
+                    labels[:,i][j:j+step_plot],
+                    means[:,i][j:j+step_plot],
+                    vars_[:,i][j:j+step_plot],
+                    subjectivities[:,i][j:j+step_plot],
+                    params.emo_dim_set[i],
+                    f"{method} ({j}-{j+step_plot}) uncal.",
+                    partition)
+    
+    return sbUMEs, pebUMEs, Cvs
+    
+def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = None):
     if params.uncertainty_approach == "monte_carlo_dropout":
-        full_means, full_vars, full_labels, full_subjectivities = outputs_mc_dropout(model, test_loader, params)
+        # full_means, full_vars, full_labels, full_subjectivities = outputs_mc_dropout(model, test_loader, params)
+        prediction_fn = outputs_mc_dropout
         method = "MC Dropout"
     
     elif params.uncertainty_approach == "quantile_regression":
         raise NotImplementedError
-        # full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val = outputs_quantile_regression(model, test_loader, val_loader, params)
-        # method = "Quantile Regression"
     
     elif params.uncertainty_approach == None:# NOTE random uncertainty generation
-        full_means, full_vars, full_labels, full_subjectivities = outputs_random(model, test_loader, params)
+        # full_means, full_vars, full_labels, full_subjectivities = outputs_random(model, test_loader, params)
+        prediction_fn = outputs_random
         method = "Random"
     
     else:
         raise NotImplementedError
+    
+    full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
 
-    sbUMEs, pebUMEs, Cvs = [], [], []
-    # print(f"full_means: {full_means.shape}")
+    # sbUMEs, pebUMEs, Cvs = [], [], []
+    # for i in range(full_means.shape[1]):
+        # # NOTE calculate metrics
+        # sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
+ 
+        # tmp = {}
+        # for window in [5,50,200,500]:
+        #     pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
+        #     tmp[window] = pebUME
+        # pebUMEs += [tmp]
+
+        # Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
+
+        # # NOTE plot
+        # if params.uncertainty_approach != None:
+        #     max_plot = 1000#len(full_labels)
+        #     step_plot = 100
+        #     for j in range(0, max_plot, step_plot):
+        #         plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} ({j}-{j+step_plot}) uncal.", test_loader.dataset.partition)
+    sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method, test_loader.dataset.partition, params.uncertainty_approach != None)
+    
+    # NOTE re-calibration: if validation data given, see it as an order to calibrate
+    if val_loader is None:
+        return  sbUMEs, pebUMEs, Cvs
+    
+    _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
+    full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
+        calibration_features = full_vars_val[:,i]
+        calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
+        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, test_uncalibrated, full_vars[:,i], "isotonic_regression")
+        full_vars_calibrated[:,i] = calibration_result
+    
+    sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method, test_loader.dataset.partition, params.uncertainty_approach != None)
 
-        # NOTE calculate metrics
-        sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
-        print(f"sbUME: {sbUMEs[i]}")
-        # pebUMEs += [
-        #     {
-        #         window: uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
-        #         for window in [5,50,200,500]
-        #     }
-        # ]
-        tmp = {}
-        for window in [5,50,200,500]:
-            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
-            print(f"pebUME({window}): {pebUME}")
-            tmp[window] = pebUME
-        pebUMEs += [tmp]
-
-        Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
-
-        # NOTE for sbUME and pebUME, there is no need for calibration, because we scale uncertainty quantifications to [0,1] and subjectivity as well as rolling correlation measurement become scaled to [0,1]
-        # NOTE further we arrume that any uncertainty quantifications in the whole test set has 100%, so 1) uncertainty; so we can normalize all uncertainty quantifications by dividing by maximum
-
-        # NOTE plot
-        if params.uncertainty_approach != None:
-            max_plot = 1000#len(full_labels)
-            step_plot = 100
-            for j in range(0, max_plot, step_plot):
-                plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} ({j}-{j+step_plot})", test_loader.dataset.partition)
-        
-    return  sbUMEs, pebUMEs, Cvs
+    return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal

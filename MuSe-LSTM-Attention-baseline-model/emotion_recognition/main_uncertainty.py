@@ -210,9 +210,13 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
-        sbUMEs, pebUMEs, Cvs = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params)        
+        sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
+        # NOTE uncalibrated
         pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
-        print("On Test: sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
+        print("On Test (uncal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
+        # NOTE calibrated
+        pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs_cal[0].items()])
+        print("On Test (cal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs_cal[0], pebUME_str, Cvs_cal[0]))
         ########################################
         if params.uncertainty_approach == None:
             test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
