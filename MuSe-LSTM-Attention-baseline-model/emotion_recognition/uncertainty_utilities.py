@@ -8,7 +8,7 @@ import config
 import typing
 import pandas as pd
 
-def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
+def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
     max_uncertainty = predicted_uncertainty.max()
 
     ume = 0.
@@ -31,6 +31,27 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
         if rmv != 0.:
             ume_ /= rmv
 
+        ume += ume_
+
+    ume /= bins
+    return ume
+
+def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 10) -> float:
+    predicted_uncertainty /= predicted_uncertainty.max()
+
+    ume = 0.
+    bin_indicies = np.digitize(real_uncertainty, np.linspace(0., 1., bins))
+    for j in range(1, bins + 1):
+        mask = bin_indicies == j
+        if not mask.sum() > 0:
+            continue
+
+        rmse = np.mean(real_uncertainty[mask])
+        rmse = np.abs(rmse - 1) / 2
+
+        rmv = np.mean(predicted_uncertainty[mask])
+        
+        ume_ = np.abs(rmv - rmse) / rmse
         ume += ume_
 
     ume /= bins

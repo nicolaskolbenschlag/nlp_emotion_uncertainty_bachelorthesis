@@ -14,7 +14,7 @@ The first step for getting appropriate measuremets of predictive uncertainty. Th
 
 Additionally we developed an approach for confirming the feasibility of quantifying predictive uncertainty by such a method.
 
-We developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. It is based on the ENCE proposed by Levi et al. in [this paper](https://arxiv.org/abs/1905.11659). They use RMSE as measurement for true uncertainty in single target regression tasks. But the RMSE is not a suitable metric for our data. Mostly, corrleations measured over a certain period of time is a much more suitable performance metric for time series prediction tasks, than just the distance at each timestep considered separately.
+We developed a metric called UME (Uncertainty Measurement Error) to measure this similarity. It is based on the ENCE proposed by Levi et al. in [this paper](https://arxiv.org/abs/1905.11659). The authors use RMSE as measurement for true uncertainty in non-timeseries-target regression tasks. But the RMSE is not a suitable metric for our data. Mostly, corrleations measured over a certain period of time is a much more suitable performance metric for time series prediction tasks, than just the distance at each timestep considered separately.
 
 ### Multiple understandings of uncertainty
 
@@ -26,7 +26,9 @@ Of course, there can be multiple factors that cause predictive uncertainty, but 
 
 ![uncalibrated](images/MC_Dropout_UNCALIBRATED_(700-800).jpg)
 
-This plot shows the model's prediction (blue) and the quantified uncertainty (lightblue). As larger the lightblue area, as less confident was the model in its prediction. In this particular situation we used [Monte Carlo Dropout](https://arxiv.org/abs/1506.02142) to make the model quantifying its confidence. Further, the yellow line represents the true, or at least expected, uncertainty, which is defined as the average pearson correlation coefficient between multiple annotations. A correlation of +1 means that all annotators did perfectly agree (zero subjectivity/total objectivity) about the sample's annotation, as while -1 means negative correlation, so they absolutely disagreed (total subjectivity/zero objectivity).
+This plot shows the model's prediction (blue) and the quantified uncertainty (lightblue). As larger the lightblue area, as less confident was the model in its prediction. In this particular situation we used [Monte Carlo Dropout](https://arxiv.org/abs/1506.02142) to make the model quantifying its confidence.
+
+Further, the yellow line represents the true, or at least expected, uncertainty, which is defined as the average pearson correlation coefficient between multiple annotations. A correlation of +1 means that all annotators did perfectly agree (zero subjectivity/total objectivity) about the sample's annotation, as while -1 means negative correlation, so they absolutely disagreed (total subjectivity/zero objectivity).
 
 What we expect (or at least hope) to observe is that, the model's uncertainty correlates with the subjectivity of the annotation. This would mean that we observe larger lightblue areas for smaller yellow values.
 
