@@ -8,7 +8,6 @@ import pandas as pd
 
 import calibration_utilities_deprecated
 
-
 def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
     max_uncertainty = predicted_uncertainty.max()
 
@@ -279,7 +278,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         #     step_plot = 100
         #     for j in range(0, max_plot, step_plot):
         #         plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} ({j}-{j+step_plot}) uncal.", test_loader.dataset.partition)
-    sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method, test_loader.dataset.partition, params.uncertainty_approach != None)
+    sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     
     # NOTE re-calibration: if validation data given, see it as an order to calibrate
     if val_loader is None:
@@ -293,6 +292,6 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, test_uncalibrated, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
     
-    sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method, test_loader.dataset.partition, params.uncertainty_approach != None)
+    sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
 
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
