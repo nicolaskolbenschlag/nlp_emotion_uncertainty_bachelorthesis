@@ -212,7 +212,7 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
 
 def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True):
     sbUMEs, pebUMEs, Cvs = [], [], []
-    for i in range(full_means.shape[1]):
+    for i in range(means.shape[1]):
 
         sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
  
