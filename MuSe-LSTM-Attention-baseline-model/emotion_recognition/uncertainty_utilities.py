@@ -287,9 +287,10 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
     full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
+        # assert full_vars_val.shape == full_subjectivities_val.shape
         calibration_features = full_vars_val[:,i]
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
-        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, test_uncalibrated, full_vars[:,i], "isotonic_regression")
+        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
     
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
