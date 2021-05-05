@@ -140,3 +140,23 @@ On Test (cal.): sbUME nan | pebUME(5) nan | pebUME(50) nan | pebUME(200) nan | p
 On Test: CCC  0.5833 | PCC  0.5937 | RMSE  0.1651
 ==================================================
 Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4541 [' 0.4541']| Loss: 0.6135 | PCC: 0.4565 ['0.4565'] | RMSE: 0.1777 ['0.1777']
+On Test (uncal.): sbUME 1.3916 | pebUME(5) 1.8299 | pebUME(50) 1.5746 | pebUME(200) 1.3333 | pebUME(500) 1.1848 | Cv 0.5785
+On Test (cal.): sbUME nan | pebUME(5) nan | pebUME(50) nan | pebUME(200) nan | pebUME(500) nan | Cv nan
+On Test: CCC  0.5820 | PCC  0.5928 | RMSE  0.1708
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4541
+On ground-truth labels:		[Test CCC] for seed "315":	 0.5820
+----------------------------------------------------------------------------------------------------
+Predict val & test videos...
+Traceback (most recent call last):
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 327, in <module>
+    main(params)
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 283, in main
+    predict(best_model, data_loader['test'], params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 287, in predict
+    features, feature_lens, labels, metas = batch_data
+ValueError: too many values to unpack (expected 4)
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.

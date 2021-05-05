@@ -4,7 +4,7 @@ This repository contains the code for my bachelorthesis at University of Augsbur
 
 ## MuSe 2021
 
-The [dataset](https://www.muse-challenge.org/) used in this project.
+We used the [MuSe CaR dataset](https://www.muse-challenge.org/) in this project. It contains multi-model features of car-review videos annotated by their emotional state. The circumstance that each sample was annotated by 5 different annotators, which are all available, and the fact that emotion recongintion is a highly subjective task, makes this dataset very well suited for investigation of uncertainty methods.
 
 ## Quantification of predictive uncertainty
 

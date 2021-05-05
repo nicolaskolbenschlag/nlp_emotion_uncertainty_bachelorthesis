@@ -284,7 +284,7 @@ def predict(model, data_loader, params):
     full_preds, full_metas, full_labels = [], [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(data_loader, 1):
-            features, feature_lens, labels, metas = batch_data
+            features, feature_lens, labels, metas, _ = batch_data
             # move to gpu if use gpu
             if params.gpu is not None:
                 model.cuda()

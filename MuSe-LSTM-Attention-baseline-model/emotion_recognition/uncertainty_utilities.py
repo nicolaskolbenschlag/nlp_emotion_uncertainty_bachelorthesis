@@ -63,7 +63,11 @@ def UME_2_experimental(real_uncertainty: np.array, predicted_uncertainty) -> flo
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
 def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
+    print(y_pred_var)
     mean_of_var = np.mean(y_pred_var)
+    print(mean_of_var)
+    print(np.power(y_pred_var - mean_of_var, 2).sum())
+    print()
     cv = np.sqrt(np.power(y_pred_var - mean_of_var, 2).sum() / (len(y_pred_var) - 1)) / mean_of_var
     return cv
 
@@ -272,17 +276,13 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
     full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
-        # assert full_vars_val.shape == full_subjectivities_val.shape
         calibration_features = full_vars_val[:,i]
-        print(f"calibration_features: {np.nan in calibration_features}")
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
-        print(f"calibration_target: {np.nan in calibration_target}")
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
-        print(f"calibration_result: {np.nan in calibration_result}")
         full_vars_calibrated[:,i] = calibration_result
     
-    print(f"full_vars_calibrated: {np.nan in full_vars_calibrated}")
+    print(full_vars.dtype)
+    print(full_vars_calibrated.dtype)
     
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
-
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
