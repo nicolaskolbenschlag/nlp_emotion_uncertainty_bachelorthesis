@@ -23,7 +23,7 @@ def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncert
         rmse = np.abs(rmse - 1) / 2
 
         rmv = np.mean(predicted_uncertainty[mask])
-        
+
         np.seterr("raise")# NOTE sometimes in next line numpy error: 'invalid value encountered'
         rmv /= max_uncertainty
 
@@ -56,6 +56,11 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
 
     ume /= bins
     return ume
+
+def UME_2_experimental(real_uncertainty: np.array, predicted_uncertainty) -> float:
+    predicted_uncertainty /= predicted_uncertainty.max()
+    real_uncertainty = np.abs(real_uncertainty - 1) / 2
+    return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
 def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
     mean_of_var = np.mean(y_pred_var)
@@ -235,7 +240,7 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
                     vars_[:,i][j:j+step_plot],
                     subjectivities[:,i][j:j+step_plot],
                     params.emo_dim_set[i],
-                    f"{method} ({j}-{j+step_plot}) uncal.",
+                    f"{method} ({j}-{j+step_plot})",
                     partition)
     
     return sbUMEs, pebUMEs, Cvs
@@ -258,26 +263,6 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         raise NotImplementedError
     
     full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
-
-    # sbUMEs, pebUMEs, Cvs = [], [], []
-    # for i in range(full_means.shape[1]):
-        # # NOTE calculate metrics
-        # sbUMEs += [uncertainty_measurement_error(full_subjectivities[:,i], full_vars[:,i])]
- 
-        # tmp = {}
-        # for window in [5,50,200,500]:
-        #     pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], window), full_vars[:,i])
-        #     tmp[window] = pebUME
-        # pebUMEs += [tmp]
-
-        # Cvs += [stds_coefficient_of_variation(full_vars[:,i])]
-
-        # # NOTE plot
-        # if params.uncertainty_approach != None:
-        #     max_plot = 1000#len(full_labels)
-        #     step_plot = 100
-        #     for j in range(0, max_plot, step_plot):
-        #         plot_confidence(params, full_labels[:,i][j:j+step_plot], full_means[:,i][j:j+step_plot], full_vars[:,i][j:j+step_plot], full_subjectivities[:,i][j:j+step_plot], params.emo_dim_set[i], f"{method} ({j}-{j+step_plot}) uncal.", test_loader.dataset.partition)
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     
     # NOTE re-calibration: if validation data given, see it as an order to calibrate
@@ -289,9 +274,14 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     for i in range(full_means.shape[1]):
         # assert full_vars_val.shape == full_subjectivities_val.shape
         calibration_features = full_vars_val[:,i]
+        print(f"calibration_features: {np.nan in calibration_features}")
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
+        print(f"calibration_target: {np.nan in calibration_target}")
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
+        print(f"calibration_result: {np.nan in calibration_result}")
         full_vars_calibrated[:,i] = calibration_result
+    
+    print(f"full_vars_calibrated: {np.nan in full_vars_calibrated}")
     
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
 
