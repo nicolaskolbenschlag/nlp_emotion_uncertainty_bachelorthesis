@@ -8,7 +8,7 @@ import pandas as pd
 
 import calibration_utilities_deprecated
 
-def uncertainty_measurement_error_1(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
+def uncertainty_measurement_error_divide_by_predicted_uncertainty(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
     max_uncertainty = predicted_uncertainty.max()
 
     ume = 0.
@@ -219,15 +219,15 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
     sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(means.shape[1]):
 
-        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i].copy(), vars_[:,i].copy())]
+        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
  
         tmp = {}
         for window in [5,50,200,500]:
-            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i].copy(), means[:,i].copy(), window), vars_[:,i].copy())
+            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
             tmp[window] = pebUME
         pebUMEs += [tmp]
 
-        Cvs += [stds_coefficient_of_variation(vars_[:,i]).copy()]
+        Cvs += [stds_coefficient_of_variation(vars_[:,i])]
 
         if plot:
             max_plot = 1000#len(labels)
@@ -268,12 +268,22 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         return  sbUMEs, pebUMEs, Cvs
     
     _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
-    full_vars_calibrated = np.zeros_like(full_vars)
+    full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
         calibration_features = full_vars_val[:,i]
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
+
+    print("min:", min(full_vars_calibrated[:,0]))
+    print("max:", max(full_vars_calibrated[:,0]))
+    print("sum:", sum(full_vars_calibrated[:,0]))
+    print(f"uncal: {full_vars.shape} ({full_vars.dtype})")
+    print(f"uncal: {full_vars_calibrated.shape} ({full_vars_calibrated.dtype})")
+    print("mean:", np.mean(full_vars_calibrated[:,0]))
+    print(np.nan in full_vars_calibrated[:,0])
+
+    full_vars_calibrated = full_vars
         
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal

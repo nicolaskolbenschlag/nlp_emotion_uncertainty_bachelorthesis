@@ -73,9 +73,9 @@ def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
     cv = np.sqrt(np.power(y_pred_var - mean_of_var, 2).sum() / (len(y_pred_var) - 1)) / mean_of_var
     return cv
 
-def calibrate(val_uncalibrated: np.ndarray, val_calibrated: np.ndarray, test_uncalibrated: np.ndarray, method: str = "scalar_fitting") -> np.ndarray:
+def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalibrated: np.array, method: str = "scalar_fitting") -> np.array:
     if method == "isotonic_regression":
-        calibrator = sklearn.isotonic.IsotonicRegression().fit(val_uncalibrated, val_calibrated)
+        calibrator = sklearn.isotonic.IsotonicRegression(out_of_bounds="clip", increasing="auto", y_min=0, y_max=1).fit(val_uncalibrated, val_calibrated)
         return calibrator.predict(test_uncalibrated)
     elif method == "scalar_fitting":
         opt = scipy.optimize.minimize_scalar(lambda x: ((val_calibrated - x * val_uncalibrated) ** 2).mean())
