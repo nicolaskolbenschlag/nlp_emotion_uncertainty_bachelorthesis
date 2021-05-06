@@ -283,7 +283,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     print("mean:", np.mean(full_vars_calibrated[:,0]))
     print(np.nan in full_vars_calibrated[:,0])
 
-    full_vars_calibrated = full_vars
+    # full_vars_calibrated = full_vars
         
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
