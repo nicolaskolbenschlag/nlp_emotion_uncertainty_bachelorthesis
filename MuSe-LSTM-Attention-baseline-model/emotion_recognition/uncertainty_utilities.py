@@ -63,11 +63,7 @@ def UME_2_experimental(real_uncertainty: np.array, predicted_uncertainty) -> flo
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
 def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
-    print(y_pred_var)
     mean_of_var = np.mean(y_pred_var)
-    print(mean_of_var)
-    print(np.power(y_pred_var - mean_of_var, 2).sum())
-    print()
     cv = np.sqrt(np.power(y_pred_var - mean_of_var, 2).sum() / (len(y_pred_var) - 1)) / mean_of_var
     return cv
 
@@ -223,15 +219,15 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
     sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(means.shape[1]):
 
-        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
+        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i].copy(), vars_[:,i].copy())]
  
         tmp = {}
         for window in [5,50,200,500]:
-            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i].copy(), means[:,i].copy(), window), vars_[:,i].copy())
             tmp[window] = pebUME
         pebUMEs += [tmp]
 
-        Cvs += [stds_coefficient_of_variation(vars_[:,i])]
+        Cvs += [stds_coefficient_of_variation(vars_[:,i]).copy()]
 
         if plot:
             max_plot = 1000#len(labels)
@@ -251,7 +247,6 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
     
 def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = None):
     if params.uncertainty_approach == "monte_carlo_dropout":
-        # full_means, full_vars, full_labels, full_subjectivities = outputs_mc_dropout(model, test_loader, params)
         prediction_fn = outputs_mc_dropout
         method = "MC Dropout"
     
@@ -259,7 +254,6 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         raise NotImplementedError
     
     elif params.uncertainty_approach == None:# NOTE random uncertainty generation
-        # full_means, full_vars, full_labels, full_subjectivities = outputs_random(model, test_loader, params)
         prediction_fn = outputs_random
         method = "Random"
     
@@ -274,15 +268,12 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         return  sbUMEs, pebUMEs, Cvs
     
     _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
-    full_vars_calibrated = np.empty_like(full_vars)
+    full_vars_calibrated = np.zeros_like(full_vars)
     for i in range(full_means.shape[1]):
         calibration_features = full_vars_val[:,i]
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
-    
-    print(full_vars.dtype)
-    print(full_vars_calibrated.dtype)
-    
+        
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
