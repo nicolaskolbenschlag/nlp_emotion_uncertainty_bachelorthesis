@@ -40,23 +40,29 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
 
 <table>
     <tr>
+        <th colspan="7">Randomly quantified uncertainty</th>
+    </tr>
+    <tr>
         <th></th>
-        <th colspan="3">Randomly quantified uncertainty</th>
-        <th colspan="3">Monte Carlo Dropout</th>
+        <th colspan="3">Uncalibrated</th>
+        <th colspan="3">Calibrated with Isotonic Regression</th>
     </tr>
     <tr>
         <th>Seed</th>
         <th>CCC</th>
         <th>sbUME</th>
         <th>pebUME</th>
+        <th>Cv</th>
         <th>CCC</th>
         <th>sbUME</th>
         <th>pebUME</th>
+        <th>Cv</th>
     </tr>
     <tr>
         <td>314</td>
-        <td>0.5833</td>
-        <td>0.6906</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -64,8 +70,9 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
     </tr>
     <tr>
         <td>315</td>
-        <td>0.5820</td>
-        <td>0.6959</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -73,8 +80,9 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
     </tr>
     <tr>
         <td>316</td>
-        <td>0.5900</td>
-        <td>0.7159</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -82,8 +90,71 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
     </tr>
     <tr>
         <td>&#8709;</td>
-        <td>0.5851</td>
-        <td>0.7008</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th colspan="7">Monte Carlo Dropout</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th colspan="3">Uncalibrated</th>
+        <th colspan="3">Calibrated with Isotonic Regression</th>
+    </tr>
+    <tr>
+        <th>Seed</th>
+        <th>CCC</th>
+        <th>sbUME</th>
+        <th>pebUME</th>
+        <th>Cv</th>
+        <th>CCC</th>
+        <th>sbUME</th>
+        <th>pebUME</th>
+        <th>Cv</th>
+    </tr>
+    <tr>
+        <td>314</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>315</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>316</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>&#8709;</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
