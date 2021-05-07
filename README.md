@@ -40,12 +40,12 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
 
 <table>
     <tr>
-        <th colspan="7">Randomly quantified uncertainty</th>
+        <th colspan="4">Randomly quantified uncertainty</th>
     </tr>
     <tr>
         <th></th>
-        <th colspan="3">Uncalibrated</th>
-        <th colspan="3">Calibrated with Isotonic Regression</th>
+        <th colspan="4">Uncalibrated</th>
+        <th colspan="4">Calibrated with Isotonic Regression</th>
     </tr>
     <tr>
         <th>Seed</th>
@@ -67,6 +67,7 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>315</td>
@@ -77,19 +78,11 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
         <td></td>
         <td></td>
         <td></td>
-    </tr>
-    <tr>
-        <td>316</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
     </tr>
     <tr>
         <td>&#8709;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -102,12 +95,12 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
 
 <table>
     <tr>
-        <th colspan="7">Monte Carlo Dropout</th>
+        <th colspan="9">Monte Carlo Dropout</th>
     </tr>
     <tr>
         <th></th>
-        <th colspan="3">Uncalibrated</th>
-        <th colspan="3">Calibrated with Isotonic Regression</th>
+        <th colspan="4">Uncalibrated</th>
+        <th colspan="4">Calibrated with Isotonic Regression</th>
     </tr>
     <tr>
         <th>Seed</th>
@@ -129,6 +122,7 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>315</td>
@@ -139,19 +133,11 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
         <td></td>
         <td></td>
         <td></td>
-    </tr>
-    <tr>
-        <td>316</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td></td>
     </tr>
     <tr>
         <td>&#8709;</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
