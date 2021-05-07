@@ -244,7 +244,7 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
                     partition)
     
     return sbUMEs, pebUMEs, Cvs
-    
+
 def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = None):
     if params.uncertainty_approach == "monte_carlo_dropout":
         prediction_fn = outputs_mc_dropout
@@ -274,16 +274,6 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
-
-    print("min:", min(full_vars_calibrated[:,0]))
-    print("max:", max(full_vars_calibrated[:,0]))
-    print("sum:", sum(full_vars_calibrated[:,0]))
-    print(f"uncal: {full_vars.shape} ({full_vars.dtype})")
-    print(f"uncal: {full_vars_calibrated.shape} ({full_vars_calibrated.dtype})")
-    print("mean:", np.mean(full_vars_calibrated[:,0]))
-    print(np.nan in full_vars_calibrated[:,0])
-
-    # full_vars_calibrated = full_vars
         
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
