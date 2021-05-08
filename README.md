@@ -40,7 +40,7 @@ We can also calculate to UME between the quantified/predicted uncertianty and th
 
 <table>
     <tr>
-        <th colspan="4">Randomly quantified uncertainty</th>
+        <th colspan="9">Randomly quantified uncertainty</th>
     </tr>
     <tr>
         <th></th>

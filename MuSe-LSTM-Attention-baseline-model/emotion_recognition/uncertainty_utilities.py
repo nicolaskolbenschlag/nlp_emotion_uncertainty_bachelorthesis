@@ -57,9 +57,13 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
     ume /= bins
     return ume
 
-def UME_2_experimental(real_uncertainty: np.array, predicted_uncertainty) -> float:
+def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty) -> float:
     predicted_uncertainty /= predicted_uncertainty.max()
     real_uncertainty = np.abs(real_uncertainty - 1) / 2
+
+    real_uncertainty -= real_uncertainty.min()
+    real_uncertainty = real_uncertainty / real_uncertainty.max()
+
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
 def stds_coefficient_of_variation(y_pred_var: np.ndarray) -> float:
@@ -219,11 +223,15 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
     sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(means.shape[1]):
 
-        sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
+        # sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
+        sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i])]
  
         tmp = {}
         for window in [5,50,200,500]:
-            pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+            
+            # pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+            pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+
             tmp[window] = pebUME
         pebUMEs += [tmp]
 
@@ -270,6 +278,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
     full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
+        # NOTE calibrate on subjectivities
         calibration_features = full_vars_val[:,i]
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
