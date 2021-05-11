@@ -227,7 +227,7 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
         sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i])]
  
         tmp = {}
-        for window in [3]:#[5,50,200,500]
+        for window in [3,5,7,10]:
             
             # pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
             pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
@@ -275,16 +275,25 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     if val_loader is None:
         return  sbUMEs, pebUMEs, Cvs
     
-    _, full_vars_val, _, full_subjectivities_val = prediction_fn(model, val_loader, params)
+    full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = prediction_fn(model, val_loader, params)
     full_vars_calibrated = np.empty_like(full_vars)
     for i in range(full_means.shape[1]):
-        # NOTE calibrate on subjectivities
         calibration_features = full_vars_val[:,i]
         
-        calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
-        # TODO vary calibration target
-        
-        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
+        # NOTE set calibration target
+        calibration_target = "rolling_error"
+
+        if calibration_target == "subjectivity":
+            true_uncertainty = full_subjectivities_val[:,i]
+        elif calibration_target == "rolling_error":
+            true_uncertainty = rolling_correlation_coefficient(full_labels_val[:,i], full_means_val[:,i], 3)
+        else:
+            raise NotImplementedError
+
+        # NOTE true uncertainty ranges from -1 (high) to +1 (low), so rescale it like UME will do
+        calibration_target_ = np.abs(true_uncertainty - 1) / 2
+
+        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target_, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
         
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
