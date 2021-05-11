@@ -58,15 +58,15 @@ Input feature dim: 768.
 Training model... [seed 314]
 Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
 Seed 314 | Best [Val CCC]: 0.4305 [' 0.4305']| Loss: 0.6205 | PCC: 0.4362 ['0.4362'] | RMSE: 0.1673 ['0.1673']
-On Test (uncal.): sbUME 0.2691 | pebUME(5) 0.3796 | pebUME(50) 0.3597 | pebUME(200) 0.3442 | pebUME(500) 0.3370 | Cv 0.5798
-On Test (cal.): sbUME 0.3208 | pebUME(5) 0.4493 | pebUME(50) 0.5270 | pebUME(200) 0.5755 | pebUME(500) 0.5776 | Cv 0.0020
+On Test (uncal.): sbUME 0.2698 | pebUME(3) 0.4177 | Cv 0.5786
+On Test (cal.): sbUME 0.4784 | pebUME(3) 0.5540 | Cv 0.0027
 On Test: CCC  0.5833 | PCC  0.5937 | RMSE  0.1651
 ==================================================
 Training model... [seed 315]
 Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
 Seed 315 | Best [Val CCC]: 0.4541 [' 0.4541']| Loss: 0.6135 | PCC: 0.4565 ['0.4565'] | RMSE: 0.1777 ['0.1777']
-On Test (uncal.): sbUME 0.2687 | pebUME(5) 0.3804 | pebUME(50) 0.3576 | pebUME(200) 0.3412 | pebUME(500) 0.3292 | Cv 0.5777
-On Test (cal.): sbUME 0.3793 | pebUME(5) 0.4821 | pebUME(50) 0.5686 | pebUME(200) 0.6226 | pebUME(500) 0.6185 | Cv 0.0031
+On Test (uncal.): sbUME 0.2690 | pebUME(3) 0.4169 | Cv 0.5770
+On Test (cal.): sbUME 0.4197 | pebUME(3) 0.5122 | Cv 0.0016
 On Test: CCC  0.5820 | PCC  0.5928 | RMSE  0.1708
 ==================================================
 On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4541
@@ -74,7 +74,7 @@ On ground-truth labels:		[Test CCC] for seed "315":	 0.5820
 ----------------------------------------------------------------------------------------------------
 Predict val & test videos...
 ...done.
-Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-08-20-52_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[2_315_None_None].pth".
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-09-20-04_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[2_315_None_None].pth".
 MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --predict --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5
 Constructing dataset and data loader ...
 Constructing data from scratch ...
@@ -135,22 +135,26 @@ Input feature dim: 768.
 Training model... [seed 314]
 Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
 Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
-On Test (uncal.): sbUME 0.4496 | pebUME(5) 0.3616 | pebUME(50) 0.2672 | pebUME(200) 0.2195 | pebUME(500) 0.1971 | Cv 1.1817
-On Test (cal.): sbUME 0.4905 | pebUME(5) 0.5926 | pebUME(50) 0.6960 | pebUME(200) 0.7393 | pebUME(500) 0.7615 | Cv 0.0064
+On Test (uncal.): sbUME 0.4496 | pebUME(3) 0.3881 | Cv 1.1817
+On Test (cal.): sbUME 0.4905 | pebUME(3) 0.5764 | Cv 0.0064
 On Test: CCC  0.6047 | PCC  0.6191 | RMSE  0.1613
 ==================================================
 Training model... [seed 315]
-Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
-Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
-On Test (uncal.): sbUME 0.4498 | pebUME(5) 0.3564 | pebUME(50) 0.2641 | pebUME(200) 0.2031 | pebUME(500) 0.2043 | Cv 1.0133
-On Test (cal.): sbUME 0.4490 | pebUME(5) 0.5628 | pebUME(50) 0.6584 | pebUME(200) 0.7109 | pebUME(500) 0.7053 | Cv 0.0590
-On Test: CCC  0.6040 | PCC  0.6161 | RMSE  0.1552
-==================================================
-On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4431
-On ground-truth labels:		[Test CCC] for seed "315":	 0.6040
-----------------------------------------------------------------------------------------------------
-Predict val & test videos...
-...done.
-Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-09-04-45_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[2_315_None_None].pth".
+Traceback (most recent call last):
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 327, in <module>
+    main(params)
+  File "MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 210, in main
+    train_model(model, data_loader, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 48, in train_model
+    train_loss = train(model, train_loader, criterion, optimizer, epoch, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 125, in train
+    loss.backward()
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/tensor.py", line 221, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/autograd/__init__.py", line 132, in backward
+    allow_unreachable=True)  # allow_unreachable flag
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 21476) is killed by signal: Killed. 
 slurmstepd: Exceeded step memory limit at some point.
 slurmstepd: Exceeded job memory limit at some point.

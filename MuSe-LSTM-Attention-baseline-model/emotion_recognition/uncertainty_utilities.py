@@ -227,7 +227,7 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
         sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i])]
  
         tmp = {}
-        for window in [5,50,200,500]:
+        for window in [3]:#[5,50,200,500]
             
             # pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
             pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
@@ -280,7 +280,10 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     for i in range(full_means.shape[1]):
         # NOTE calibrate on subjectivities
         calibration_features = full_vars_val[:,i]
+        
         calibration_target = np.abs(full_subjectivities_val[:,i] - 1) / 2
+        # TODO vary calibration target
+        
         calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target, full_vars[:,i], "isotonic_regression")
         full_vars_calibrated[:,i] = calibration_result
         
