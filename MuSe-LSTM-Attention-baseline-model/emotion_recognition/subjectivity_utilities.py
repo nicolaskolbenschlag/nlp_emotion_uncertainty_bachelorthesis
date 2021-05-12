@@ -54,9 +54,9 @@ def calculate_rolling_subjectivities(params):
         for emo_dim, annotations in emo_dims.items():
 
             subjectivity_of_sample = []
-            for i, annotation_1 in enumerate(annotations):
-                for j, annotation_2 in enumerate(annotations[i:]):
-                    if i == j:
+            for k, annotation_1 in enumerate(annotations):
+                for j, annotation_2 in enumerate(annotations[k:]):
+                    if k == j:
                         continue
                     
                     # NOTE calculate rolling measuremt of subjectivity between each available annotation

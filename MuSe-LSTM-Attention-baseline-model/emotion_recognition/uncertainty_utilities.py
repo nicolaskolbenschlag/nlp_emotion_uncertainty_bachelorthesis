@@ -63,6 +63,19 @@ def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty) -> f
 
     real_uncertainty -= real_uncertainty.min()
     real_uncertainty = real_uncertainty / real_uncertainty.max()
+    predicted_uncertainty -= predicted_uncertainty.min()
+    predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
+
+    # def rolling_scaling(array: np.array, window: int = 20) -> np.array:
+    #     out = np.empty_like(array)
+    #     for i in range(0, len(array), window):
+    #         tmp = array[i : min(i + window, len(array))]
+    #         tmp -= tmp.min()
+    #         tmp = tmp / tmp.max()
+    #         out[i : min(i + window, len(array))] = tmp
+    #     return out
+    # real_uncertainty = rolling_scaling(real_uncertainty)
+    # predicted_uncertainty = rolling_scaling(predicted_uncertainty)
 
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
@@ -124,7 +137,24 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 10):
                 subjectivities = subjectivities.cuda()
             preds = [model(features, feature_lens).cpu().detach().squeeze(0).numpy() for _ in range(n_ensemble_members)]
             means = np.mean(preds, axis=0)
-            vars_ = np.var(preds, axis=0)
+            
+            # vars_ = np.var(preds, axis=0)
+            ###########
+            vars_ = []
+            for k, p1 in enumerate(preds):
+                for p2 in preds[k+1:]:
+                    rolling_window = 3
+                    corr = [
+                        pd.Series(p1[i - rolling_window : i]).corr(pd.Series(p2[i - rolling_window : i]))
+                        for i in range(rolling_window, len(p1) + 1)
+                        ]
+                    corr = [corr[0]] * (rolling_window - 1) + corr                    
+                    if np.isnan(corr[0]):
+                        corr[0] = 0.
+                    corr = pd.Series(corr).interpolate()
+                    vars_ += [corr]
+            vars_ = np.stack(vars_).mean(axis=0)
+            ###########
             
             full_means.append(means)
             full_vars.append(vars_)
