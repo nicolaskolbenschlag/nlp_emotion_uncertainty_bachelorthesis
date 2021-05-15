@@ -123,7 +123,7 @@ def plot_confidence(params, labels: np.ndarray, pred_mean: np.ndarray, pred_conf
     fig.savefig(os.path.join(dir, f"{title}.jpg"))
     plt.close()
     
-def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 10):
+def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
     model.train()
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
@@ -139,21 +139,52 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 10):
             means = np.mean(preds, axis=0)
             
             # vars_ = np.var(preds, axis=0)
+            print(means.shape)
             ###########
+            rolling_window = 3
+            # vars_ = []
+            # for dim in range(means.shape[1]):
+            #     vars_dim = []
+            #     for k, p1 in enumerate(preds):
+            #         for p2 in preds[k+1:]:
+            #             corr = [
+            #                 pd.Series(p1[:,dim][i - rolling_window : i]).corr(pd.Series(p2[:,dim][i - rolling_window : i]))
+            #                 for i in range(rolling_window, len(p1) + 1)
+            #                 ]
+            #             corr = [corr[0]] * (rolling_window - 1) + corr
+            #             if np.isnan(corr[0]):
+            #                 corr[0] = 0.
+            #             corr = pd.Series(corr).interpolate()
+            #             vars_dim += [corr]
+            #     vars_dim = np.stack(vars_dim).mean(axis=0)
+            #     vars_dim = np.abs(vars_dim - 1) / 2
+            #     vars_ += [vars_dim]
+            # vars_ = np.column_stack(vars_)
+            # assert vars_.shape == means.shape
+            ###########
+            preds = np.stack(preds, axis=3)
             vars_ = []
-            for k, p1 in enumerate(preds):
-                for p2 in preds[k+1:]:
-                    rolling_window = 3
-                    corr = [
-                        pd.Series(p1[i - rolling_window : i]).corr(pd.Series(p2[i - rolling_window : i]))
-                        for i in range(rolling_window, len(p1) + 1)
-                        ]
-                    corr = [corr[0]] * (rolling_window - 1) + corr                    
-                    if np.isnan(corr[0]):
-                        corr[0] = 0.
-                    corr = pd.Series(corr).interpolate()
-                    vars_ += [corr]
-            vars_ = np.stack(vars_).mean(axis=0)
+            for emo_dim in range(preds.shape[2]):
+                vars_emo_dim = []
+                for sample in preds:
+                    vars_sample = []
+                    sample = sample[:,emo_dim,:]
+                    for j in range(n_ensemble_members):
+                        for k in range(j+1, n_ensemble_members):
+                            corr = [
+                                pd.Series(sample[:,j][i - rolling_window : i]).corr(pd.Series(sample[:,k][i - rolling_window : i]))
+                                for i in range(rolling_window, len(sample) + 1)
+                            ]
+                            corr = [corr[0]] * (rolling_window - 1) + corr
+                            if np.isnan(corr[0]):
+                                corr[0] = 0.
+                            corr = pd.Series(corr).interpolate()
+                            vars_sample += [corr]
+                    vars_emo_dim += [np.mean(vars_sample, axis=0)]
+                vars_ += [vars_emo_dim]
+            vars_ = np.stack(vars_, axis=2)
+            vars_ = np.abs(vars_ - 1) / 2
+            assert vars_.shape == means.shape
             ###########
             
             full_means.append(means)
@@ -166,7 +197,7 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 10):
     return full_means, full_vars, full_labels, full_subjectivities
 
 def outputs_random(model, test_loader, params):
-    model.train()
+    model.eval()
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
@@ -179,7 +210,7 @@ def outputs_random(model, test_loader, params):
                 subjectivities = subjectivities.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
             means = preds
-            # NOTE random vector as guessed uncertainty
+            # NOTE random vector as predicted/guessed uncertainty
             vars_ = np.random.uniform(size=means.shape)
             
             full_means.append(means)
@@ -192,50 +223,40 @@ def outputs_random(model, test_loader, params):
     return full_means, full_vars, full_labels, full_subjectivities
 
 def outputs_quantile_regression(model, test_loader, val_loader, params):
-    full_means, full_vars, full_labels = [], [], []
+    full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta = batch_data
+            features, feature_lens, labels, meta, subjectivities = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
+                subjectivities = subjectivities.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            means = preds[:, 1:2]
+            assert preds.shape[2] == 1, "Currently only one emo. dim. supported for quantile regression"
+            means = preds[:,:,0:1]
             
-            # NOTE use difference between upper and lower quantile as measurement for uncalibrated confidence
-            vars = preds[:, 2:3] - preds[:, 0:1]
-            vars = np.abs(vars)
+            vars_ = []
+            rolling_window = 3
+            for sample in preds:
+                corr = [
+                    pd.Series(sample[:,1][i - rolling_window : i]).corr(pd.Series(sample[:,2][i - rolling_window : i]))
+                    for i in range(rolling_window, len(sample) + 1)
+                ]
+                vars_ += [corr]
+            vars_ = np.array(vars_)
+            vars_ = vars_[:,:,np.newaxis]
+            assert vars_.shape == means.shape
             
             full_means.append(means)
-            full_vars.append(vars)
+            full_vars.append(vars_)
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
+            full_subjectivities.append(subjectivities.cpu().detach().squeeze(0).numpy())
 
-        full_means, full_vars, full_labels = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels)
-        
-    full_means_val, full_vars_val, full_labels_val = [], [], []
-    with torch.no_grad():
-        for _, batch_data in enumerate(val_loader, 1):
-            features, feature_lens, labels, meta = batch_data
-            if params.gpu is not None:
-                model.cuda()
-                features = features.cuda()
-                feature_lens = feature_lens.cuda()
-                labels = labels.cuda()
-            preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            means = preds[:, 1:2]
-            
-            vars = preds[:, 2:3] - preds[:, 0:1]
-            vars = np.abs(vars)
-
-            full_means_val.append(means)
-            full_vars_val.append(vars)
-            full_labels_val.append(labels.cpu().detach().squeeze(0).numpy())
-
-        full_means_val, full_vars_val, full_labels_val = np.row_stack(full_means_val), np.row_stack(full_vars_val), np.row_stack(full_labels_val)
+        full_means, full_vars, full_labels, full_subjectivities = np.row_stack(full_means), np.row_stack(full_vars), np.row_stack(full_labels), np.row_stack(full_subjectivities)
     
-    return full_means, full_vars, full_labels, full_means_val, full_vars_val, full_labels_val
+    return full_means, full_vars, full_labels, full_subjectivities
 
 def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_window: int) -> np.array:
     error = [
@@ -289,7 +310,8 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         method = "MC Dropout"
     
     elif params.uncertainty_approach == "quantile_regression":
-        raise NotImplementedError
+        prediction_fn = outputs_quantile_regression
+        method = "Tilt by Correlation"
     
     elif params.uncertainty_approach == None:# NOTE random uncertainty generation
         prediction_fn = outputs_random
@@ -311,7 +333,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         calibration_features = full_vars_val[:,i]
         
         # NOTE set calibration target
-        calibration_target = "rolling_error"
+        calibration_target = "subjectivity"
 
         if calibration_target == "subjectivity":
             true_uncertainty = full_subjectivities_val[:,i]

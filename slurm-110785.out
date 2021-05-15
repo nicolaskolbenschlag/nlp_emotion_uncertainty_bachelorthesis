@@ -1,0 +1,156 @@
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --predict --attn --rnn_bi --loss ccc
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4305 [' 0.4305']| Loss: 0.6205 | PCC: 0.4362 ['0.4362'] | RMSE: 0.1673 ['0.1673']
+On Test (uncal.): sbUME 0.2694 | pebUME(3) 0.4163 | pebUME(5) 0.3802 | pebUME(7) 0.3694 | pebUME(10) 0.3649 | Cv 0.5796
+On Test (cal.): sbUME 0.1133 | pebUME(3) 0.3920 | pebUME(5) 0.3399 | pebUME(7) 0.3260 | pebUME(10) 0.3203 | Cv 0.0781
+On Test: CCC  0.5833 | PCC  0.5937 | RMSE  0.1651
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4541 [' 0.4541']| Loss: 0.6135 | PCC: 0.4565 ['0.4565'] | RMSE: 0.1777 ['0.1777']
+On Test (uncal.): sbUME 0.2697 | pebUME(3) 0.4172 | pebUME(5) 0.3819 | pebUME(7) 0.3720 | pebUME(10) 0.3672 | Cv 0.5810
+On Test (cal.): sbUME 0.3827 | pebUME(3) 0.4959 | pebUME(5) 0.4872 | pebUME(7) 0.4909 | pebUME(10) 0.4997 | Cv 0.0664
+On Test: CCC  0.5820 | PCC  0.5928 | RMSE  0.1708
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4541
+On ground-truth labels:		[Test CCC] for seed "315":	 0.5820
+----------------------------------------------------------------------------------------------------
+Predict val & test videos...
+...done.
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-14-13-23_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[2_315_None_None].pth".
+MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --predict --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+On Test (uncal.): sbUME 0.3631 | pebUME(3) 0.4082 | pebUME(5) 0.3719 | pebUME(7) 0.3603 | pebUME(10) 0.3493 | Cv 1.0233
+On Test (cal.): sbUME 0.5066 | pebUME(3) 0.4218 | pebUME(5) 0.4053 | pebUME(7) 0.3940 | pebUME(10) 0.3806 | Cv 28.5214
+On Test: CCC  0.6047 | PCC  0.6191 | RMSE  0.1613
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+On Test (uncal.): sbUME 0.3616 | pebUME(3) 0.4085 | pebUME(5) 0.3707 | pebUME(7) 0.3572 | pebUME(10) 0.3450 | Cv 1.0302
+On Test (cal.): sbUME 0.5067 | pebUME(3) 0.4180 | pebUME(5) 0.4006 | pebUME(7) 0.3885 | pebUME(10) 0.3746 | Cv 34.0022
+On Test: CCC  0.6040 | PCC  0.6161 | RMSE  0.1552
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4431
+On ground-truth labels:		[Test CCC] for seed "315":	 0.6040
+----------------------------------------------------------------------------------------------------
+Predict val & test videos...
+...done.
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-14-21-46_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[2_315_None_None].pth".
+
+FORGETTEN TO MAKE ROLLING CORR 1 to 0 uncertainty and -1 to 1 uncertainty
