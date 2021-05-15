@@ -140,51 +140,54 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
             
             # vars_ = np.var(preds, axis=0)
             print(means.shape)
+            print(labels.shape)
+            print(features.shape)
+            print()
             ###########
             rolling_window = 3
-            # vars_ = []
-            # for dim in range(means.shape[1]):
-            #     vars_dim = []
-            #     for k, p1 in enumerate(preds):
-            #         for p2 in preds[k+1:]:
-            #             corr = [
-            #                 pd.Series(p1[:,dim][i - rolling_window : i]).corr(pd.Series(p2[:,dim][i - rolling_window : i]))
-            #                 for i in range(rolling_window, len(p1) + 1)
-            #                 ]
-            #             corr = [corr[0]] * (rolling_window - 1) + corr
-            #             if np.isnan(corr[0]):
-            #                 corr[0] = 0.
-            #             corr = pd.Series(corr).interpolate()
-            #             vars_dim += [corr]
-            #     vars_dim = np.stack(vars_dim).mean(axis=0)
-            #     vars_dim = np.abs(vars_dim - 1) / 2
-            #     vars_ += [vars_dim]
-            # vars_ = np.column_stack(vars_)
-            # assert vars_.shape == means.shape
-            ###########
-            preds = np.stack(preds, axis=3)
             vars_ = []
-            for emo_dim in range(preds.shape[2]):
-                vars_emo_dim = []
-                for sample in preds:
-                    vars_sample = []
-                    sample = sample[:,emo_dim,:]
-                    for j in range(n_ensemble_members):
-                        for k in range(j+1, n_ensemble_members):
-                            corr = [
-                                pd.Series(sample[:,j][i - rolling_window : i]).corr(pd.Series(sample[:,k][i - rolling_window : i]))
-                                for i in range(rolling_window, len(sample) + 1)
+            for dim in range(means.shape[1]):
+                vars_dim = []
+                for k, p1 in enumerate(preds):
+                    for p2 in preds[k+1:]:
+                        corr = [
+                            pd.Series(p1[:,dim][i - rolling_window : i]).corr(pd.Series(p2[:,dim][i - rolling_window : i]))
+                            for i in range(rolling_window, len(p1) + 1)
                             ]
-                            corr = [corr[0]] * (rolling_window - 1) + corr
-                            if np.isnan(corr[0]):
-                                corr[0] = 0.
-                            corr = pd.Series(corr).interpolate()
-                            vars_sample += [corr]
-                    vars_emo_dim += [np.mean(vars_sample, axis=0)]
-                vars_ += [vars_emo_dim]
-            vars_ = np.stack(vars_, axis=2)
+                        corr = [corr[0]] * (rolling_window - 1) + corr
+                        if np.isnan(corr[0]):
+                            corr[0] = 0.
+                        corr = pd.Series(corr).interpolate()
+                        vars_dim += [corr]
+                vars_dim = np.stack(vars_dim).mean(axis=0)
+                vars_ += [vars_dim]
+            vars_ = np.column_stack(vars_)
             vars_ = np.abs(vars_ - 1) / 2
             assert vars_.shape == means.shape
+            ###########
+            # preds = np.stack(preds, axis=3)
+            # vars_ = []
+            # for emo_dim in range(preds.shape[2]):
+            #     vars_emo_dim = []
+            #     for sample in preds:
+            #         vars_sample = []
+            #         sample = sample[:,emo_dim,:]
+            #         for j in range(n_ensemble_members):
+            #             for k in range(j+1, n_ensemble_members):
+            #                 corr = [
+            #                     pd.Series(sample[:,j][i - rolling_window : i]).corr(pd.Series(sample[:,k][i - rolling_window : i]))
+            #                     for i in range(rolling_window, len(sample) + 1)
+            #                 ]
+            #                 corr = [corr[0]] * (rolling_window - 1) + corr
+            #                 if np.isnan(corr[0]):
+            #                     corr[0] = 0.
+            #                 corr = pd.Series(corr).interpolate()
+            #                 vars_sample += [corr]
+            #         vars_emo_dim += [np.mean(vars_sample, axis=0)]
+            #     vars_ += [vars_emo_dim]
+            # vars_ = np.stack(vars_, axis=2)
+            # vars_ = np.abs(vars_ - 1) / 2
+            # assert vars_.shape == means.shape
             ###########
             
             full_means.append(means)
@@ -222,7 +225,7 @@ def outputs_random(model, test_loader, params):
     
     return full_means, full_vars, full_labels, full_subjectivities
 
-def outputs_quantile_regression(model, test_loader, val_loader, params):
+def outputs_quantile_regression(model, test_loader, params):
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
