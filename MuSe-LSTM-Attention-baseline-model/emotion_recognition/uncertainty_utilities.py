@@ -243,6 +243,7 @@ def outputs_quantile_regression(model, test_loader, params):
                 for i in range(rolling_window, len(preds) + 1)
             ]
             vars_ = np.array(vars_)[:,np.newaxis]
+            vars_ = np.abs(vars_ - 1) / 2
             assert vars_.shape == means.shape
             
             full_means.append(means)
