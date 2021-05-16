@@ -233,19 +233,16 @@ def outputs_quantile_regression(model, test_loader, params):
                 labels = labels.cuda()
                 subjectivities = subjectivities.cuda()
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
-            assert preds.shape[2] == 1, "Currently only one emo. dim. supported for quantile regression"
-            means = preds[:,:,0:1]
             
-            vars_ = []
+            assert preds.shape[1] == 3, "currently only one emo. dim. with 3 quantiles supported"
+            means = preds[:,0:1]
+            
             rolling_window = 3
-            for sample in preds:
-                corr = [
-                    pd.Series(sample[:,1][i - rolling_window : i]).corr(pd.Series(sample[:,2][i - rolling_window : i]))
-                    for i in range(rolling_window, len(sample) + 1)
-                ]
-                vars_ += [corr]
-            vars_ = np.array(vars_)
-            vars_ = vars_[:,:,np.newaxis]
+            vars_ = [
+                pd.Series(preds[:,1][i - rolling_window : i]).corr(pd.Series(preds[:,2][i - rolling_window : i]))
+                for i in range(rolling_window, len(preds) + 1)
+            ]
+            vars_ = np.array(vars_)[:,np.newaxis]
             assert vars_.shape == means.shape
             
             full_means.append(means)

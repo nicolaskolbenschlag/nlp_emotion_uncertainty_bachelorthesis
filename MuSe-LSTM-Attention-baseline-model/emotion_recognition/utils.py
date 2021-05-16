@@ -606,16 +606,22 @@ class TiltedCCCLoss(nn.Module):
             error = pd.Series(error).interpolate().to_numpy()
             return error
 
-        
-        mean_prediction_error = torch.mean(TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask), dim=0)
-        print(f"mean_prediction_error: {mean_prediction_error.shape}")
-        losses = [mean_prediction_error]
+        ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask)
+        print(f"ccc: {ccc.shape}")
+        # ccc = torch.mean(ccc, dim=0)
+        # print(f"mean_prediction_error: {ccc.shape}")
+
+        losses = [ccc]
         # NOTE unlimited number of window sizes would be possible
         windows = [3,10]
         for i, window in enumerate(windows, 1):
             rolling_correlation = torch.tensor([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype="float")
-            rolling_correlation_error = 1. - rolling_correlation            
-            losses += [torch.mean(rolling_correlation_error, dim=0)]
+            rolling_correlation_error = 1. - rolling_correlation
+            # NOTE mean per sample
+            rolling_correlation_error = torch.mean(rolling_correlation_error, dim=1)
+            # NOTE overall mean
+            # rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)
+            losses += [rolling_correlation_error]
         
         print(f"torch.cat(losses): {torch.cat(losses).shape}")
         loss = torch.mean(torch.cat(losses))
