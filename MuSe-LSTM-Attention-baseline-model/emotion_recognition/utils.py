@@ -590,22 +590,34 @@ class TiltedCCCLoss(nn.Module):
             for i, seq_len in enumerate(seq_lens): mask[i, seq_len:] = 0
         else:
             mask = torch.ones_like(y_true, device=y_true.device)
+        
+        def rolling_correlation_coefficient(y_true: torch.tensor, y_pred: torch.tensor, rolling_window: int) -> torch.tensor:
+            
+            def corr(x, y):
+                vx = x - torch.mean(x)
+                vy = y - torch.mean(y)
+                return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
 
-        mean_prediction_error = TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask)
+            error = [corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)]
+            error = [error[0]] * (rolling_window - 1) + error
+            # NOTE [0,0,0].corr([0,0,0]) = nan; therefore interpolate to fill nan
+            if np.isnan(error[0]):
+                error[0] = 0.
+            error = pd.Series(error).interpolate().to_numpy()
+            return error
+
+        
+        mean_prediction_error = torch.mean(TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask), dim=0)
+        print(f"mean_prediction_error: {mean_prediction_error.shape}")
         losses = [mean_prediction_error]
-        import uncertainty_utilities
         # NOTE unlimited number of window sizes would be possible
         windows = [3,10]
         for i, window in enumerate(windows, 1):
-            rolling_correlation = torch.tensor([uncertainty_utilities.rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype="float")
-            # NOTE this acts as tilt; as larger the error, as larger the influence on this quantile's error (so this 'quantile' willl focus on avoiding 'window'-term-errors)
-            rolling_correlation_error = (1. - rolling_correlation) / 2
-            # NOTE calculate actual loss
-            # ccc_loss = TiltedCCCLoss.compute_ccc(y_pred[:,:,i], y_true, mask)
-            # NOTE perform the tilt (note: ccc is one number per whole sample, while rolling correlation is one value per timesteps per sample; so take mean to get to whole sample)
-            # ccc_loss = ccc_loss * rolling_correlation_error.mean(dim=-1)
-            # losses += [ccc_loss.mean()]
-            losses += [torch.mean(rolling_correlation_error)]
+            rolling_correlation = torch.tensor([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype="float")
+            rolling_correlation_error = 1. - rolling_correlation            
+            losses += [torch.mean(rolling_correlation_error, dim=0)]
+        
+        print(f"torch.cat(losses): {torch.cat(losses).shape}")
         loss = torch.mean(torch.cat(losses))
         return loss
 
