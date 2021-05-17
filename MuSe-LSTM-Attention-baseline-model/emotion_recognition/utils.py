@@ -600,8 +600,10 @@ class TiltedCCCLoss(nn.Module):
 
             error = [corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)]
             error = [error[0]] * (rolling_window - 1) + error
+            error = torch.Tensor(error)
+            error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])
             
-            error = torch.nan_to_num(error, nan=torch.mean(error))
+            # error = torch.nan_to_num(error, nan=torch.mean(error[~torch.isnan(error)]))
             return error
         
         ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask)# NOTE (batch_size,1)
@@ -610,14 +612,17 @@ class TiltedCCCLoss(nn.Module):
         # NOTE unlimited number of window sizes would be possible
         windows = [3,10]
         for i, window in enumerate(windows, 1):
-            rolling_correlation = torch.tensor([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype=torch.double)
+            rolling_correlation = torch.stack([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)])
             rolling_correlation_error = 1. - rolling_correlation# NOTE (batch_size,seq_len)
+            # print(f"rolling_correlation_error: {rolling_correlation_error.shape}")
+            # print(f"y_true: {y_true.shape}")
+            # assert rolling_correlation_error.shape == y_true.shape
             # NOTE mean per sample
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=1)# NOTE (batch_size,)
             rolling_correlation_error = rolling_correlation_error.unsqueeze(1)# NOTE (batch_size,1)
             # NOTE overall mean
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)# NOTE (1,)
-            print(f"rolling_correlation_error: {rolling_correlation_error}")
+            # print(f"{window} rolling_correlation_error: {rolling_correlation_error}")
             losses += [rolling_correlation_error]
         
         loss = torch.mean(torch.cat(losses))

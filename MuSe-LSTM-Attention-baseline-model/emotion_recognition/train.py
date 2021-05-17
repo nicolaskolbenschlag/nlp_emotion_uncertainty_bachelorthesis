@@ -313,7 +313,7 @@ def validate_quantile_regression(model, val_loader, criterion, params):
         val_loss = 0
         val_size = 0
         for batch, batch_data in enumerate(val_loader, 1):
-            features, feature_lens, labels, _ = batch_data
+            features, feature_lens, labels, _, _ = batch_data
             batch_size = features.size(0)
             # move to gpu if use gpu
             if params.gpu is not None:

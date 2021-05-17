@@ -210,6 +210,9 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
+        if params.uncertainty_approach == "quantile_regression":
+            print("On val: loss {}".format(val_loss))
+        ########################################
         sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
         # NOTE uncalibrated
         pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
@@ -235,6 +238,8 @@ def main(params):
         val_pccs.append(val_pcc)
         val_rmses.append(val_rmse)
         best_model_files.append(best_model_file)
+
+        ########################################
 
         test_cccs.append(test_ccc)
         test_pccs.append(test_pcc)
