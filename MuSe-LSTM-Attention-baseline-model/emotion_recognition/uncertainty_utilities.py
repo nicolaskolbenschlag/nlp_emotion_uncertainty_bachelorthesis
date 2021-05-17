@@ -61,21 +61,21 @@ def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty) -> f
     # predicted_uncertainty /= predicted_uncertainty.max()
     real_uncertainty = np.abs(real_uncertainty - 1) / 2
 
-    # real_uncertainty -= real_uncertainty.min()
-    # real_uncertainty = real_uncertainty / real_uncertainty.max()
-    # predicted_uncertainty -= predicted_uncertainty.min()
-    # predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
+    real_uncertainty -= real_uncertainty.min()
+    real_uncertainty = real_uncertainty / real_uncertainty.max()
+    predicted_uncertainty -= predicted_uncertainty.min()
+    predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
 
-    def rolling_scaling(array: np.array, window: int = 10) -> np.array:
-        out = np.empty_like(array)
-        for i in range(0, len(array), window):
-            tmp = array[i : min(i + window, len(array))]
-            tmp -= tmp.min()
-            tmp = tmp / tmp.max()
-            out[i : min(i + window, len(array))] = tmp
-        return out
-    real_uncertainty = rolling_scaling(real_uncertainty)
-    predicted_uncertainty = rolling_scaling(predicted_uncertainty)
+    # def rolling_scaling(array: np.array, window: int = 10) -> np.array:
+    #     out = np.empty_like(array)
+    #     for i in range(0, len(array), window):
+    #         tmp = array[i : min(i + window, len(array))]
+    #         tmp -= tmp.min()
+    #         tmp = tmp / tmp.max()
+    #         out[i : min(i + window, len(array))] = tmp
+    #     return out
+    # real_uncertainty = rolling_scaling(real_uncertainty)
+    # predicted_uncertainty = rolling_scaling(predicted_uncertainty)
 
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 

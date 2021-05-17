@@ -56,3 +56,17 @@ Samples in partitions: (3132, 62, 64)
 Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:74: RuntimeWarning: invalid value encountered in true_divide
+  tmp = tmp / tmp.max()
+On Test (uncal.): sbUME nan | pebUME(3) 0.4120 | pebUME(5) 0.4033 | pebUME(7) 0.4042 | pebUME(10) nan | Cv 0.6972
+On Test (cal.): sbUME nan | pebUME(3) 0.5208 | pebUME(5) 0.5197 | pebUME(7) 0.5181 | pebUME(10) nan | Cv 0.3365
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:74: RuntimeWarning: invalid value encountered in true_divide
+  tmp = tmp / tmp.max()
+On Test: CCC  0.6050 | PCC  0.6196 | RMSE  0.1611
+==================================================
+Training model... [seed 315]
+slurmstepd: *** JOB 110910 ON eihw-gpu2 CANCELLED AT 2021-05-16T19:06:06 ***
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.

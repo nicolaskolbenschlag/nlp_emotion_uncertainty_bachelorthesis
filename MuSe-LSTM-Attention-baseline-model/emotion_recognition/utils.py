@@ -600,30 +600,35 @@ class TiltedCCCLoss(nn.Module):
 
             error = [corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)]
             error = [error[0]] * (rolling_window - 1) + error
+            
             # NOTE [0,0,0].corr([0,0,0]) = nan; therefore interpolate to fill nan
-            if np.isnan(error[0]):
-                error[0] = 0.
-            error = pd.Series(error).interpolate().to_numpy()
+            # if torch.isnan(error[0]):
+                # error[0] = 0.
+            # error = pd.Series(error).interpolate().to_numpy()
+            # error[torch.isnan(error)] = 0.
+            
             return error
-
+        
+        # print(f"y_pred: {y_pred.shape}")# (1024, 200, 3)
+        # print(f"y_true: {y_true.shape}")# (1024, 200)
         ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask)
-        print(f"ccc: {ccc.shape}")
-        # ccc = torch.mean(ccc, dim=0)
-        # print(f"mean_prediction_error: {ccc.shape}")
-
+        # print(f"ccc: {ccc.shape}")# (1024,1)
+        ccc = torch.mean(ccc, dim=0)
         losses = [ccc]
         # NOTE unlimited number of window sizes would be possible
         windows = [3,10]
         for i, window in enumerate(windows, 1):
-            rolling_correlation = torch.tensor([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype="float")
+            rolling_correlation = torch.tensor([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)], dtype=torch.double)
             rolling_correlation_error = 1. - rolling_correlation
+            assert rolling_correlation_error.shape == (1024,200)
             # NOTE mean per sample
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=1)
+            assert rolling_correlation_error.shape == (1024,1)
             # NOTE overall mean
-            # rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)
+            rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)
+            print(f"rolling_correlation_error: {rolling_correlation_error}")
             losses += [rolling_correlation_error]
         
-        print(f"torch.cat(losses): {torch.cat(losses).shape}")
         loss = torch.mean(torch.cat(losses))
         return loss
 
