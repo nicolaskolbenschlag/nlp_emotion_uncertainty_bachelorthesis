@@ -57,25 +57,30 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
     ume /= bins
     return ume
 
-def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty) -> float:
-    # predicted_uncertainty /= predicted_uncertainty.max()
+def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty, params) -> float:
     real_uncertainty = np.abs(real_uncertainty - 1) / 2
 
-    real_uncertainty -= real_uncertainty.min()
-    real_uncertainty = real_uncertainty / real_uncertainty.max()
-    predicted_uncertainty -= predicted_uncertainty.min()
-    predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
+    def rolling_scaling(array: np.array, window: int) -> np.array:
+        out = np.empty_like(array)
+        for i in range(0, len(array), window):
+            tmp = array[i : min(i + window, len(array))]
+            tmp -= tmp.min()
+            if tmp.max() != 0: tmp = tmp / tmp.max()
+            out[i : min(i + window, len(array))] = tmp
+        # if np.isnan(out[0]): out[0] = .0
+        # out = pd.Series(out).interpolate().to_numpy()
+        return out
 
-    # def rolling_scaling(array: np.array, window: int = 10) -> np.array:
-    #     out = np.empty_like(array)
-    #     for i in range(0, len(array), window):
-    #         tmp = array[i : min(i + window, len(array))]
-    #         tmp -= tmp.min()
-    #         tmp = tmp / tmp.max()
-    #         out[i : min(i + window, len(array))] = tmp
-    #     return out
-    # real_uncertainty = rolling_scaling(real_uncertainty)
-    # predicted_uncertainty = rolling_scaling(predicted_uncertainty)
+    if params.ume_rolling_scaling_window is None:
+        real_uncertainty -= real_uncertainty.min()
+        real_uncertainty = real_uncertainty / real_uncertainty.max()
+        predicted_uncertainty -= predicted_uncertainty.min()
+        predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
+
+    else:
+        window = params.ume_rolling_scaling_window
+        real_uncertainty = rolling_scaling(real_uncertainty, window)
+        predicted_uncertainty = rolling_scaling(predicted_uncertainty, window)
 
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
@@ -139,7 +144,6 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
             means = np.mean(preds, axis=0)
             
             # vars_ = np.var(preds, axis=0)
-            ###########
             rolling_window = 3
             vars_ = []
             for dim in range(means.shape[1]):
@@ -151,8 +155,7 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
                             for i in range(rolling_window, len(p1) + 1)
                             ]
                         corr = [corr[0]] * (rolling_window - 1) + corr
-                        if np.isnan(corr[0]):
-                            corr[0] = 0.
+                        if np.isnan(corr[0]): corr[0] = 0.
                         corr = pd.Series(corr).interpolate()
                         vars_dim += [corr]
                 vars_dim = np.stack(vars_dim).mean(axis=0)
@@ -160,31 +163,6 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
             vars_ = np.column_stack(vars_)
             vars_ = np.abs(vars_ - 1) / 2
             assert vars_.shape == means.shape
-            ###########
-            # preds = np.stack(preds, axis=3)
-            # vars_ = []
-            # for emo_dim in range(preds.shape[2]):
-            #     vars_emo_dim = []
-            #     for sample in preds:
-            #         vars_sample = []
-            #         sample = sample[:,emo_dim,:]
-            #         for j in range(n_ensemble_members):
-            #             for k in range(j+1, n_ensemble_members):
-            #                 corr = [
-            #                     pd.Series(sample[:,j][i - rolling_window : i]).corr(pd.Series(sample[:,k][i - rolling_window : i]))
-            #                     for i in range(rolling_window, len(sample) + 1)
-            #                 ]
-            #                 corr = [corr[0]] * (rolling_window - 1) + corr
-            #                 if np.isnan(corr[0]):
-            #                     corr[0] = 0.
-            #                 corr = pd.Series(corr).interpolate()
-            #                 vars_sample += [corr]
-            #         vars_emo_dim += [np.mean(vars_sample, axis=0)]
-            #     vars_ += [vars_emo_dim]
-            # vars_ = np.stack(vars_, axis=2)
-            # vars_ = np.abs(vars_ - 1) / 2
-            # assert vars_.shape == means.shape
-            ###########
             
             full_means.append(means)
             full_vars.append(vars_)
@@ -270,18 +248,40 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
     error = pd.Series(error).interpolate().to_numpy()
     return error
 
+def subjectivity_vs_rolling_correlation_error(subjectivity: np.ndarray, labels: np.ndarray, means: np.ndarray):
+    
+    def ccc_score(x: np.array, y: np.array) -> float:
+        x_mean, y_mean = np.mean(x), np.mean(y)
+        cov_mat = np.cov(x, y)
+        covariance = cov_mat[0,1]
+        x_var, y_var = cov_mat[0,0], cov_mat[1,1]
+        ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+        return ccc
+    
+    SvCs = []
+    for i in range(subjectivity.shape[1]):
+        tmp = {}
+        for window in [3,5,7,10]:
+            correlation_error = rolling_correlation_coefficient(labels[:,i], means[:,i], window)
+            tmp[window] = ccc_score(subjectivity[:,i], correlation_error)
+            ###### NOTE for debugging
+            print(f"Should be 1: {ccc_score(subjectivity[:,i], subjectivity[:,i])}")
+            ######
+        SvCs += [tmp]
+    return SvCs
+
 def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True):
     sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(means.shape[1]):
 
         # sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
-        sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i])]
+        sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i], params)]
  
         tmp = {}
         for window in [3,5,7,10]:
             
             # pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
-            pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
+            pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i], params)
 
             tmp[window] = pebUME
         pebUMEs += [tmp]
@@ -313,7 +313,8 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         prediction_fn = outputs_quantile_regression
         method = "Tilt by Correlation"
     
-    elif params.uncertainty_approach == None:# NOTE random uncertainty generation
+    # NOTE random uncertainty generation
+    elif params.uncertainty_approach == None:
         prediction_fn = outputs_random
         method = "Random"
     
@@ -323,6 +324,10 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     
+    # NOTE compare subjectivity and rolling correlation error
+    SvCs = subjectivity_vs_rolling_correlation_error(full_subjectivities, full_labels, full_means)
+    print(f"Subjectivity vs. roll.-corr.-coef.: {SvCs}")
+
     # NOTE re-calibration: if validation data given, see it as an order to calibrate
     if val_loader is None:
         return  sbUMEs, pebUMEs, Cvs
@@ -332,12 +337,9 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     for i in range(full_means.shape[1]):
         calibration_features = full_vars_val[:,i]
         
-        # NOTE set calibration target
-        calibration_target = "rolling_error"
-
-        if calibration_target == "subjectivity":
+        if params.calibration_target == "subjectivity":
             true_uncertainty = full_subjectivities_val[:,i]
-        elif calibration_target == "rolling_error":
+        elif params.calibration_target == "rolling_error_3":
             true_uncertainty = rolling_correlation_coefficient(full_labels_val[:,i], full_means_val[:,i], 3)
         else:
             raise NotImplementedError

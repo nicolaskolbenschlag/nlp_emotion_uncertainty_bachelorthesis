@@ -130,10 +130,12 @@ def parse_params():
                         help='whether construct data from scratch. (default: False)')
 
     
-    # NOTE: choose uncertainty approach
+    # NOTE uncertainty
     parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
     parser.add_argument("--predict_subjectivity", type=bool, default=False)
     parser.add_argument("--measure_uncertainty", type=bool, default=True)
+    parser.add_argument("--ume_rolling_scaling_window", type=int, default=None)
+    parser.add_argument("--calibration_target", type=str, choices=["subjectivity", "rolling_error_3"], default="subjectivity")
 
     # parse
     args = parser.parse_args()
