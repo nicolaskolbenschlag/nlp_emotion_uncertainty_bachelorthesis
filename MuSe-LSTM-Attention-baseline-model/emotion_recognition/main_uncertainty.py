@@ -131,7 +131,8 @@ def parse_params():
 
     
     # NOTE: choose uncertainty approach
-    parser.add_argument('--uncertainty_approach', type=str, choices=[None, 'quantile_regression', 'monte_carlo_dropout'])
+    parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
+    parser.add_argument("--predict_subjectivity", type=bool, default=False)
 
     # parse
     args = parser.parse_args()
@@ -168,11 +169,14 @@ def main(params):
     # check params
     if params.out_biases is None:
         params.out_biases = [0.0] * len(params.emo_dim_set)
+
     if params.loss_weights is None:
         if len(params.emo_dim_set) == 2:
             params.loss_weights = [0.5, 0.5]  # default: 0.5 * arousal + 0.5 * valence
         else:
             params.loss_weights = [1]
+
+
     assert len(params.emo_dim_set) == len(params.loss_weights) and len(params.loss_weights) == len(params.out_biases)
     assert (not params.add_seg_id and params.transformer) or not params.transformer
     assert (params.transformer and len(params.feature_set) == 3) or not params.transformer

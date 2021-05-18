@@ -95,7 +95,7 @@ class QuantileRegressor(nn.Module):
     def __init__(self, d_in, d_hidden, d_out, dropout=0, bias=0):
         super(QuantileRegressor, self).__init__()
         self.fc_1 = nn.Sequential(nn.Linear(d_in, d_hidden), nn.ReLU(True), nn.Dropout(dropout))
-        self.fc_2 = nn.Linear(d_hidden, 3)#d_out)
+        self.fc_2 = nn.Linear(d_hidden, 3)#d_out)# TODO d_out * 3
         nn.init.constant_(self.fc_2.bias.data, bias)
 
     def forward(self, x):
@@ -132,7 +132,8 @@ class Model(nn.Module):
         if params.uncertainty_approach == "quantile_regression":
             self.out = QuantileRegressor(d_rnn_out, params.d_out_fc, len(params.emo_dim_set), dropout=params.out_dr)
         else:
-            self.out = Regressor(d_rnn_out, params.d_out_fc, len(params.emo_dim_set), dropout=params.out_dr)
+            out_dim = len(params.emo_dim_set) if not params.predict_subjectivity else len(params.emo_dim_set) * 2
+            self.out = Regressor(d_rnn_out, params.d_out_fc, out_dim, dropout=params.out_dr)
 
     def forward(self, x, x_len):
         if self.params.d_in != self.params.d_rnn and not self.params.transformer:

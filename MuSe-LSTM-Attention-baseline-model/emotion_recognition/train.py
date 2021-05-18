@@ -101,7 +101,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
     report_loss, report_size = 0, 0
     total_loss, total_size = 0, 0
     for batch, batch_data in enumerate(train_loader, 1):
-        features, feature_lens, labels, metas, _ = batch_data
+        features, feature_lens, labels, metas, subjectivities = batch_data
         batch_size = features.size(0)
         # move to gpu if use gpu
         if params.gpu is not None:
@@ -122,6 +122,15 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
                 branch_loss = criterion(preds[:, :, i], labels[:, :, i], feature_lens, params.label_smooth)
 
             loss = loss + params.loss_weights[i] * branch_loss
+
+            #########################
+            if params.predict_subjectivity:
+                assert params.uncertainty_approach != "quantile_regression", "currently not supported"
+                idx = i + len(params.loss_weights)
+                branch_loss = criterion(preds[:,:,idx], subjectivities[:,:,i], feature_lens, None)
+                loss = loss + params.loss_weights[i] * branch_loss
+            #########################
+            
         loss.backward()
         if params.clip > 0:
             nn.utils.clip_grad_norm_(model.parameters(), max_norm=params.clip)
