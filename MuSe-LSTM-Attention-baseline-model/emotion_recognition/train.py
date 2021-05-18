@@ -363,8 +363,8 @@ def evaluate_quantile_regression(model, test_loader, params):
                 labels = labels.cuda()
             
             preds = model(features, feature_lens)
-            # preds = preds[:, :, 1:2]# NOTE: use 0.5 quantile for prediction
-            preds = preds.mean(axis=2).reshape((preds.shape[0], preds.shape[1], 1))# NOTE: use mean of all quantiles as prediction
+            preds = preds[:, :, 1:2]# NOTE: use 0.5 quantile for prediction
+            # preds = preds.mean(axis=2).reshape((preds.shape[0], preds.shape[1], 1))# NOTE: use mean of all quantiles as prediction
             
             full_preds.append(preds.cpu().detach().squeeze(0).numpy())
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())

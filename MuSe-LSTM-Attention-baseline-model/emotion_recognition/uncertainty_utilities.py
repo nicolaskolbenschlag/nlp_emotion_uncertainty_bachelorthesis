@@ -235,13 +235,16 @@ def outputs_quantile_regression(model, test_loader, params):
             preds = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
             
             assert preds.shape[1] == 3, "currently only one emo. dim. with 3 quantiles supported"
-            means = preds[:,0:1]
+            means = preds[:,1:2]
             
             rolling_window = 3
             vars_ = [
-                pd.Series(preds[:,1][i - rolling_window : i]).corr(pd.Series(preds[:,2][i - rolling_window : i]))
+                pd.Series(preds[:,0][i - rolling_window : i]).corr(pd.Series(preds[:,2][i - rolling_window : i]))
                 for i in range(rolling_window, len(preds) + 1)
             ]
+            vars_ = [vars_[0]] * (rolling_window - 1) + vars_
+            if np.isnan(vars_[0]): vars_[0] = 0.
+            vars_ = pd.Series(vars_).interpolate()
             vars_ = np.array(vars_)[:,np.newaxis]
             vars_ = np.abs(vars_ - 1) / 2
             assert vars_.shape == means.shape
@@ -330,7 +333,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         calibration_features = full_vars_val[:,i]
         
         # NOTE set calibration target
-        calibration_target = "subjectivity"
+        calibration_target = "rolling_error"
 
         if calibration_target == "subjectivity":
             true_uncertainty = full_subjectivities_val[:,i]

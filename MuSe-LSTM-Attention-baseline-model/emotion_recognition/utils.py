@@ -599,31 +599,32 @@ class TiltedCCCLoss(nn.Module):
                 return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
 
             error = [corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)]
-            error = [error[0]] * (rolling_window - 1) + error
+            # error = [error[0]] * (rolling_window - 1) + error
             error = torch.Tensor(error)
             error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])
             
             # error = torch.nan_to_num(error, nan=torch.mean(error[~torch.isnan(error)]))
             return error
         
-        ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,0], y_true, mask)# NOTE (batch_size,1)
+        ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,1], y_true, mask)# NOTE (batch_size,1)
         ccc = torch.mean(ccc, dim=0)# NOTE (1,)
-        losses = [ccc]
+        losses = []
         # NOTE unlimited number of window sizes would be possible
         windows = [3,10]
-        for i, window in enumerate(windows, 1):
-            rolling_correlation = torch.stack([rolling_correlation_coefficient(yt, yp[:,i], window) for yt, yp in zip(y_true, y_pred)])
+        node_indicies = [0,2]# NOTE 'upper' and 'lower' quantile
+        for i, idx in enumerate(node_indicies):
+            window = windows[i]
+            rolling_correlation = torch.stack([rolling_correlation_coefficient(yt, yp[:,idx], window) for yt, yp in zip(y_true, y_pred)])
             rolling_correlation_error = 1. - rolling_correlation# NOTE (batch_size,seq_len)
-            # print(f"rolling_correlation_error: {rolling_correlation_error.shape}")
-            # print(f"y_true: {y_true.shape}")
-            # assert rolling_correlation_error.shape == y_true.shape
             # NOTE mean per sample
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=1)# NOTE (batch_size,)
             rolling_correlation_error = rolling_correlation_error.unsqueeze(1)# NOTE (batch_size,1)
             # NOTE overall mean
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)# NOTE (1,)
-            # print(f"{window} rolling_correlation_error: {rolling_correlation_error}")
             losses += [rolling_correlation_error]
+        
+        # NOTE use middle quantile as prediction
+        losses = [losses[0], ccc, losses[1]]
         
         loss = torch.mean(torch.cat(losses))
         return loss
