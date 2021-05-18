@@ -132,7 +132,7 @@ class Model(nn.Module):
         if params.uncertainty_approach == "quantile_regression":
             self.out = QuantileRegressor(d_rnn_out, params.d_out_fc, len(params.emo_dim_set), dropout=params.out_dr)
         else:
-            out_dim = len(params.emo_dim_set) if not params.predict_subjectivity else len(params.emo_dim_set) * 2
+            out_dim = len(params.emo_dim_set) if not params.predict_subjectivity else len(params.emo_dim_set) * 2# NOTE nodes for subjectivity
             self.out = Regressor(d_rnn_out, params.d_out_fc, out_dim, dropout=params.out_dr)
 
     def forward(self, x, x_len):

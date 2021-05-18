@@ -133,6 +133,7 @@ def parse_params():
     # NOTE: choose uncertainty approach
     parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
     parser.add_argument("--predict_subjectivity", type=bool, default=False)
+    parser.add_argument("--measure_uncertainty", type=bool, default=True)
 
     # parse
     args = parser.parse_args()
@@ -217,13 +218,15 @@ def main(params):
         if params.uncertainty_approach == "quantile_regression":
             print("On val: loss {}".format(val_loss))
         ########################################
-        sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
-        # NOTE uncalibrated
-        pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
-        print("On Test (uncal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
-        # NOTE calibrated
-        pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs_cal[0].items()])
-        print("On Test (cal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs_cal[0], pebUME_str, Cvs_cal[0]))
+        if params.measure_uncertainty:
+            assert not params.predict_subjectivity, "not supported; either directly predict uncertainty or quantify"
+            sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
+            # NOTE uncalibrated
+            pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
+            print("On Test (uncal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs[0], pebUME_str, Cvs[0]))
+            # NOTE calibrated
+            pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs_cal[0].items()])
+            print("On Test (cal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs_cal[0], pebUME_str, Cvs_cal[0]))
         ########################################
         if params.uncertainty_approach == None:
             test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
