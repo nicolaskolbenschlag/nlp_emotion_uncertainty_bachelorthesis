@@ -248,7 +248,7 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
     error = pd.Series(error).interpolate().to_numpy()
     return error
 
-def subjectivity_vs_rolling_correlation_error(subjectivity: np.ndarray, labels: np.ndarray, means: np.ndarray):
+def subjectivity_vs_rolling_correlation_error(subjectivities: np.ndarray, labels: np.ndarray, means: np.ndarray):
     
     def ccc_score(x: np.array, y: np.array) -> float:
         x_mean, y_mean = np.mean(x), np.mean(y)
@@ -259,13 +259,13 @@ def subjectivity_vs_rolling_correlation_error(subjectivity: np.ndarray, labels: 
         return ccc
     
     SvCs = []
-    for i in range(subjectivity.shape[1]):
+    for i in range(subjectivities.shape[1]):
         tmp = {}
         for window in [3,5,7,10]:
             correlation_error = rolling_correlation_coefficient(labels[:,i], means[:,i], window)
-            tmp[window] = ccc_score(subjectivity[:,i], correlation_error)
+            tmp[window] = ccc_score(subjectivities[:,i], correlation_error)
             ###### NOTE for debugging
-            print(f"Should be 1: {ccc_score(subjectivity[:,i], subjectivity[:,i])}")
+            print(f"Should be -1: {ccc_score(subjectivities[:,i], subjectivities[:,i][::-1])}")
             ######
         SvCs += [tmp]
     return SvCs
