@@ -132,8 +132,12 @@ def parse_params():
     
     # NOTE uncertainty
     parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
-    parser.add_argument("--predict_subjectivity", type=bool, default=False)
-    parser.add_argument("--measure_uncertainty", type=bool, default=True)
+    
+    # parser.add_argument("--predict_subjectivity", type=bool, default=False)
+    # parser.add_argument("--measure_uncertainty", type=bool, default=True)
+    parser.add_argument("--predict_subjectivity", action="store_true", help="whether predict subjectivity. (default: False)")
+    parser.add_argument("--not_measure_uncertainty", action="store_true", help="whether measure uncertainty. (default: False)")
+    
     parser.add_argument("--ume_rolling_scaling_window", type=int, default=None)
     parser.add_argument("--calibration_target", type=str, choices=["subjectivity", "rolling_error_3"], default="subjectivity")
 
@@ -158,6 +162,9 @@ def get_dataloaders(data, subjectivities_per_sample, predict=False):
 def main(params):
     # load data
     print('Constructing dataset and data loader ...')
+
+    assert params.predict_subjectivity
+    assert params.not_measure_uncertainty
 
     ########################################
     data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
@@ -217,11 +224,18 @@ def main(params):
             train_model(model, data_loader, params)
         
         ########################################
+        val_losses.append(val_loss)
+        val_cccs.append(val_ccc)
+        val_pccs.append(val_pcc)
+        val_rmses.append(val_rmse)
+        best_model_files.append(best_model_file)
+        
+        ########################################
         if params.uncertainty_approach == "quantile_regression":
             print("On val: loss {}".format(val_loss))
         ########################################
-        if params.measure_uncertainty:
-            assert not params.predict_subjectivity, "not supported; either directly predict uncertainty or quantify"
+        if not params.not_measure_uncertainty:
+            assert not params.predict_subjectivity, "not supported, either directly predict uncertainty or quantify"
             sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal = uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
             # NOTE uncalibrated
             pebUME_str = " | ".join(["pebUME({}) {:.4f}".format(window, ume) for window, ume in pebUMEs[0].items()])
@@ -231,7 +245,13 @@ def main(params):
             print("On Test (cal.): sbUME {:.4f} | {} | Cv {:.4f}".format(sbUMEs_cal[0], pebUME_str, Cvs_cal[0]))
         ########################################
         if params.uncertainty_approach == None:
-            test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
+            # test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
+
+            if not params.predict_subjectivity:
+                test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
+            else:
+                test_ccc, test_pcc, test_rmse, test_subjectivity_mse = train.evaluate_with_subjectivities(model, data_loader['test'], params)
+                print(test_subjectivity_mse)
         
         elif params.uncertainty_approach == "quantile_regression":
             test_ccc, test_pcc, test_rmse = train.evaluate_quantile_regression(model, data_loader['test'], params)
@@ -242,11 +262,11 @@ def main(params):
         else:
             raise NotImplementedError()
         ########################################
-        val_losses.append(val_loss)
-        val_cccs.append(val_ccc)
-        val_pccs.append(val_pcc)
-        val_rmses.append(val_rmse)
-        best_model_files.append(best_model_file)
+        # val_losses.append(val_loss)
+        # val_cccs.append(val_ccc)
+        # val_pccs.append(val_pcc)
+        # val_rmses.append(val_rmse)
+        # best_model_files.append(best_model_file)
 
         ########################################
 

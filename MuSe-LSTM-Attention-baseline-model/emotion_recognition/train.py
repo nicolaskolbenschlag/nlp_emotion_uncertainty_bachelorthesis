@@ -100,6 +100,10 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
     start_time = time.time()
     report_loss, report_size = 0, 0
     total_loss, total_size = 0, 0
+
+    # NOTE define loss function for subjectivity
+    criterion_subjectivity = utils.MSELoss()
+
     for batch, batch_data in enumerate(train_loader, 1):
         features, feature_lens, labels, metas, subjectivities = batch_data
         batch_size = features.size(0)
@@ -125,9 +129,9 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
 
             #########################
             if params.predict_subjectivity:
-                assert params.uncertainty_approach != "quantile_regression", "currently not supported"
+                assert params.uncertainty_approach != "quantile_regression" and params.not_measure_uncertainty, "currently not supported"
                 idx = i + len(params.loss_weights)
-                branch_loss = criterion(preds[:,:,idx], subjectivities[:,:,i], feature_lens, None)
+                branch_loss = criterion_subjectivity(preds[:,:,idx], subjectivities[:,:,i], feature_lens, None)
                 loss = loss + params.loss_weights[i] * branch_loss
             #########################
             
@@ -206,7 +210,7 @@ def validate(model, val_loader, criterion, params):
         val_size = 0
         for batch, batch_data in enumerate(val_loader, 1):
             
-            features, feature_lens, labels, metas, subjectivity = batch_data
+            features, feature_lens, labels, metas, subjectivities = batch_data
             
             batch_size = features.size(0)
             # move to gpu if use gpu
@@ -216,6 +220,12 @@ def validate(model, val_loader, criterion, params):
                 feature_lens = feature_lens.cuda()
                 labels = labels.cuda()
             preds = model(features, feature_lens)
+
+            #######################
+            if params.predict_subjectivity:
+                preds = preds[:,:,:len(preds.loss_weights)]
+            #######################
+            
             # cal loss
             loss = 0.0
             for i in range(len(params.loss_weights)):
@@ -229,6 +239,7 @@ def validate(model, val_loader, criterion, params):
             full_preds.append(preds.cpu().detach().squeeze(0).numpy())
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
         val_loss /= val_size
+
         val_ccc, val_pcc, val_rmse = utils.eval(full_preds, full_labels)
 
     return val_loss, val_ccc, val_pcc, val_rmse
@@ -268,13 +279,50 @@ def validate_std(model, val_loader, criterion, params):
 
     return val_loss, val_ccc, val_pcc, val_rmse
 
+########################
+def evaluate_subjectivity_prediction(preds: np.ndarray, labels: np.ndarray):
+    preds = np.row_stack(preds)
+    labels = np.row_stack(labels)
+    assert preds.shape == labels.shape
+    MSEs = []
+    for i in range(preds.shape[1]):
+        pred_i = preds[:,i]
+        label_i = labels[:,i]
+        
+        mse = np.mean((pred_i - label_i) ** 2)
+        MSEs += [mse]
+    
+    return MSEs
+
+def evaluate_with_subjectivities(model, test_loader, params):
+    model.eval()
+    full_preds, full_labels = [], []
+    with torch.no_grad():
+        for batch, batch_data in enumerate(test_loader, 1):
+            features, feature_lens, labels, meta, subjectivities = batch_data
+            if params.gpu is not None:
+                model.cuda()
+                features = features.cuda()
+                feature_lens = feature_lens.cuda()
+                labels = labels.cuda()
+            preds = model(features, feature_lens)
+            full_preds.append(preds.cpu().detach().squeeze(0).numpy())
+            full_labels.append(labels.cpu().detach().squeeze(0).numpy())
+        
+        print(f"full_preds: {full_preds.shape}")
+        test_ccc, test_pcc, test_rmse = utils.eval(full_preds[:len(params.emo_dim_set)], full_labels)
+
+        test_subjectivity_mse = evaluate_subjectivity_prediction(full_preds[len(params.emo_dim_set):], subjectivities)
+
+    return test_ccc, test_pcc, test_rmse, test_subjectivity_mse
+########################
 
 def evaluate(model, test_loader, params):
     model.eval()
     full_preds, full_labels = [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta, _ = batch_data
+            features, feature_lens, labels, meta, subjectivities = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()

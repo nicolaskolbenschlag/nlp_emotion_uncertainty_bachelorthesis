@@ -68,3 +68,20 @@ On Test (cal.): sbUME 0.4067 | pebUME(3) 0.5558 | pebUME(5) 0.5710 | pebUME(7) 0
 On Test: CCC  0.6050 | PCC  0.6196 | RMSE  0.1611
 ==================================================
 Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+Should be 1: 1.0
+Should be 1: 1.0
+Should be 1: 1.0
+Should be 1: 1.0
+Subjectivity vs. roll.-corr.-coef.: [{3: 0.011902877162236309, 5: 0.018979350210734103, 7: 0.023704981979035394, 10: 0.02461077616215021}]
+On Test (uncal.): sbUME 0.2831 | pebUME(3) 0.4199 | pebUME(5) 0.4043 | pebUME(7) 0.4099 | pebUME(10) 0.4191 | Cv 0.3507
+On Test (cal.): sbUME 0.3959 | pebUME(3) 0.5519 | pebUME(5) 0.5662 | pebUME(7) 0.5765 | pebUME(10) 0.5882 | Cv 0.0766
+On Test: CCC  0.6060 | PCC  0.6181 | RMSE  0.1548
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4431
+On ground-truth labels:		[Test CCC] for seed "315":	 0.6060
+----------------------------------------------------------------------------------------------------
+Delete model "MuSe-LSTM-Attention-baseline-model/output/model/2021-05-19-09-00_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[2_315_None_None].pth".
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.
