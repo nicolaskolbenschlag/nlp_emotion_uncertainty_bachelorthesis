@@ -223,7 +223,7 @@ def validate(model, val_loader, criterion, params):
 
             #######################
             if params.predict_subjectivity:
-                preds = preds[:,:,:len(preds.loss_weights)]
+                preds = preds[:,:,:len(params.loss_weights)]
             #######################
             
             # cal loss
@@ -284,15 +284,27 @@ def evaluate_subjectivity_prediction(preds: np.ndarray, labels: np.ndarray):
     preds = np.row_stack(preds)
     labels = np.row_stack(labels)
     assert preds.shape == labels.shape
-    MSEs = []
+    mse, var_pred, var_label = [], [], []
     for i in range(preds.shape[1]):
         pred_i = preds[:,i]
         label_i = labels[:,i]
         
-        mse = np.mean((pred_i - label_i) ** 2)
-        MSEs += [mse]
+        mse_ = np.mean((pred_i - label_i) ** 2)
+        mse += [mse_]
+
+        var_pred_ = np.var(pred_i)
+        var_pred += [var_pred_]
+
+        var_label_ = np.var(label_i)
+        var_label += [var_label_]
     
-    return MSEs
+    print("-----Evaluation of subjectivity prediction-----")
+    print(f"mse: {mse}")
+    print(f"var_label: {var_label}")
+    print(f"var_pred: {var_pred}")
+    print("-----------------------------------------------")
+    
+    return mse, var_pred, var_label
 
 def evaluate_with_subjectivities(model, test_loader, params):
     model.eval()
@@ -312,7 +324,7 @@ def evaluate_with_subjectivities(model, test_loader, params):
         print(f"full_preds: {full_preds.shape}")
         test_ccc, test_pcc, test_rmse = utils.eval(full_preds[:len(params.emo_dim_set)], full_labels)
 
-        test_subjectivity_mse = evaluate_subjectivity_prediction(full_preds[len(params.emo_dim_set):], subjectivities)
+        _, _, _ = evaluate_subjectivity_prediction(full_preds[len(params.emo_dim_set):], subjectivities)
 
     return test_ccc, test_pcc, test_rmse, test_subjectivity_mse
 ########################
