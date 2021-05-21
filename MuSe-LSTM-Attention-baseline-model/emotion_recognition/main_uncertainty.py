@@ -163,9 +163,6 @@ def main(params):
     # load data
     print('Constructing dataset and data loader ...')
 
-    assert params.predict_subjectivity
-    assert params.not_measure_uncertainty
-
     ########################################
     data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
     
@@ -250,8 +247,7 @@ def main(params):
             if not params.predict_subjectivity:
                 test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)
             else:
-                test_ccc, test_pcc, test_rmse, test_subjectivity_mse = train.evaluate_with_subjectivities(model, data_loader['test'], params)
-                print(test_subjectivity_mse)
+                test_ccc, test_pcc, test_rmse = train.evaluate_with_subjectivities(model, data_loader['test'], params)
         
         elif params.uncertainty_approach == "quantile_regression":
             test_ccc, test_pcc, test_rmse = train.evaluate_quantile_regression(model, data_loader['test'], params)

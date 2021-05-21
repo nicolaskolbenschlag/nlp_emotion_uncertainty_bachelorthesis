@@ -18,27 +18,57 @@ import os
 # PATH_TO_RAW_AUDIO = os.path.join(PATH_TO_MUSE_2020, 'raw/audio_norm')
 # PATH_TO_RAW_VIDEO = os.path.join(PATH_TO_MUSE_2020, 'raw/video')
 
-DATA_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/data'
-MODEL_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/model'
-LOG_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/log'
-PREDICTION_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/prediction'
+
+
+
+##########################################
+
+# DATA_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/data'
+# MODEL_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/model'
+# LOG_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/log'
+# PREDICTION_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/prediction'
+# # FUSION_FOLDER = 'output/fusion'
+
+# # numerical
+# EPSILON = 1e-6
+
+# PARTITION_FILE = "c1_muse_wild/partition.csv"
+# PATH_TO_ALIGNED_FEATURES = "../emotion_uncertainty_oberseminar/MuSe-LSTM-Attention-baseline-model/extracted_features/"
+# PATH_TO_LABELS = "c1_muse_wild/label_segments/"
+# PATH_TO_LABELS_RAW = "c1_muse_wild/label_segments/raw_annotations"
+# PATH_TO_TRANSCRIPTIONS = "c1_muse_wild/transcription_segments/"
+# ANNOTATOR_MAPPING = "c1_muse_wild/annotator_id_mapping.json"
+
+# USE_2021_FEATURES = True
+# if USE_2021_FEATURES:
+#     base_dir_2021 = "../../EmCaR/8_MuSe2021/data/c1_muse_wilder/"
+#     # PATH_TO_ALIGNED_FEATURES = base_dir_2021 + "feature_segments/"
+#     PATH_TO_LABELS = base_dir_2021 + "label_segments/"    
+
+##########################################
+
+base_0 = "/nas/student/NicolasKolbenschlag/"
+base_1 = base_0 + "emotion_uncertainty_bachelorarbeit/"
+
+DATA_FOLDER = base_1 + 'MuSe-LSTM-Attention-baseline-model/output/data'
+MODEL_FOLDER = base_1 + 'MuSe-LSTM-Attention-baseline-model/output/model'
+LOG_FOLDER = base_1 + 'MuSe-LSTM-Attention-baseline-model/output/log'
+PREDICTION_FOLDER = base_1 + 'MuSe-LSTM-Attention-baseline-model/output/prediction'
 # FUSION_FOLDER = 'output/fusion'
-
-
 
 # numerical
 EPSILON = 1e-6
 
-PARTITION_FILE = "c1_muse_wild/partition.csv"
-PATH_TO_ALIGNED_FEATURES = "../emotion_uncertainty_oberseminar/MuSe-LSTM-Attention-baseline-model/extracted_features/"
-PATH_TO_LABELS = "c1_muse_wild/label_segments/"
-PATH_TO_LABELS_RAW = "c1_muse_wild/label_segments/raw_annotations"
-PATH_TO_TRANSCRIPTIONS = "c1_muse_wild/transcription_segments/"
-ANNOTATOR_MAPPING = "c1_muse_wild/annotator_id_mapping.json"
+PARTITION_FILE = base_1 + "c1_muse_wild/partition.csv"
+PATH_TO_ALIGNED_FEATURES = base_0 + "emotion_uncertainty_oberseminar/MuSe-LSTM-Attention-baseline-model/extracted_features/"
+PATH_TO_LABELS = base_1 + "c1_muse_wild/label_segments/"
+PATH_TO_LABELS_RAW = base_1 + "c1_muse_wild/label_segments/raw_annotations"
+PATH_TO_TRANSCRIPTIONS = base_1 + "c1_muse_wild/transcription_segments/"
+ANNOTATOR_MAPPING = base_1 + "c1_muse_wild/annotator_id_mapping.json"
 
 USE_2021_FEATURES = True
 if USE_2021_FEATURES:
-    base_dir_2021 = "../../EmCaR/8_MuSe2021/data/c1_muse_wilder/"
+    base_dir_2021 = base_0 + "../EmCaR/8_MuSe2021/data/c1_muse_wilder/"
     # PATH_TO_ALIGNED_FEATURES = base_dir_2021 + "feature_segments/"
     PATH_TO_LABELS = base_dir_2021 + "label_segments/"    
     
