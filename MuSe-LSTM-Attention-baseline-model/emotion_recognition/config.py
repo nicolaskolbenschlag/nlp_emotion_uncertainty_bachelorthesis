@@ -19,9 +19,7 @@ import os
 # PATH_TO_RAW_VIDEO = os.path.join(PATH_TO_MUSE_2020, 'raw/video')
 
 
-
-
-##########################################
+#################### RELATIVE PATHS ######################
 
 # DATA_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/data'
 # MODEL_FOLDER = 'MuSe-LSTM-Attention-baseline-model/output/model'
@@ -45,7 +43,7 @@ import os
 #     # PATH_TO_ALIGNED_FEATURES = base_dir_2021 + "feature_segments/"
 #     PATH_TO_LABELS = base_dir_2021 + "label_segments/"    
 
-##########################################
+#################### ABSOLUE PATHS ######################
 
 base_0 = "/nas/student/NicolasKolbenschlag/"
 base_1 = base_0 + "emotion_uncertainty_bachelorarbeit/"
