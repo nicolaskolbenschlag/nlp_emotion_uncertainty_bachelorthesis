@@ -248,15 +248,15 @@ def rolling_correlation_coefficient(y_true: np.array, y_pred: np.array, rolling_
     error = pd.Series(error).interpolate().to_numpy()
     return error
 
+def ccc_score(x: np.array, y: np.array) -> float:
+    x_mean, y_mean = np.mean(x), np.mean(y)
+    cov_mat = np.cov(x, y)
+    covariance = cov_mat[0,1]
+    x_var, y_var = cov_mat[0,0], cov_mat[1,1]
+    ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+    return ccc
+
 def subjectivity_vs_rolling_correlation_error(subjectivities: np.ndarray, labels: np.ndarray, means: np.ndarray):
-    
-    def ccc_score(x: np.array, y: np.array) -> float:
-        x_mean, y_mean = np.mean(x), np.mean(y)
-        cov_mat = np.cov(x, y)
-        covariance = cov_mat[0,1]
-        x_var, y_var = cov_mat[0,0], cov_mat[1,1]
-        ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
-        return ccc
     
     SvCs = []
     for i in range(subjectivities.shape[1]):

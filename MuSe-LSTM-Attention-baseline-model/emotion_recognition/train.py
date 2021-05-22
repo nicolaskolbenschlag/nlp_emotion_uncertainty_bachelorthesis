@@ -280,17 +280,22 @@ def validate_std(model, val_loader, criterion, params):
     return val_loss, val_ccc, val_pcc, val_rmse
 
 ########################
+import uncertainty_utilities
+
 def evaluate_subjectivity_prediction(preds: np.ndarray, labels: np.ndarray):
     preds = np.row_stack(preds)
     labels = np.row_stack(labels)
     assert preds.shape == labels.shape
-    mse, var_pred, var_label = [], [], []
+    mse, ccc , var_pred, var_label = [], [], [], []
     for i in range(preds.shape[1]):
         pred_i = preds[:,i]
         label_i = labels[:,i]
         
         mse_ = np.mean((pred_i - label_i) ** 2)
         mse += [mse_]
+
+        ccc_ = uncertainty_utilities.ccc_score(pred_i, label_i)
+        ccc += [ccc_]
 
         var_pred_ = np.var(pred_i)
         var_pred += [var_pred_]
@@ -300,6 +305,7 @@ def evaluate_subjectivity_prediction(preds: np.ndarray, labels: np.ndarray):
     
     print("-----Evaluation of subjectivity prediction-----")
     print(f"mse: {mse}")
+    print(f"ccc: {ccc}")
     print(f"var_label: {var_label}")
     print(f"var_pred: {var_pred}")
     print("-----------------------------------------------")
