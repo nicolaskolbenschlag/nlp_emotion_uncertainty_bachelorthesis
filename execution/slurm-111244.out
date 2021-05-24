@@ -1,80 +1,4 @@
-/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity
-Constructing dataset and data loader ...
-Constructing data from scratch ...
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.6726, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -1.0, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.7353, max 0.80704).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.9549, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.9706, max 0.9218999999999999).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.39030000000000004, max 0.4687).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.98725, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.8137000000000001, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 9: 9
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 10: 10
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 11: 11
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 12: 12
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 13: 13
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 14: 14
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-No label preprocessing (min -0.58476, max 1.0).
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 16: 16
-Found cached annotator 2 video mapping.
-Constructing data from scratch ...
-Exception for annotator 17: 17
-Samples in partitions: (3132, 62, 64)
-Input feature dim: 768.
-==================================================
-Training model... [seed 314]
-Seed 314 | Best [Val CCC]: 0.0524 [' 0.0524']| Loss: 0.9285 | PCC: 0.1152 ['0.1152'] | RMSE: 0.1846 ['0.1846']
-In train.evaluate_with_subjectivities
-full_preds_all: (86962, 2)
-full_preds_emo: (86962, 1)
-full_preds_sub: (86962, 1)
-full_subjectivities: (86962, 1)
-full_labels: (86962, 1)
------Evaluation of subjectivity prediction-----
-mse: [0.045837946]
-var_label: [0.027858062]
-var_pred: [0.0003235221]
------------------------------------------------
-On Test: CCC  0.0317 | PCC  0.0969 | RMSE  0.1962
-==================================================
-On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.0524
-On ground-truth labels:		[Test CCC] for seed "314":	 0.0317
-----------------------------------------------------------------------------------------------------
-Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-05-22-17-55_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[1_314_None_None].pth".
-/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --calibration_target subjectivity
 Constructing dataset and data loader ...
 Constructing data from scratch ...
 Found cached annotator 2 video mapping.
@@ -133,18 +57,93 @@ Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
 Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
-Seed 314 | Best [Val CCC]: 0.4527 [' 0.4527']| Loss: 0.6004 | PCC: 0.4564 ['0.4564'] | RMSE: 0.1795 ['0.1795']
-In train.evaluate_with_subjectivities
-full_preds_all: (86962, 2)
-full_preds_emo: (86962, 1)
-full_preds_sub: (86962, 1)
-full_subjectivities: (86962, 1)
-full_labels: (86962, 1)
------Evaluation of subjectivity prediction-----
-mse: [0.029010583]
-var_label: [0.027858062]
-var_pred: [0.0002650325]
------------------------------------------------
-On Test: CCC  0.5778 | PCC  0.5825 | RMSE  0.1649
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Subjectivity vs. roll.-corr.-coef.: [{3: 0.011599919248286744, 5: 0.021013405092272085, 7: 0.025572622362490183, 10: 0.024953838548167497}]
+On Test (uncal.): sbUME 0.3023 | pebUME(3) 0.4214 | pebUME(5) 0.4051 | pebUME(7) 0.4101 | pebUME(10) 0.4210 | Cv 0.3143
+On Test (cal.): sbUME 0.4860 | pebUME(3) 0.5598 | pebUME(5) 0.5775 | pebUME(7) 0.5898 | pebUME(10) 0.6040 | Cv 0.0124
+On Test: CCC  0.6050 | PCC  0.6196 | RMSE  0.1611
 ==================================================
 Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Should be -1: 0.046135678519164225
+Subjectivity vs. roll.-corr.-coef.: [{3: 0.011902877162236309, 5: 0.018979350210734103, 7: 0.023704981979035394, 10: 0.02461077616215021}]
+On Test (uncal.): sbUME 0.3013 | pebUME(3) 0.4237 | pebUME(5) 0.4082 | pebUME(7) 0.4143 | pebUME(10) 0.4243 | Cv 0.3232
+On Test (cal.): sbUME 0.4500 | pebUME(3) 0.5361 | pebUME(5) 0.5492 | pebUME(7) 0.5617 | pebUME(10) 0.5757 | Cv 0.0231
+On Test: CCC  0.6060 | PCC  0.6181 | RMSE  0.1548
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4431
+On ground-truth labels:		[Test CCC] for seed "315":	 0.6060
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-05-23-16-22_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[2_315_None_None].pth".
+python3: can't open file '/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --calibration_target subjectivity --ume_rolling_scaling_window 10': [Errno 36] File name too long
+python3: can't open file '/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --calibration_target subjectivity --ume_rolling_scaling_window 200': [Errno 36] File name too long
+python3: can't open file '/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --calibration_target subjectivity --ume_rolling_scaling_window 500': [Errno 36] File name too long
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --calibration_target rolling_error_3
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+slurmstepd: *** JOB 111244 ON eihw-gpu2 CANCELLED AT 2021-05-24T09:40:01 ***
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.
