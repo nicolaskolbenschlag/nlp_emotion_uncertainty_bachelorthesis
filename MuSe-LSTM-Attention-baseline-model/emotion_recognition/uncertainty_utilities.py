@@ -76,9 +76,8 @@ def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty, ume_
         predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
 
     else:
-        window = ume_rolling_scaling_window
-        real_uncertainty = rolling_scaling(real_uncertainty, window)
-        predicted_uncertainty = rolling_scaling(predicted_uncertainty, window)
+        real_uncertainty = rolling_scaling(real_uncertainty, ume_rolling_scaling_window)
+        predicted_uncertainty = rolling_scaling(predicted_uncertainty, ume_rolling_scaling_window)
 
     return np.mean(np.abs(predicted_uncertainty - real_uncertainty))
 
@@ -262,9 +261,6 @@ def subjectivity_vs_rolling_correlation_error(subjectivities: np.ndarray, labels
         for window in [3,5,7,10]:
             correlation_error = rolling_correlation_coefficient(labels[:,i], means[:,i], window)
             tmp[window] = ccc_score(subjectivities[:,i], correlation_error)
-            ###### NOTE for debugging
-            print(f"Should be -1: {ccc_score([1,2,3,4,5,6,2], [2,6,5,4,3,2,1])}")
-            ######
         SvCs += [tmp]
     return SvCs
 
@@ -274,11 +270,15 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
 
         tmp_0_sbUME = {}
         tmp_0_pebUME = {}
+
+        # NOTE window that determines how UME is calculated
         for scaling_window in [None, 10, 200, 500]:
-            
+                        
             tmp_0_sbUME[scaling_window] = UME_abs_experimental(subjectivities[:,i], vars_[:,i], scaling_window)
 
             tmp_1_pebUME = {}
+
+            # NOTE window that defines rolling correlation error
             for window in [3,5,7,10]:
                 pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i], scaling_window)
                 tmp_1_pebUME[window] = pebUME
@@ -330,7 +330,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     
     full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
-    print(f"UNCALIBRATED\nsbUMEs: {sbUMEs}\npebUMES{pebUMEs}\nCvs: {Cvs}\n")
+    print(f"UNCALIBRATED\nsbUMEs: {sbUMEs}\npebUMES{pebUMEs}\nCvs: {Cvs}")
 
     # NOTE compare subjectivity and rolling correlation error
     SvCs = subjectivity_vs_rolling_correlation_error(full_subjectivities, full_labels, full_means)
@@ -342,7 +342,7 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     
     full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = prediction_fn(model, val_loader, params)
     
-    for calibration_target in ["subjectivity", "rolling_error_3", "rolling_error_10"]:
+    for calibration_target in ["subjectivity", "rolling_error_3", "rolling_error_5"]:
     
         full_vars_calibrated = np.empty_like(full_vars)
         for i in range(full_means.shape[1]):

@@ -328,16 +328,10 @@ def evaluate_with_subjectivities(model, test_loader, params):
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
             full_subjectivities.append(subjectivities.cpu().detach().squeeze(0).numpy())
         
-        print(f"In train.evaluate_with_subjectivities\nfull_preds_all: {np.row_stack(full_preds).shape}")
         full_preds_emo = [p[:,:len(params.emo_dim_set)] for p in full_preds]
         full_preds_sub = [p[:,len(params.emo_dim_set):] for p in full_preds]
-        print(f"full_preds_emo: {np.row_stack(full_preds_emo).shape}")
-        print(f"full_preds_sub: {np.row_stack(full_preds_sub).shape}")
         
         test_ccc, test_pcc, test_rmse = utils.eval(full_preds_emo, full_labels)
-
-        print(f"full_subjectivities: {np.row_stack(full_subjectivities).shape}")
-        print(f"full_labels: {np.row_stack(full_labels).shape}")
 
         _, _, _ = evaluate_subjectivity_prediction(full_preds_sub, full_subjectivities)
 
