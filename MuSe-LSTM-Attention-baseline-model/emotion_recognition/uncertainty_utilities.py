@@ -57,7 +57,7 @@ def uncertainty_measurement_error(real_uncertainty: np.array, predicted_uncertai
     ume /= bins
     return ume
 
-def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty, params) -> float:
+def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty, ume_rolling_scaling_window: int) -> float:
     real_uncertainty = np.abs(real_uncertainty - 1) / 2
 
     def rolling_scaling(array: np.array, window: int) -> np.array:
@@ -67,18 +67,16 @@ def UME_abs_experimental(real_uncertainty: np.array, predicted_uncertainty, para
             tmp -= tmp.min()
             if tmp.max() != 0: tmp = tmp / tmp.max()
             out[i : min(i + window, len(array))] = tmp
-        # if np.isnan(out[0]): out[0] = .0
-        # out = pd.Series(out).interpolate().to_numpy()
         return out
 
-    if params.ume_rolling_scaling_window is None:
+    if ume_rolling_scaling_window is None:
         real_uncertainty -= real_uncertainty.min()
         real_uncertainty = real_uncertainty / real_uncertainty.max()
         predicted_uncertainty -= predicted_uncertainty.min()
         predicted_uncertainty = predicted_uncertainty / predicted_uncertainty.max()
 
     else:
-        window = params.ume_rolling_scaling_window
+        window = ume_rolling_scaling_window
         real_uncertainty = rolling_scaling(real_uncertainty, window)
         predicted_uncertainty = rolling_scaling(predicted_uncertainty, window)
 
@@ -265,28 +263,37 @@ def subjectivity_vs_rolling_correlation_error(subjectivities: np.ndarray, labels
             correlation_error = rolling_correlation_coefficient(labels[:,i], means[:,i], window)
             tmp[window] = ccc_score(subjectivities[:,i], correlation_error)
             ###### NOTE for debugging
-            print(f"Should be -1: {ccc_score(subjectivities[:,i], subjectivities[:,i][::-1])}")
+            print(f"Should be -1: {ccc_score([1,2,3,4,5,6,2], [2,6,5,4,3,2,1])}")
             ######
         SvCs += [tmp]
     return SvCs
 
 def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True):
     sbUMEs, pebUMEs, Cvs = [], [], []
-    for i in range(means.shape[1]):
+    for i in range(means.shape[1]):        
 
-        # sbUMEs += [uncertainty_measurement_error(subjectivities[:,i], vars_[:,i])]
-        sbUMEs += [UME_abs_experimental(subjectivities[:,i], vars_[:,i], params)]
- 
-        tmp = {}
-        for window in [3,5,7,10]:
+        tmp_0_sbUME = {}
+        tmp_0_pebUME = {}
+        for scaling_window in [None, 10, 200, 500]:
             
-            # pebUME = uncertainty_measurement_error(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i])
-            pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i], params)
+            tmp_0_sbUME[scaling_window] = UME_abs_experimental(subjectivities[:,i], vars_[:,i], scaling_window)
 
-            tmp[window] = pebUME
-        pebUMEs += [tmp]
+            tmp_1_pebUME = {}
+            for window in [3,5,7,10]:
+                pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i], scaling_window)
+                tmp_1_pebUME[window] = pebUME
+            
+            tmp_0_pebUME[scaling_window] = tmp_1_pebUME
+        
+        sbUMEs += [tmp_0_sbUME]
+        pebUMEs += [tmp_0_pebUME]
+        
 
-        Cvs += [stds_coefficient_of_variation(vars_[:,i])]
+        Cvs += [{
+            "predicted uncertainty": stds_coefficient_of_variation(vars_[:,i]),
+            "true subjectivity": stds_coefficient_of_variation(subjectivities[:,i]),
+            "true rolling error 3": stds_coefficient_of_variation(rolling_correlation_coefficient(labels[:,i], means[:,i], 3)),
+        }]
 
         if plot:
             max_plot = 1000#len(labels)
@@ -323,7 +330,8 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     
     full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
-    
+    print(f"UNCALIBRATED\nsbUMEs: {sbUMEs}\npebUMES{pebUMEs}\nCvs: {Cvs}\n")
+
     # NOTE compare subjectivity and rolling correlation error
     SvCs = subjectivity_vs_rolling_correlation_error(full_subjectivities, full_labels, full_means)
     print(f"Subjectivity vs. roll.-corr.-coef.: {SvCs}")
@@ -333,22 +341,26 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
         return  sbUMEs, pebUMEs, Cvs
     
     full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = prediction_fn(model, val_loader, params)
-    full_vars_calibrated = np.empty_like(full_vars)
-    for i in range(full_means.shape[1]):
-        calibration_features = full_vars_val[:,i]
-        
-        if params.calibration_target == "subjectivity":
-            true_uncertainty = full_subjectivities_val[:,i]
-        elif params.calibration_target == "rolling_error_3":
-            true_uncertainty = rolling_correlation_coefficient(full_labels_val[:,i], full_means_val[:,i], 3)
-        else:
-            raise NotImplementedError
+    
+    for calibration_target in ["subjectivity", "rolling_error_3", "rolling_error_10"]:
+    
+        full_vars_calibrated = np.empty_like(full_vars)
+        for i in range(full_means.shape[1]):
+            calibration_features = full_vars_val[:,i]
+            
+            if calibration_target == "subjectivity":
+                true_uncertainty = full_subjectivities_val[:,i]
+            elif calibration_target == "rolling_error_3":
+                true_uncertainty = rolling_correlation_coefficient(full_labels_val[:,i], full_means_val[:,i], 3)
+            elif calibration_target == "rolling_error_5":
+                true_uncertainty = rolling_correlation_coefficient(full_labels_val[:,i], full_means_val[:,i], 5)
+            else:
+                raise NotImplementedError
 
-        # NOTE true uncertainty ranges from -1 (high) to +1 (low), so rescale it like UME will do
-        calibration_target_ = np.abs(true_uncertainty - 1) / 2
-
-        calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target_, full_vars[:,i], "isotonic_regression")
-        full_vars_calibrated[:,i] = calibration_result
-        
-    sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
-    return  sbUMEs, pebUMEs, Cvs, sbUMEs_cal, pebUMEs_cal, Cvs_cal
+            # NOTE true uncertainty ranges from -1 (high) to +1 (low), so rescale it like UME will do
+            calibration_target_ = np.abs(true_uncertainty - 1) / 2
+            calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target_, full_vars[:,i], "isotonic_regression")
+            full_vars_calibrated[:,i] = calibration_result
+            
+        sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
+        print(f"CALIBRATED on {calibration_target}:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")

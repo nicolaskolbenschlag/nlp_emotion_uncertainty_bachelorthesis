@@ -17,4 +17,4 @@ emo_dim=valence
 # python3 $cmd
 
 cmd="$START_HERE/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set $features --emo_dim_set $emo_dim --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity"
-python3 $cmd
+# python3 $cmd
