@@ -228,6 +228,12 @@ def validate(model, val_loader, criterion, params):
 
             #######################
             if params.predict_subjectivity:
+                print("In validate:", preds.shape)
+
+                # NOTE obtain performance on validation set
+                preds_subj = preds[:,:,len(params.loss_weights):]
+                evaluate_subjectivity_prediction(preds_subj, labels)
+                
                 preds = preds[:,:,:len(params.loss_weights)]
             #######################
             
