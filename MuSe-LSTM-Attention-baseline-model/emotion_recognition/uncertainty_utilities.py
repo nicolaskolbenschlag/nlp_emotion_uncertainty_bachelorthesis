@@ -311,7 +311,14 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
     
     return sbUMEs, pebUMEs, Cvs
 
-def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = None):
+def evaluate_uncertainty_measurement(model, test_loader, params, val_loader):
+    print("-" * 20 + "TEST" + "-" * 20)
+    evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader)
+    
+    print("-" * 20 + "DEVEL" + "-" * 20)
+    evaluate_uncertainty_measurement_help(model, val_loader, params, val_loader)
+
+def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader):
     if params.uncertainty_approach == "monte_carlo_dropout":
         prediction_fn = outputs_mc_dropout
         method = "MC Dropout"
@@ -336,10 +343,6 @@ def evaluate_uncertainty_measurement(model, test_loader, params, val_loader = No
     SvCs = subjectivity_vs_rolling_correlation_error(full_subjectivities, full_labels, full_means)
     print(f"Subjectivity vs. roll.-corr.-coef.: {SvCs}")
 
-    # NOTE re-calibration: if validation data given, see it as an order to calibrate
-    if val_loader is None:
-        return  sbUMEs, pebUMEs, Cvs
-    
     full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = prediction_fn(model, val_loader, params)
     
     for calibration_target in ["subjectivity", "rolling_error_3", "rolling_error_5"]:

@@ -66,3 +66,5 @@ Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.45
 On Test: CCC  0.6043 | PCC  0.6123 | RMSE  0.1572
 ==================================================
 Training model... [seed 316]
+slurmstepd: *** JOB 111307 ON eihw-gpu1 CANCELLED AT 2021-05-27T13:37:21 ***
+slurmstepd: Exceeded step memory limit at some point.
