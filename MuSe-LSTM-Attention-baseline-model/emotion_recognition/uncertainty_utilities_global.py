@@ -5,7 +5,7 @@ import uncertainty_utilities
 import calibration_utilities_deprecated
 
 def mean_absolute_error(x: np.array, y: np.array) -> float:
-    return (x - y).abs().mean()
+    return np.abs(x - y).mean()
 
 def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5):
     model.train()
