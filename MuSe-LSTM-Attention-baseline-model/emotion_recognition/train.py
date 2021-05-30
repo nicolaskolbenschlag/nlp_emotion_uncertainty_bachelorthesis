@@ -110,7 +110,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
         raise NotImplementedError
 
     for batch, batch_data in enumerate(train_loader, 1):
-        features, feature_lens, labels, metas, subjectivities = batch_data
+        features, feature_lens, labels, metas, subjectivities, subjectivities_global = batch_data
         batch_size = features.size(0)
         # move to gpu if use gpu
         if params.gpu is not None:
@@ -162,60 +162,17 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
     train_loss = total_loss / total_size
     return train_loss
 
-# def train_with_std(model, train_loader, criterion, optimizer, epoch, params):
-#     model.train()
-#     start_time = time.time()
-#     report_loss, report_size = 0, 0
-#     total_loss, total_size = 0, 0
-#     for batch, batch_data in enumerate(train_loader, 1):
-#         features, feature_lens, labels, metas, stdvs = batch_data
-#         batch_size = features.size(0)
-#         # move to gpu if use gpu
-#         if params.gpu is not None:
-#             model.cuda()
-#             features = features.cuda()
-#             feature_lens = feature_lens.cuda()
-#             labels = labels.cuda()
-#         optimizer.zero_grad()
-#         preds = model(features, feature_lens)
-#         # cal loss
-#         loss = 0.0
-#         for i in range(len(params.loss_weights)):
-            
-#             branch_loss = criterion(preds[:, :, i], labels[:, :, i], stdvs, feature_lens, params.label_smooth)
-
-#             loss = loss + params.loss_weights[i] * branch_loss
-#         loss.backward()
-#         if params.clip > 0:
-#             nn.utils.clip_grad_norm_(model.parameters(), max_norm=params.clip)
-#         optimizer.step()
-
-#         total_loss += loss.item() * batch_size
-#         total_size += batch_size
-
-#         report_loss += loss.item() * batch_size
-#         report_size += batch_size
-
-#         if batch % params.log_interval == 0 and params.log_extensive:
-#             avg_loss = report_loss / report_size
-#             elapsed_time = time.time() - start_time
-#             print(
-#                 f"Epoch:{epoch:>3} | Batch: {batch:>3} | Lr: {optimizer.state_dict()['param_groups'][0]['lr']:>1.5f} | "
-#                 f"Time used(s): {elapsed_time:>.1f} | Training loss: {avg_loss:>.4f}")
-#             report_loss, report_size, start_time = 0, 0, time.time()
-
-#     train_loss = total_loss / total_size
-#     return train_loss
-
 def validate(model, val_loader, criterion, params):
     model.eval()
     full_preds, full_labels = [], []
+    full_preds_subj = []
     with torch.no_grad():
         val_loss = 0
         val_size = 0
+
         for batch, batch_data in enumerate(val_loader, 1):
             
-            features, feature_lens, labels, metas, subjectivities = batch_data
+            features, feature_lens, labels, metas, subjectivities, subjectivities_global = batch_data
             
             batch_size = features.size(0)
             # move to gpu if use gpu
@@ -228,11 +185,9 @@ def validate(model, val_loader, criterion, params):
 
             #######################
             if params.predict_subjectivity:
-                print("In validate:", preds.shape)
-
                 # NOTE obtain performance on validation set
                 preds_subj = preds[:,:,len(params.loss_weights):]
-                evaluate_subjectivity_prediction(preds_subj, labels)
+                full_preds_subj += [preds_subj.cpu().detach().squeeze(0).numpy()]
                 
                 preds = preds[:,:,:len(params.loss_weights)]
             #######################
@@ -253,42 +208,11 @@ def validate(model, val_loader, criterion, params):
 
         val_ccc, val_pcc, val_rmse = utils.eval(full_preds, full_labels)
 
+        if params.predict_subjectivity:
+            print("Subjectivity validation set:")
+            evaluate_subjectivity_prediction(full_preds_subj, full_labels)
+
     return val_loss, val_ccc, val_pcc, val_rmse
-
-# def validate_std(model, val_loader, criterion, params):
-#     model.eval()
-#     full_preds, full_labels = [], []
-#     with torch.no_grad():
-#         val_loss = 0
-#         val_size = 0
-#         for batch, batch_data in enumerate(val_loader, 1):
-            
-#             features, feature_lens, labels, _, std = batch_data# NOTE: with std
-            
-#             batch_size = features.size(0)
-#             # move to gpu if use gpu
-#             if params.gpu is not None:
-#                 model.cuda()
-#                 features = features.cuda()
-#                 feature_lens = feature_lens.cuda()
-#                 labels = labels.cuda()
-#             preds = model(features, feature_lens)
-#             # cal loss
-#             loss = 0.0
-#             for i in range(len(params.loss_weights)):
-                
-#                 branch_loss = utils.CCCLoss()(preds[:, :, i], labels[:, :, i], feature_lens, params.label_smooth)
-
-#                 loss = loss + params.loss_weights[i] * branch_loss
-#             val_loss += loss.item() * batch_size
-#             val_size += batch_size
-
-#             full_preds.append(preds.cpu().detach().squeeze(0).numpy())
-#             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
-#         val_loss /= val_size
-#         val_ccc, val_pcc, val_rmse = utils.eval(full_preds, full_labels)
-
-#     return val_loss, val_ccc, val_pcc, val_rmse
 
 ########################
 import uncertainty_utilities
@@ -297,7 +221,7 @@ def evaluate_subjectivity_prediction(preds: np.ndarray, labels: np.ndarray):
     preds = np.row_stack(preds)
     labels = np.row_stack(labels)
     assert preds.shape == labels.shape
-    mse, ccc , var_pred, var_label = [], [], [], []
+    mse, ccc, var_pred, var_label = [], [], [], []
     for i in range(preds.shape[1]):
         pred_i = preds[:,i]
         label_i = labels[:,i]
@@ -354,7 +278,7 @@ def evaluate(model, test_loader, params):
     full_preds, full_labels = [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta, subjectivities = batch_data
+            features, feature_lens, labels, meta, subjectivities, subjectivities_global = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -373,7 +297,7 @@ def predict(model, data_loader, params):
     full_preds, full_metas, full_labels = [], [], []
     with torch.no_grad():
         for batch, batch_data in enumerate(data_loader, 1):
-            features, feature_lens, labels, metas, _ = batch_data
+            features, feature_lens, labels, metas, _, _ = batch_data
             # move to gpu if use gpu
             if params.gpu is not None:
                 model.cuda()

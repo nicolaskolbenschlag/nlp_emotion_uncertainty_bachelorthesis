@@ -4,10 +4,12 @@ import torch
 import utils
 import config
 
-def calculate_rolling_subjectivities(params):
+import uncertainty_utilities
+
+def get_annotations_per_sample(params):
     annotations_per_vid = {}
 
-    for annotator in range(1,18):#[2,4,5,7,8], range(1,16)
+    for annotator in range(1,18):
         try:
             data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=annotator)
         except Exception as e:
@@ -47,6 +49,9 @@ def calculate_rolling_subjectivities(params):
                     
                     annotations_per_vid[vid_id][emo_dim] += [label_series]
     
+    return annotations_per_vid
+
+def calculate_rolling_subjectivities(annotations_per_vid):
     subjectivities = {}
     for vid_id, emo_dims in annotations_per_vid.items():
 
@@ -94,3 +99,30 @@ def calculate_rolling_subjectivities(params):
         subjectivities[vid_id] = subjectivity_of_sample_all_emo_dims
     
     return subjectivities
+
+def calculate_global_subjectivities(annotations_per_vid):
+    subjectivities = {}
+    for vid_id, emo_dims in annotations_per_vid.items():
+
+        subjectivity_of_sample_all_emo_dims = []
+        for emo_dim, annotations in emo_dims.items():
+
+            subjectivity_of_sample = []
+            for k, annotation_1 in enumerate(annotations):
+                for annotation_2 in annotations[k+1:]:                    
+                    subjectivity = uncertainty_utilities.ccc_score(annotation_1, annotation_2)
+                    subjectivity_of_sample += [subjectivity]
+                                        
+            subjectivity_of_sample = np.mean(subjectivity_of_sample)
+            subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
+    
+        subjectivity_of_sample_all_emo_dims = torch.Tensor(subjectivity_of_sample_all_emo_dims)
+        subjectivities[vid_id] = subjectivity_of_sample_all_emo_dims
+    
+    return subjectivities
+
+def calculate_subjectivities(params):
+    annotations_per_vid = get_annotations_per_sample(params)
+    short_term = calculate_rolling_subjectivities(annotations_per_vid)
+    globals = calculate_global_subjectivities(annotations_per_vid)
+    return short_term, globals

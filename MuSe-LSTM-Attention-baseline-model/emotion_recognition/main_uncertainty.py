@@ -16,6 +16,7 @@ import config
 import train
 
 import uncertainty_utilities
+import uncertainty_utilities_global
 
 
 # parse parameters
@@ -137,16 +138,18 @@ def parse_params():
     parser.add_argument("--loss_subjectivity", type=str, default="ccc", choices=["ccc", "mse"], help="loss function for subjectivity (default: ccc)")
     parser.add_argument("--not_measure_uncertainty", action="store_true", help="whether measure uncertainty. (default: False)")
     
+    parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
+    
     # parse
     args = parser.parse_args()
     return args
 
 
-def get_dataloaders(data, subjectivities_per_sample, predict=False):
+def get_dataloaders(data, subjectivities_per_sample_rolling, subjectivities_per_sample_global, predict=False):
     sample_counts = []
     data_loader = {}
     for partition in data.keys():
-        set_ = MyDataset(data, partition, subjectivities_per_sample)
+        set_ = MyDataset(data, partition, subjectivities_per_sample_rolling, subjectivities_per_sample_global)
         sample_counts.append(len(set_))
 
         batch_size = params.batch_size if partition == 'train' and not predict else 1
@@ -163,9 +166,10 @@ def main(params):
     data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
     
     import subjectivity_utilities
-    subjectivities_per_sample = subjectivity_utilities.calculate_rolling_subjectivities(params)
+    subjectivities_per_sample = subjectivity_utilities.calculate_subjectivities(params)
+    subjectivities_per_sample_rolling, subjectivities_per_sample_global = subjectivities_per_sample
     
-    data_loader = get_dataloaders(data, subjectivities_per_sample)
+    data_loader = get_dataloaders(data, subjectivities_per_sample_rolling, subjectivities_per_sample_global)
     data_loader_gt = None
     ########################################
 
@@ -228,7 +232,11 @@ def main(params):
 
         if not params.not_measure_uncertainty:
             assert not params.predict_subjectivity, "not supported, either directly predict uncertainty or quantify"
-            uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
+            
+            if not params.measure_uncertainty_globally:
+                uncertainty_utilities.evaluate_uncertainty_measurement(model, data_loader["test"], params, data_loader["devel"])
+            else:
+                uncertainty_utilities_global.evaluate_uncertainty_measurement_global(params, model, data_loader["test"], data_loader["devel"])
         ########################################
         if params.uncertainty_approach == None:
             # test_ccc, test_pcc, test_rmse = evaluate(model, data_loader['test'], params)

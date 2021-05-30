@@ -4,7 +4,7 @@ from torch.utils.data.dataset import Dataset
 from torch.nn.utils.rnn import pad_sequence
 
 class MyDataset(Dataset):
-    def __init__(self, data, partition, subjectivities_per_sample):
+    def __init__(self, data, partition, subjectivities_per_sample, subjectivities_per_sample_global):
         super(MyDataset, self).__init__()
         self.partition = partition
         features, labels = data[partition]['feature'], data[partition]['label']
@@ -29,6 +29,9 @@ class MyDataset(Dataset):
         
         # NOTE incorporate subjecities among annotations
         subjectivities = []
+
+        subjectivities_global = []
+
         for meta in self.metas:
             sample_id = int(meta[0][0])
 
@@ -40,13 +43,16 @@ class MyDataset(Dataset):
                 sample_id = str(sample_id)
 
             subjectivity = subjectivities_per_sample[sample_id]
-
             subjectivities += [subjectivity]
+
+            subjectivities_global += [subjectivities_per_sample_global[sample_id]]
         
         if partition == "train":
             subjectivities = pad_sequence(subjectivities, batch_first=True)
 
         self.subjectivities = subjectivities
+
+        self.subjectivities_global = subjectivities_global
 
 
     def get_feature_dim(self):
@@ -62,4 +68,6 @@ class MyDataset(Dataset):
         meta = self.metas[idx]
         
         subjectivity = self.subjectivities[idx]
-        return feature, feature_len, label, meta, subjectivity
+        subjectivity_global = self.subjectivities_global[idx]
+        
+        return feature, feature_len, label, meta, subjectivity, subjectivity_global
