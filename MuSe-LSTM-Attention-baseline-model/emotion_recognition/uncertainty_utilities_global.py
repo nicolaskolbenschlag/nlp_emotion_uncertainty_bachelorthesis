@@ -45,9 +45,9 @@ def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5
 
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)
-    evaluate_uncertainty_measurement_global_help(model, test_loader, params, val_loader)
+    evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
     print("-" * 20 + "DEVEL" + "-" * 20)
-    evaluate_uncertainty_measurement_global_help(model, val_loader, params, val_loader)
+    evaluate_uncertainty_measurement_global_help(params, model, val_loader, val_loader)
 
 def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores):
     # NOTE calculate global equivalent to sbUME: Global sbUME (GsbUME)
@@ -87,7 +87,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
         subjectivities_pred = np.array(full_subjectivities_pred)[:,emo_dim]
         subjectivities_global = np.array(full_subjectivities_global)[:,emo_dim]
-        prediction_scores = np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(full_means)])
+        prediction_scores = np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(len(full_means))])
         assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape
 
         # NOTE uncalibrated measurements
@@ -106,7 +106,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
         # NOTE calibration target: prediction error
-        calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(full_means_val)])
+        calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(len(full_means_val))])
         calibration_target_pred = calibration_utilities_deprecated.calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         GsbUME_cal_err, _, GpebUME_cal_err, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
