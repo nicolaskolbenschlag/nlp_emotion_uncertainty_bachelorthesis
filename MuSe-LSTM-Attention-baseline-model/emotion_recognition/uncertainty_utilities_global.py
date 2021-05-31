@@ -51,22 +51,29 @@ def evaluate_uncertainty_measurement_global(params, model, test_loader, val_load
     evaluate_uncertainty_measurement_global_help(params, model, val_loader, val_loader)
 
 def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores):
-    # NOTE calculate global equivalent to sbUME: Global sbUME (GsbUME)
-    GsbUME = mean_absolute_error(subjectivities_global, subjectivities_pred)
-    
-    # NOTE compare to GsbUME with guessed (normally distributed) subjectivities
-    subjectivities_pred_rand = np.random.normal(subjectivities_global.mean(), subjectivities_global.std(), subjectivities_pred.shape)
-    GsbUME_rand = mean_absolute_error(subjectivities_global, subjectivities_pred_rand)
+    GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = {}, {}, {}, {}, {}
 
-    # NOTE calculate global equivalent to pebUME: Global pebUME (GpebUME)
-    GpebUME = mean_absolute_error(prediction_scores, subjectivities_pred)
+    metric_fns = [mean_absolute_error, uncertainty_utilities.ccc_score]
+    for i, metric in ["mae", "ccc"]:
+        metric_fn = metric_fns[i]
 
-    # NOTE compare to GpebUME with guessed (normally distributed) prediction errors
-    subjectivities_pred_rand = np.random.normal(prediction_scores.mean(), prediction_scores.std(), subjectivities_pred.shape)
-    GpebUME_rand = mean_absolute_error(prediction_scores, subjectivities_pred_rand)
+        # NOTE calculate global equivalent to sbUME: Global sbUME (GsbUME)
+        GsbUME[metric] = metric_fn(subjectivities_global, subjectivities_pred)
+        
+        # NOTE compare to GsbUME with guessed (normally distributed) subjectivities
+        subjectivities_pred_rand = np.random.normal(subjectivities_global.mean(), subjectivities_global.std(), subjectivities_pred.shape)
+        GsbUME_rand[metric] = metric_fn(subjectivities_global, subjectivities_pred_rand)
 
-    # NOTE measure similarity between true subjectivity among annotations and prediction error
-    vs = mean_absolute_error(prediction_scores, subjectivities_global)
+        # NOTE calculate global equivalent to pebUME: Global pebUME (GpebUME)
+        GpebUME[metric] = metric_fn(prediction_scores, subjectivities_pred)
+
+        # NOTE compare to GpebUME with guessed (normally distributed) prediction errors
+        subjectivities_pred_rand = np.random.normal(prediction_scores.mean(), prediction_scores.std(), subjectivities_pred.shape)
+        GpebUME_rand[metric] = metric_fn(prediction_scores, subjectivities_pred_rand)
+
+        # NOTE measure similarity between true subjectivity among annotations and prediction error
+        vs[metric] = metric_fn(prediction_scores, subjectivities_global)
+        # TODO measure with ccc (or pearson correlation)
 
     return GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs
 
@@ -109,9 +116,9 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         # NOTE calibration target: subjectivity among annotations
         calibration_target_train = np.array(full_subjectivities_global_val)[:,emo_dim]
 
-        print(calibration_features_train)
-        print(calibration_target_train)
-        print(calibration_features)
+        # print(calibration_features_train)
+        # print(calibration_target_train)
+        # print(calibration_features)
 
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         # NOTE only obtain metrics that are affected by calibration
