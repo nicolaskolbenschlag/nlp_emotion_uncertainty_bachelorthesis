@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import sklearn.isotonic
 
 import uncertainty_utilities
 import calibration_utilities_deprecated
@@ -25,12 +26,12 @@ def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5
             subjectivities_global = subjectivities_global.squeeze(0).numpy()
 
             subjectivities_pred = []
-            for _ in range(means.shape[1]):
+            for dim in range(means.shape[1]):
                 subj_dim = []
                 
                 for i, pred_1 in enumerate(preds):
                     for pred_2 in preds[i+1:]:
-                        ccc = uncertainty_utilities.ccc_score(pred_1, pred_2)
+                        ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
                         subj_dim += [ccc]
                 
                 subj_dim = np.mean(subj_dim)
@@ -69,6 +70,13 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
 
     return GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs
 
+def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalibrated: np.array, method: str) -> np.array:
+    if method == "isotonic_regression":
+        calibrator = sklearn.isotonic.IsotonicRegression(out_of_bounds="clip", y_min=-1, y_max=1).fit(val_uncalibrated, val_calibrated)
+        return calibrator.predict(test_uncalibrated)
+    else:
+        raise NotImplementedError
+
 def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader):
     if params.uncertainty_approach == "monte_carlo_dropout":
         prediction_fn = outputs_mc_dropout_global
@@ -100,14 +108,19 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
         # NOTE calibration target: subjectivity among annotations
         calibration_target_train = np.array(full_subjectivities_global_val)[:,emo_dim]
-        calibration_target_pred = calibration_utilities_deprecated.calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
+
+        print(calibration_features_train)
+        print(calibration_target_train)
+        print(calibration_features)
+
+        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         # NOTE only obtain metrics that are affected by calibration
         GsbUME_cal_subj, _, GpebUME_cal_subj, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores)
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
         # NOTE calibration target: prediction error
         calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(len(full_means_val))])
-        calibration_target_pred = calibration_utilities_deprecated.calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
+        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         GsbUME_cal_err, _, GpebUME_cal_err, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
     

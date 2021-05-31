@@ -64,17 +64,39 @@ Seed 314 | Best [Val CCC]: 0.0243 [' 0.0243']| Loss: 0.9756 | PCC: 0.1523 ['0.15
   c *= np.true_divide(1, fact)
 /nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/numpy/lib/function_base.py:2455: RuntimeWarning: invalid value encountered in multiply
   c *= np.true_divide(1, fact)
+[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan]
+False
+[-0.0130525   0.32437876  0.04959703  0.08391025  0.3826152   0.01552276
+  0.16770744  0.13971439  0.10209735  0.05524743  0.10446028  0.02927979
+  0.02357653  0.0369132   0.06175379  0.01752151  0.04637047  0.10108344
+  0.14549306  0.17158309  0.08435814  0.01003089  0.13734835  0.21380422
+  0.09840287  0.0844828   0.04481249  0.04017502 -0.01202978  0.04896013
+  0.13084999  0.04699508  0.1332952   0.1428969   0.19155914  0.24818918
+  0.25566846  0.13901533  0.4145926   0.07989263  0.41103888  0.06088544
+  0.19382446  0.00105457  0.09919863  0.05652939  0.04447209  0.08153148
+  0.10764001  0.04806979  0.12428512  0.24273096  0.17976335  0.04811273
+  0.21161598  0.06684908  0.30449116  0.25658992  0.17554843  0.23139746
+  0.23430511  0.22782937]
+False
+[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan]
+False
 Traceback (most recent call last):
   File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 347, in <module>
     main(params)
   File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py", line 239, in main
     uncertainty_utilities_global.evaluate_uncertainty_measurement_global(params, model, data_loader["test"], data_loader["devel"])
-  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 48, in evaluate_uncertainty_measurement_global
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 49, in evaluate_uncertainty_measurement_global
     evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
-  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 103, in evaluate_uncertainty_measurement_global_help
-    calibration_target_pred = calibration_utilities_deprecated.calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
-  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/calibration_utilities_deprecated.py", line 78, in calibrate
-    calibrator = sklearn.isotonic.IsotonicRegression(out_of_bounds="clip", y_min=0, y_max=1).fit(val_uncalibrated, val_calibrated)# NOTE increasing="auto"?
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 119, in evaluate_uncertainty_measurement_global_help
+    calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 75, in calibrate
+    calibrator = sklearn.isotonic.IsotonicRegression(out_of_bounds="clip", y_min=-1, y_max=1).fit(val_uncalibrated, val_calibrated)
   File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/sklearn/isotonic.py", line 326, in fit
     X = check_array(X, dtype=[np.float64, np.float32], **check_params)
   File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/sklearn/utils/validation.py", line 63, in inner_f
