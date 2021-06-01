@@ -44,6 +44,51 @@ def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5
     
     return full_means, full_subjectivities_pred, full_labels, full_subjectivities_global
 
+def outputs_ensemble_averaging_global(ensemble, test_loader, params):
+    full_means, full_subjectivities_pred, full_labels, full_subjectivities_global = [], [], [], []
+
+    with torch.no_grad():
+        for _, batch_data in enumerate(test_loader, 1):
+            features, feature_lens, labels, meta, subjectivities, subjectivities_global = batch_data
+
+            labels = labels.cpu().detach().squeeze(0).numpy()
+            full_labels += [labels]
+            subjectivities_global = subjectivities_global.squeeze(0).numpy()
+            full_subjectivities_global += [subjectivities_global]
+
+            preds = []
+            for model in ensemble:
+                model.train()
+
+                if params.gpu is not None:
+                    model.cuda()
+                    features = features.cuda()
+                    feature_lens = feature_lens.cuda()
+                    labels = labels.cuda()
+                
+                pred = model(features, feature_lens).cpu().detach().squeeze(0).numpy()
+                preds += [pred]
+            
+            means = np.mean(preds, axis=0)
+            full_means += [means]
+
+            subjectivities_pred = []
+            for dim in range(means.shape[1]):
+                subj_dim = []
+                
+                for i, pred_1 in enumerate(preds):
+                    for pred_2 in preds[i+1:]:
+                        ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
+                        subj_dim += [ccc]
+                
+                subj_dim = np.mean(subj_dim)
+                subjectivities_pred += [subj_dim]
+            
+            full_subjectivities_pred += [subjectivities_pred]
+            
+    
+    return full_means, full_subjectivities_pred, full_labels, full_subjectivities_global
+
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)
     evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
@@ -87,6 +132,9 @@ def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalib
 def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader):
     if params.uncertainty_approach == "monte_carlo_dropout":
         prediction_fn = outputs_mc_dropout_global
+    
+    elif params.uncertainty_approach == "ensemble_averaging":
+        prediction_fn = outputs_ensemble_averaging_global
     
     else:
         raise NotImplementedError
