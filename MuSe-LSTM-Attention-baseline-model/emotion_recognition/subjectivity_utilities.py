@@ -100,7 +100,7 @@ def calculate_rolling_subjectivities(annotations_per_vid):
     
     return subjectivities
 
-def calculate_global_subjectivities(annotations_per_vid):
+def calculate_global_subjectivities(annotations_per_vid, window: int):
     subjectivities = {}
     for vid_id, emo_dims in annotations_per_vid.items():
 
@@ -109,10 +109,18 @@ def calculate_global_subjectivities(annotations_per_vid):
 
             subjectivity_of_sample = []
             for k, annotation_1 in enumerate(annotations):
-                for annotation_2 in annotations[k+1:]:                    
-                    subjectivity = uncertainty_utilities.ccc_score(annotation_1, annotation_2)
+                for annotation_2 in annotations[k+1:]:
+                    
+                    if window is None:
+                        subjectivity = uncertainty_utilities.ccc_score(annotation_1, annotation_2)
+                    
+                    else:
+                        subjectivity = []
+                        for i in range(0, len(annotation_1) + 1 - window, window):
+                            subjectivity += [uncertainty_utilities.ccc_score(annotation_1[i : i + window], annotation_2[i : i + window])]
+                    
                     subjectivity_of_sample += [subjectivity]
-                                        
+
             subjectivity_of_sample = np.mean(subjectivity_of_sample)
             subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
     
@@ -124,5 +132,5 @@ def calculate_global_subjectivities(annotations_per_vid):
 def calculate_subjectivities(params):
     annotations_per_vid = get_annotations_per_sample(params)
     short_term = calculate_rolling_subjectivities(annotations_per_vid)
-    globals = calculate_global_subjectivities(annotations_per_vid)
+    globals = calculate_global_subjectivities(annotations_per_vid, params.global_uncertainty_window)
     return short_term, globals

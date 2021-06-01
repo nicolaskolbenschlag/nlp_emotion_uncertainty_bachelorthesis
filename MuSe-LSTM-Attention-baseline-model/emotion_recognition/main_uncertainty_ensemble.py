@@ -132,13 +132,15 @@ def parse_params():
 
     
     # NOTE uncertainty
-    parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
+    parser.add_argument("--uncertainty_approach", type=str, choices=["ensemble_averaging"])
     
     parser.add_argument("--predict_subjectivity", action="store_true", help="whether predict subjectivity. (default: False)")
     parser.add_argument("--loss_subjectivity", type=str, default="ccc", choices=["ccc", "mse"], help="loss function for subjectivity (default: ccc)")
     parser.add_argument("--not_measure_uncertainty", action="store_true", help="whether measure uncertainty. (default: False)")
     
     parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
+    parser.add_argument("--global_uncertainty_window", type=int, default=None)
+    parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true")
     
     # parse
     args = parser.parse_args()

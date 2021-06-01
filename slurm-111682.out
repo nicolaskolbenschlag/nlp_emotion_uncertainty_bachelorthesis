@@ -56,3 +56,90 @@ Samples in partitions: (3132, 62, 64)
 Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
+Seed 314 | Best [Val CCC]: 0.0243 [' 0.0243']| Loss: 0.9756 | PCC: 0.1523 ['0.1523'] | RMSE: 0.7830 ['0.7830']
+--------------------TEST--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.5691493922224418, 'ccc': -0.010125113663723137}], rand. GsbUME: [{'mae': 0.11983224918081087, 'ccc': -0.07227027672680988}]
+GpebUME: [{'mae': 0.7100403577968027, 'ccc': 0.0034788126319133124}], rand. GpebUME: [{'mae': 0.04579197011781773, 'ccc': -0.05524792744759523}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.14125696135722032, 'ccc': 0.07412719432020783}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.09001115380085481, 'ccc': 0.0}]
+GpebUME: [{'mae': 0.07761248834933629, 'ccc': 5.169502474886362e-33}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.16954571088187398, 'ccc': -0.004981801171712834}]
+GpebUME: [{'mae': 0.03507703898653054, 'ccc': 0.06362205631487851}]
+--------------------DEVEL--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.6322766961221418, 'ccc': -0.017433723393344563}], rand. GsbUME: [{'mae': 0.11671902838124139, 'ccc': -0.033579286180871686}]
+GpebUME: [{'mae': 0.7332126274400674, 'ccc': 0.002054831790111141}], rand. GpebUME: [{'mae': 0.027713643263599003, 'ccc': -0.053669511251891865}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.1076429033952589, 'ccc': 0.023550424943611706}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.08146422067226436, 'ccc': 0.0003189892410844017}]
+GpebUME: [{'mae': 0.10072325270736086, 'ccc': 0.0001338113907095195}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.10762562659126959, 'ccc': -0.041407268086384195}]
+GpebUME: [{'mae': 0.01659058586718351, 'ccc': 0.28380873513485005}]
+On Test: CCC  0.0635 | PCC  0.2745 | RMSE  0.6721
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.0243
+On ground-truth labels:		[Test CCC] for seed "314":	 0.0635
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-01-18-50_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[1_314_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 2 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]

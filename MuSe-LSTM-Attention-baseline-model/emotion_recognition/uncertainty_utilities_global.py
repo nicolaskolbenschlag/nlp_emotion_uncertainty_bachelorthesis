@@ -31,6 +31,7 @@ def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5
                 
                 for i, pred_1 in enumerate(preds):
                     for pred_2 in preds[i+1:]:
+                        # TODO split in windows if specified
                         ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
                         subj_dim += [ccc]
                 
@@ -78,10 +79,23 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
                 
                 for i, pred_1 in enumerate(preds):
                     for pred_2 in preds[i+1:]:
-                        ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
-                        subj_dim += [ccc]
+                        
+                        if params.global_uncertainty_window is None:
+                            ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
+                            subj_dim += [ccc]
+                        
+                        else:
+                            window = params.global_uncertainty_window
+                            tmp = []
+                            for i in range(0, len(pred_1[:,dim]) + 1 - window, window):
+                                tmp += [uncertainty_utilities.ccc_score(pred_1[:,dim][i : i + window], pred_2[:,dim][i : i + window])]
+                            subj_dim += [tmp]
                 
-                subj_dim = np.mean(subj_dim)
+                if params.global_uncertainty_window is None:
+                    subj_dim = np.mean(subj_dim)
+                else:
+                    subj_dim = [np.mean(s) for s in subj_dim]
+                
                 subjectivities_pred += [subj_dim]
             
             full_subjectivities_pred += [subjectivities_pred]
@@ -89,13 +103,19 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
     
     return full_means, full_subjectivities_pred, full_labels, full_subjectivities_global
 
-def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
-    print("-" * 20 + "TEST" + "-" * 20)
-    evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
-    print("-" * 20 + "DEVEL" + "-" * 20)
-    evaluate_uncertainty_measurement_global_help(params, model, val_loader, val_loader)
+def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, normalize: bool = False):
 
-def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores):
+    if normalize:
+        
+        subjectivities_pred -= subjectivities_pred.min()
+        subjectivities_pred /= subjectivities_pred.max()
+
+        subjectivities_global -= subjectivities_global.min()
+        subjectivities_global /= subjectivities_global.max()
+
+        prediction_scores -= prediction_scores.min()
+        prediction_scores /= prediction_scores.max()
+
     GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = {}, {}, {}, {}, {}
 
     metric_fns = [mean_absolute_error, uncertainty_utilities.ccc_score]
@@ -118,7 +138,6 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
 
         # NOTE measure similarity between true subjectivity among annotations and prediction error
         vs[metric] = metric_fn(prediction_scores, subjectivities_global)
-        # TODO measure with ccc (or pearson correlation)
 
     return GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs
 
@@ -154,7 +173,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape
 
         # NOTE uncalibrated measurements
-        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores)
+        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_global_uncertainty_measurement)
         GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
 
         # NOTE re-calibration
@@ -170,13 +189,13 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         # NOTE only obtain metrics that are affected by calibration
-        GsbUME_cal_subj, _, GpebUME_cal_subj, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores)
+        GsbUME_cal_subj, _, GpebUME_cal_subj, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
         # NOTE calibration target: prediction error
         calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(len(full_means_val))])
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
-        GsbUME_cal_err, _, GpebUME_cal_err, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores)
+        GsbUME_cal_err, _, GpebUME_cal_err, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
     
     print("Uncalibrated scores and benchmarking with random uncertainty quntification:")
@@ -191,3 +210,9 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     print("Calibrated on prediction score:")
     print(f"GsbUME: {GsbUMEs_cal_err}")
     print(f"GpebUME: {GpebUMEs_cal_err}")
+
+def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
+    print("-" * 20 + "TEST" + "-" * 20)
+    evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
+    print("-" * 20 + "DEVEL" + "-" * 20)
+    evaluate_uncertainty_measurement_global_help(params, model, val_loader, val_loader)
