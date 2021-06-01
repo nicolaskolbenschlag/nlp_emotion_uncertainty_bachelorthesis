@@ -54,7 +54,7 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
     GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = {}, {}, {}, {}, {}
 
     metric_fns = [mean_absolute_error, uncertainty_utilities.ccc_score]
-    for i, metric in ["mae", "ccc"]:
+    for i, metric in enumerate(["mae", "ccc"]):
         metric_fn = metric_fns[i]
 
         # NOTE calculate global equivalent to sbUME: Global sbUME (GsbUME)
