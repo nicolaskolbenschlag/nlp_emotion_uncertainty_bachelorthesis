@@ -99,7 +99,6 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
                 subjectivities_pred += [subj_dim]
             
             full_subjectivities_pred += [subjectivities_pred]
-            
     
     return full_means, full_subjectivities_pred, full_labels, full_subjectivities_global
 
@@ -161,6 +160,13 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     # NOTE full_subjectivities_pred represents the model's uncertainty, confidence respectively
     full_means, full_subjectivities_pred, full_labels, full_subjectivities_global = prediction_fn(model, test_loader, params)
     full_means_val, full_subjectivities_pred_val, full_labels_val, full_subjectivities_global_val = prediction_fn(model, val_loader, params)
+
+    if not params.global_uncertainty_window is None:
+        full_subjectivities_pred = None
+        full_subjectivities_global = None
+        full_subjectivities_pred_val = None
+        full_subjectivities_global_val = None
+
 
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
     GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []

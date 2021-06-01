@@ -121,7 +121,11 @@ def calculate_global_subjectivities(annotations_per_vid, window: int):
                     
                     subjectivity_of_sample += [subjectivity]
 
-            subjectivity_of_sample = np.mean(subjectivity_of_sample)
+            if window is None:
+                subjectivity_of_sample = np.mean(subjectivity_of_sample)
+            else:
+                subjectivity_of_sample = [np.mean(s) for s in subjectivity_of_sample]
+
             subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
     
         subjectivity_of_sample_all_emo_dims = torch.Tensor(subjectivity_of_sample_all_emo_dims)
