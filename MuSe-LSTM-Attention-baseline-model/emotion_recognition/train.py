@@ -340,7 +340,7 @@ def validate_quantile_regression(model, val_loader, criterion, params):
             for i in range(len(params.loss_weights)):
                 
                 # branch_loss = criterion(preds[:, :, i], labels[:, :, i], feature_lens, params.label_smooth)
-                branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth)# NOTE: for tilted loss
+                branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth, True)# NOTE: for tilted loss
 
                 loss = loss + params.loss_weights[i] * branch_loss
             val_loss += loss.item() * batch_size

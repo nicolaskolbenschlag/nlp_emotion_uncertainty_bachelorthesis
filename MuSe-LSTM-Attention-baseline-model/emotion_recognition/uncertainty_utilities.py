@@ -264,7 +264,7 @@ def subjectivity_vs_rolling_correlation_error(subjectivities: np.ndarray, labels
         SvCs += [tmp]
     return SvCs
 
-def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True):
+def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray, vars_: np.ndarray, subjectivities: np.ndarray, method: str, partition: str, plot: bool = True, benchmark: bool = False):
     sbUMEs, pebUMEs, Cvs = [], [], []
     for i in range(means.shape[1]):        
 
@@ -273,14 +273,21 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
 
         # NOTE window that determines how UME is calculated
         for scaling_window in [None, 10, 200, 500]:
-                        
-            tmp_0_sbUME[scaling_window] = UME_abs_experimental(subjectivities[:,i], vars_[:,i], scaling_window)
+
+            if not benchmark:
+                tmp_0_sbUME[scaling_window] = UME_abs_experimental(subjectivities[:,i], vars_[:,i], scaling_window)
+            else:
+                tmp_0_sbUME[scaling_window] = UME_abs_experimental(subjectivities[:,i], np.random.normal(subjectivities[:,i].mean(), subjectivities[:,i].std(), subjectivities[:,i].shape), scaling_window)
 
             tmp_1_pebUME = {}
 
             # NOTE window that defines rolling correlation error
             for window in [3,5,7,10]:
-                pebUME = UME_abs_experimental(rolling_correlation_coefficient(labels[:,i], means[:,i], window), vars_[:,i], scaling_window)
+                err = rolling_correlation_coefficient(labels[:,i], means[:,i], window)
+                if not benchmark:
+                    pebUME = UME_abs_experimental(err, vars_[:,i], scaling_window)
+                else:
+                    pebUME = UME_abs_experimental(err, np.random.normal(err[:,i].mean(), err[:,i].std(), err[:,i].shape), scaling_window)
                 tmp_1_pebUME[window] = pebUME
             
             tmp_0_pebUME[scaling_window] = tmp_1_pebUME
@@ -288,14 +295,15 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
         sbUMEs += [tmp_0_sbUME]
         pebUMEs += [tmp_0_pebUME]
         
-
-        Cvs += [{
-            "predicted uncertainty": stds_coefficient_of_variation(vars_[:,i]),
-            "true subjectivity": stds_coefficient_of_variation(subjectivities[:,i]),
-            "true rolling error 3": stds_coefficient_of_variation(rolling_correlation_coefficient(labels[:,i], means[:,i], 3)),
-        }]
+        if not benchmark:
+            Cvs += [{
+                "predicted uncertainty": stds_coefficient_of_variation(vars_[:,i]),
+                "true subjectivity": stds_coefficient_of_variation(subjectivities[:,i]),
+                "true rolling error 3": stds_coefficient_of_variation(rolling_correlation_coefficient(labels[:,i], means[:,i], 3)),
+            }]
 
         if plot:
+            assert not benchmark
             max_plot = 1000#len(labels)
             step_plot = 100
             for j in range(0, max_plot, step_plot):
@@ -331,6 +339,7 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     elif params.uncertainty_approach == None:
         prediction_fn = outputs_random
         method = "Random"
+        raise NotImplementedError
     
     else:
         raise NotImplementedError
@@ -367,3 +376,7 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
             
         sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
         print(f"CALIBRATED on {calibration_target}:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")
+    
+    # NOTE benchmarking
+    sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, None, full_subjectivities, "Benchmark", test_loader.dataset.partition, False, True)
+    print(f"BENCHMARK:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")

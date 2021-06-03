@@ -203,6 +203,7 @@ def main(params):
 
     ENSEMBLE = []
 
+    assert len(seeds) > 1, "can't build ensemble with only 1 seed"
     for seed in seeds:
         params.current_seed = seed
         torch.manual_seed(seed)

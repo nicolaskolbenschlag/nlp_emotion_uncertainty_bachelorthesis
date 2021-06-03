@@ -577,7 +577,7 @@ class TiltedCCCLoss(nn.Module):
         ccc_loss = 1.0 - ccc
         return ccc_loss
     
-    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None):
+    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False):
         """
         :param y_pred: (batch_size, seq_len)
         :param y_true: (batch_size, seq_len)
@@ -625,6 +625,9 @@ class TiltedCCCLoss(nn.Module):
         
         # NOTE use middle quantile as prediction
         losses = [losses[0], ccc, losses[1]]
+
+        if print_output:
+            print(f"tCCC output node {losses}")
         
         loss = torch.mean(torch.cat(losses))
         return loss

@@ -59,7 +59,7 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
 
             preds = []
             for model in ensemble:
-                model.train()
+                model.eval()
 
                 if params.gpu is not None:
                     model.cuda()
@@ -182,7 +182,6 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
         full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
-
 
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
     GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []
