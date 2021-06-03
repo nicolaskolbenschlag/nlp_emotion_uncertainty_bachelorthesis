@@ -1,0 +1,170 @@
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --normalize_uncalibrated_global_uncertainty_measurement
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Seed 314 | Best [Val CCC]: 0.0243 [' 0.0243']| Loss: 0.9756 | PCC: 0.1523 ['0.1523'] | RMSE: 0.7830 ['0.7830']
+On Test: CCC  0.0552 | PCC  0.2744 | RMSE  0.7507
+==================================================
+--------------------TEST--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/numpy/core/fromnumeric.py:3335: RuntimeWarning: Mean of empty slice.
+  out=out, **kwargs)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+Traceback (most recent call last):
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py", line 329, in <module>
+    main(params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py", line 252, in main
+    uncertainty_utilities_global.evaluate_uncertainty_measurement_global(params, ENSEMBLE, data_loader["test"], data_loader["devel"])
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 223, in evaluate_uncertainty_measurement_global
+    evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py", line 183, in evaluate_uncertainty_measurement_global_help
+    GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_global_uncertainty_measurement)
+AttributeError: 'Namespace' object has no attribute 'normalize_global_uncertainty_measurement'
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set bert-4 --emo_dim_set valence --epochs 1 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --normalize_uncalibrated_global_uncertainty_measurement --global_uncertainty_window 200
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/numpy/core/fromnumeric.py:3335: RuntimeWarning: Mean of empty slice.
+  out=out, **kwargs)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in double_scalars
+  ret = ret.dtype.type(ret / rcount)
+Traceback (most recent call last):
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py", line 329, in <module>
+    main(params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py", line 225, in main
+    train_model(model, data_loader, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 48, in train_model
+    train_loss = train(model, train_loader, criterion, optimizer, epoch, params)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/train.py", line 112, in train
+    for batch, batch_data in enumerate(train_loader, 1):
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 435, in __next__
+    data = self._next_data()
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1085, in _next_data
+    return self._process_data(data)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1111, in _process_data
+    data.reraise()
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/_utils.py", line 428, in reraise
+    raise self.exc_type(msg)
+RuntimeError: Caught RuntimeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/worker.py", line 198, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 47, in fetch
+    return self.collate_fn(data)
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/collate.py", line 83, in default_collate
+    return [default_collate(samples) for samples in transposed]
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/collate.py", line 83, in <listcomp>
+    return [default_collate(samples) for samples in transposed]
+  File "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/venv/lib/python3.7/site-packages/torch/utils/data/_utils/collate.py", line 55, in default_collate
+    return torch.stack(batch, 0, out=out)
+RuntimeError: stack expects each tensor to be equal size, but got [1, 10] at entry 0 and [1, 6] at entry 2
+
+slurmstepd: Exceeded step memory limit at some point.

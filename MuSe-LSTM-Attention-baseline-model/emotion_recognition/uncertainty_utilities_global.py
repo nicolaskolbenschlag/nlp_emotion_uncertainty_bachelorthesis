@@ -88,6 +88,8 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
                             window = params.global_uncertainty_window
                             tmp = []
                             for i in range(0, len(pred_1[:,dim]) + 1 - window, window):
+                                if len(pred_1[:,dim][i : i + window]) < window:
+                                    continue
                                 tmp += [uncertainty_utilities.ccc_score(pred_1[:,dim][i : i + window], pred_2[:,dim][i : i + window])]
                             subj_dim += [tmp]
                 
@@ -105,7 +107,6 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
 def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, normalize: bool = False):
 
     if normalize:
-        
         subjectivities_pred -= subjectivities_pred.min()
         subjectivities_pred /= subjectivities_pred.max()
 
@@ -162,10 +163,25 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     full_means_val, full_subjectivities_pred_val, full_labels_val, full_subjectivities_global_val = prediction_fn(model, val_loader, params)
 
     if not params.global_uncertainty_window is None:
-        full_subjectivities_pred = None
-        full_subjectivities_global = None
-        full_subjectivities_pred_val = None
-        full_subjectivities_global_val = None
+        
+        def flatten_subjectivities_of_subsamples(subjectivities, params):
+            # NOTE reshape from (num_samples, dims, num_subsamples, window) to (num_samples * num_subsamples, window, dims)
+            out = []
+            for sample in subjectivities:
+                for i_subsample in range(len(sample[0])):
+                    new_sample = []
+                    for i_dim in range(len(sample)):
+                        assert len(sample[i_dim][i_subsample]) == params.global_uncertainty_window
+                        new_sample += [sample[i_dim][i_subsample]]
+                    out += [np.column_stack(new_sample)]
+            assert out.shape[1:] == (params.global_uncertainty_window, len(params.emo_dim_set))
+            out = np.array(out)
+            return out
+            
+        full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
+        full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
+        full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
+        full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
 
 
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
@@ -179,7 +195,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape
 
         # NOTE uncalibrated measurements
-        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_global_uncertainty_measurement)
+        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
         GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
 
         # NOTE re-calibration

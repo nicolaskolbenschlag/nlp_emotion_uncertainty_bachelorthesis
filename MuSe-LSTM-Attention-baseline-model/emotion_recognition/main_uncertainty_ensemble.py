@@ -140,7 +140,7 @@ def parse_params():
     
     parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
     parser.add_argument("--global_uncertainty_window", type=int, default=None)
-    parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true")
+    parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true", help="default: False")
     
     # parse
     args = parser.parse_args()
@@ -249,7 +249,7 @@ def main(params):
         ENSEMBLE += [model]
     
     assert params.measure_uncertainty_globally and params.uncertainty_approach == "ensemble_averaging"
-    uncertainty_utilities.evaluate_uncertainty_measurement(ENSEMBLE, data_loader["test"], params, data_loader["devel"])
+    uncertainty_utilities_global.evaluate_uncertainty_measurement_global(params, ENSEMBLE, data_loader["test"], data_loader["devel"])
 
     mean_val_cccs = [np.mean(val_ccc) for val_ccc in val_cccs]
     best_idx = mean_val_cccs.index(max(mean_val_cccs))

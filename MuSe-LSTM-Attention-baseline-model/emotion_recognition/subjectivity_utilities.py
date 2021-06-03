@@ -117,6 +117,8 @@ def calculate_global_subjectivities(annotations_per_vid, window: int):
                     else:
                         subjectivity = []
                         for i in range(0, len(annotation_1) + 1 - window, window):
+                            if len(annotation_1[i : i + window]) < window:
+                                continue
                             subjectivity += [uncertainty_utilities.ccc_score(annotation_1[i : i + window], annotation_2[i : i + window])]
                     
                     subjectivity_of_sample += [subjectivity]

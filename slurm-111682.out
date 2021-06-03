@@ -143,3 +143,62 @@ Samples in partitions: (3132, 62, 64)
 Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+--------------------TEST--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.7269551721269141, 'ccc': 0.0012466710604650464}], rand. GsbUME: [{'mae': 0.10468907547890031, 'ccc': 0.1780810321204633}]
+GpebUME: [{'mae': 0.4064275239375772, 'ccc': 0.017892050362563056}], rand. GpebUME: [{'mae': 0.21832365521215014, 'ccc': -0.0815907468180701}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.3222465414159795, 'ccc': 0.05046001589056807}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.0905646368362161, 'ccc': -0.0031304857525244595}]
+GpebUME: [{'mae': 0.38467317653771615, 'ccc': 0.010695424110163294}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.20410276182685805, 'ccc': 0.03449930163014649}]
+GpebUME: [{'mae': 0.15600385753303223, 'ccc': 0.1974440514163025}]
+--------------------DEVEL--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.7894962094377019, 'ccc': 0.0008503776746688375}], rand. GsbUME: [{'mae': 0.11218909584049908, 'ccc': -0.1644635468578265}]
+GpebUME: [{'mae': 0.5371626541160643, 'ccc': 0.006837536174114451}], rand. GpebUME: [{'mae': 0.2023121104973467, 'ccc': -0.08316137564775293}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.2766352871717018, 'ccc': 0.07792845395761393}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.08207532666034142, 'ccc': 0.0469387790550328}]
+GpebUME: [{'mae': 0.2707164014628288, 'ccc': 0.02002580333074063}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.24938969735674862, 'ccc': 0.02792180927187835}]
+GpebUME: [{'mae': 0.15038454376155255, 'ccc': 0.3580820501420597}]
+On Test: CCC  0.6063 | PCC  0.6208 | RMSE  0.1608
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+--------------------TEST--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.7181855645950763, 'ccc': 0.00028239295075997326}], rand. GsbUME: [{'mae': 0.10750185600140305, 'ccc': -0.03450759839765887}]
+GpebUME: [{'mae': 0.38411329543059836, 'ccc': 0.01921672129788702}], rand. GpebUME: [{'mae': 0.1672365062249197, 'ccc': 0.004372477537661739}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.3371398801730924, 'ccc': 0.06423628714959025}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.09496242557765974, 'ccc': 0.00578448847693836}]
+GpebUME: [{'mae': 0.40030147214734807, 'ccc': 0.0259481548745451}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.2278641078882473, 'ccc': 0.01523778602622202}]
+GpebUME: [{'mae': 0.1544052136016899, 'ccc': 0.29454629931095627}]
+--------------------DEVEL--------------------
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.7838057031945157, 'ccc': 0.0006056112308988732}], rand. GsbUME: [{'mae': 0.11860724744500663, 'ccc': 0.07849164895003546}]
+GpebUME: [{'mae': 0.5025299620653854, 'ccc': 0.0055844076867927256}], rand. GpebUME: [{'mae': 0.20131752384559767, 'ccc': -0.08990551495554523}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.29684703051832934, 'ccc': 0.0795348737571323}]
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.08041420049011154, 'ccc': 0.11464873505866699}]
+GpebUME: [{'mae': 0.29322682639825887, 'ccc': 0.026811481380685457}]
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.27161643500561927, 'ccc': 0.00777691988877432}]
+GpebUME: [{'mae': 0.14145172949978355, 'ccc': 0.2305270827400907}]
+On Test: CCC  0.6028 | PCC  0.6147 | RMSE  0.1555
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4431
+On ground-truth labels:		[Test CCC] for seed "315":	 0.6028
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-01-20-44_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[2_315_None_None].pth".
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.
