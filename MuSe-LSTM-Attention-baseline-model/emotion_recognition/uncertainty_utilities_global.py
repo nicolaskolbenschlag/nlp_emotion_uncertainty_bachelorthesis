@@ -8,6 +8,37 @@ import calibration_utilities_deprecated
 def mean_absolute_error(x: np.array, y: np.array) -> float:
     return np.abs(x - y).mean()
 
+def multiple_preds_to_predicted_subjectivity(params, preds, means):
+    subjectivities_pred = []
+    
+    for dim in range(means.shape[1]):
+        subj_dim = []
+        
+        for i, pred_1 in enumerate(preds):
+            for pred_2 in preds[i+1:]:
+                
+                if params.global_uncertainty_window is None:
+                    ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
+                    subj_dim += [ccc]
+                
+                else:
+                    window = params.global_uncertainty_window
+                    tmp = []
+                    for i in range(0, len(pred_1[:,dim]) + 1 - window, window):
+                        if len(pred_1[:,dim][i : i + window]) < window:
+                            continue
+                        tmp += [uncertainty_utilities.ccc_score(pred_1[:,dim][i : i + window], pred_2[:,dim][i : i + window])]
+                    subj_dim += [tmp]
+        
+        if params.global_uncertainty_window is None:
+            subj_dim = np.mean(subj_dim)
+        else:
+            subj_dim = [np.mean(s) for s in subj_dim]
+        
+        subjectivities_pred += [subj_dim]
+    
+    return subjectivities_pred
+
 def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5):
     model.train()
     full_means, full_subjectivities_pred, full_labels, full_subjectivities_global = [], [], [], []
@@ -25,18 +56,7 @@ def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5
             labels = labels.cpu().detach().squeeze(0).numpy()
             subjectivities_global = subjectivities_global.squeeze(0).numpy()
 
-            subjectivities_pred = []
-            for dim in range(means.shape[1]):
-                subj_dim = []
-                
-                for i, pred_1 in enumerate(preds):
-                    for pred_2 in preds[i+1:]:
-                        # TODO split in windows if specified
-                        ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
-                        subj_dim += [ccc]
-                
-                subj_dim = np.mean(subj_dim)
-                subjectivities_pred += [subj_dim]
+            subjectivities_pred = multiple_preds_to_predicted_subjectivity(params, preds, means)
             
             full_means += [means]
             full_subjectivities_pred += [subjectivities_pred]
@@ -73,38 +93,15 @@ def outputs_ensemble_averaging_global(ensemble, test_loader, params):
             means = np.mean(preds, axis=0)
             full_means += [means]
 
-            subjectivities_pred = []
-            for dim in range(means.shape[1]):
-                subj_dim = []
-                
-                for i, pred_1 in enumerate(preds):
-                    for pred_2 in preds[i+1:]:
-                        
-                        if params.global_uncertainty_window is None:
-                            ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
-                            subj_dim += [ccc]
-                        
-                        else:
-                            window = params.global_uncertainty_window
-                            tmp = []
-                            for i in range(0, len(pred_1[:,dim]) + 1 - window, window):
-                                if len(pred_1[:,dim][i : i + window]) < window:
-                                    continue
-                                tmp += [uncertainty_utilities.ccc_score(pred_1[:,dim][i : i + window], pred_2[:,dim][i : i + window])]
-                            subj_dim += [tmp]
-                
-                if params.global_uncertainty_window is None:
-                    subj_dim = np.mean(subj_dim)
-                else:
-                    subj_dim = [np.mean(s) for s in subj_dim]
-                
-                subjectivities_pred += [subj_dim]
+            subjectivities_pred = multiple_preds_to_predicted_subjectivity(params, preds, means)
             
             full_subjectivities_pred += [subjectivities_pred]
     
     return full_means, full_subjectivities_pred, full_labels, full_subjectivities_global
 
 def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, normalize: bool = False):
+
+    assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
 
     if normalize:
         subjectivities_pred -= subjectivities_pred.min()
@@ -165,20 +162,33 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     if not params.global_uncertainty_window is None:
         
         def flatten_subjectivities_of_subsamples(subjectivities, params):
-            # NOTE reshape from (num_samples, dims, num_subsamples, window) to (num_samples * num_subsamples, window, dims)
+            # NOTE reshape from (num_samples, dims, num_subsamples) to (num_samples * num_subsamples, dims)
             out = []
             for sample in subjectivities:
+                assert len(sample) == len(params.emo_dim_set)
+
                 for i_subsample in range(len(sample[0])):
                     new_sample = []
+                    none_occurrence = False
+                    
                     for i_dim in range(len(sample)):
-                        assert len(sample[i_dim][i_subsample]) == params.global_uncertainty_window
-                        new_sample += [sample[i_dim][i_subsample]]
-                    out += [np.column_stack(new_sample)]
-            assert out.shape[1:] == (params.global_uncertainty_window, len(params.emo_dim_set))
+                        subsample = sample[i_dim][i_subsample]
+                        # print(f"subsample: {subsample} isnan: {torch.isnan(torch.tensor(subsample))}")
+                        
+                        if not torch.isnan(torch.tensor(subsample)):
+                            new_sample += [subsample]
+                            assert not none_occurrence, "ensure that subsumple is padded with nones at the end and no nones elsewhere"
+                        else:
+                            none_occurrence = True
+                        
+                    out += [new_sample]
             out = np.array(out)
+            print(out.shape)
+            assert out.shape[1:] == (len(params.emo_dim_set),)
             return out
             
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
+        print(full_subjectivities_global)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
         full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)

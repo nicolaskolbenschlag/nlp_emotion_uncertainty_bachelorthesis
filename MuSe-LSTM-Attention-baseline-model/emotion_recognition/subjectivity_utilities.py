@@ -5,6 +5,7 @@ import utils
 import config
 
 import uncertainty_utilities
+import pickle
 
 def get_annotations_per_sample(params):
     annotations_per_vid = {}
@@ -102,6 +103,8 @@ def calculate_rolling_subjectivities(annotations_per_vid):
 
 def calculate_global_subjectivities(annotations_per_vid, window: int):
     subjectivities = {}
+    max_len_global_subjectivities = None
+    
     for vid_id, emo_dims in annotations_per_vid.items():
 
         subjectivity_of_sample_all_emo_dims = []
@@ -126,17 +129,62 @@ def calculate_global_subjectivities(annotations_per_vid, window: int):
             if window is None:
                 subjectivity_of_sample = np.mean(subjectivity_of_sample)
             else:
-                subjectivity_of_sample = [np.mean(s) for s in subjectivity_of_sample]
+                subjectivity_of_sample = np.mean(subjectivity_of_sample, axis=0)#[np.mean(s) for s in subjectivity_of_sample]
+                if len(subjectivity_of_sample) > max_len_global_subjectivities:
+                    max_len_global_subjectivities = len(subjectivity_of_sample)
 
             subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]
-    
-        subjectivity_of_sample_all_emo_dims = torch.Tensor(subjectivity_of_sample_all_emo_dims)
+
+        if window is None:
+            subjectivity_of_sample_all_emo_dims = torch.Tensor(subjectivity_of_sample_all_emo_dims)
+
         subjectivities[vid_id] = subjectivity_of_sample_all_emo_dims
+    
+    if not window is None:
+        subjectivities_ = {}
+        for vid_id, subjectivity_of_sample_all_emo_dims in subjectivities.items():
+            subjectivity_of_sample_all_emo_dims_ = []
+            for subjectivity_of_sample in subjectivity_of_sample_all_emo_dims:
+                nans = [float("nan")] * (max_len_global_subjectivities - len(subjectivity_of_sample))
+                subjectivity_of_sample_ = subjectivity_of_sample + nans
+                subjectivity_of_sample_all_emo_dims_ += [subjectivity_of_sample_]
+            subjectivities_[vid_id] = torch.Tensor(subjectivity_of_sample_all_emo_dims_)
+        subjectivities = subjectivities_
     
     return subjectivities
 
-def calculate_subjectivities(params):
+def load_from_file(filename: str):
+    with open(filename, "rb") as file:
+        data = pickle.load(file)
+        
+    return data[0], data[1]
+
+def save_to_file(short_term_subjectivities, global_subjectivities, filename: str):
+    data = [short_term_subjectivities, global_subjectivities]
+    with open(filename, "wb") as file:
+        pickle.dump(data, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+def build_from_scratch(params, filename: str):
+    print("Calculating subjectivities among annotators from sratch...")
     annotations_per_vid = get_annotations_per_sample(params)
     short_term = calculate_rolling_subjectivities(annotations_per_vid)
     globals = calculate_global_subjectivities(annotations_per_vid, params.global_uncertainty_window)
+    
+    save_to_file(short_term, globals, filename)
+    print("Subjectivities calculated and saved to file.")
+    return short_term, globals
+
+def calculate_subjectivities(params):
+    filename = config.DATA_FOLDER + "/subjectivities_among_annotations.pickle"
+    
+    if params.load_subjectivity_from_file:
+        try:
+            short_term, globals = load_from_file(filename)
+            print("Subjectivities deserialized from file.")
+        except:
+            short_term, globals = build_from_scratch(params, filename)
+    
+    else:
+        short_term, globals = build_from_scratch(params, filename)
+        
     return short_term, globals
