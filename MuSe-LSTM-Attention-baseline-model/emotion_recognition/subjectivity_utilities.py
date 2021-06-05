@@ -129,8 +129,9 @@ def calculate_global_subjectivities(annotations_per_vid, window: int):
             if window is None:
                 subjectivity_of_sample = np.mean(subjectivity_of_sample)
             else:
-                subjectivity_of_sample = np.mean(subjectivity_of_sample, axis=0)#[np.mean(s) for s in subjectivity_of_sample]
-                if len(subjectivity_of_sample) > max_len_global_subjectivities:
+                subjectivity_of_sample = np.mean(subjectivity_of_sample, axis=0).tolist()
+
+                if max_len_global_subjectivities is None or len(subjectivity_of_sample) > max_len_global_subjectivities:
                     max_len_global_subjectivities = len(subjectivity_of_sample)
 
             subjectivity_of_sample_all_emo_dims += [subjectivity_of_sample]

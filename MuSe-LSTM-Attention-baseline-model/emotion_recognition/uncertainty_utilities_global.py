@@ -3,7 +3,6 @@ import torch
 import sklearn.isotonic
 
 import uncertainty_utilities
-import calibration_utilities_deprecated
 
 def mean_absolute_error(x: np.array, y: np.array) -> float:
     return np.abs(x - y).mean()
@@ -33,11 +32,26 @@ def multiple_preds_to_predicted_subjectivity(params, preds, means):
         if params.global_uncertainty_window is None:
             subj_dim = np.mean(subj_dim)
         else:
-            subj_dim = [np.mean(s) for s in subj_dim]
+            subj_dim = np.mean(subj_dim, axis=0)
         
         subjectivities_pred += [subj_dim]
     
     return subjectivities_pred
+
+def calculate_prediction_scores(full_means, full_labels, emo_dim, params):
+    if params.global_uncertainty_window is None:
+        return np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(len(full_means))])
+    
+    else:
+        window = params.global_uncertainty_window
+        out = []
+        for idx, sample in enumerate(full_means):
+            for i in range(0, len(sample[emo_dim]) + 1 - window, window):
+                if len(sample[emo_dim][i : i + window]) < window:
+                    continue
+                ccc = uncertainty_utilities.ccc_score(sample[emo_dim][i : i + window], full_labels[idx][emo_dim][i : i + window])
+                out += [ccc]
+        return np.array(out)
 
 def outputs_mc_dropout_global(model, test_loader, params, n_ensemble_members = 5):
     model.train()
@@ -161,8 +175,8 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
     if not params.global_uncertainty_window is None:
         
+        # NOTE reshape from (num_samples, dims, num_subsamples) to (num_samples * num_subsamples, dims)
         def flatten_subjectivities_of_subsamples(subjectivities, params):
-            # NOTE reshape from (num_samples, dims, num_subsamples) to (num_samples * num_subsamples, dims)
             out = []
             for sample in subjectivities:
                 assert len(sample) == len(params.emo_dim_set)
@@ -173,22 +187,24 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
                     
                     for i_dim in range(len(sample)):
                         subsample = sample[i_dim][i_subsample]
-                        # print(f"subsample: {subsample} isnan: {torch.isnan(torch.tensor(subsample))}")
                         
                         if not torch.isnan(torch.tensor(subsample)):
+                            if torch.is_tensor(subsample): subsample = subsample.item()
                             new_sample += [subsample]
                             assert not none_occurrence, "ensure that subsumple is padded with nones at the end and no nones elsewhere"
                         else:
                             none_occurrence = True
-                        
-                    out += [new_sample]
+                    
+                    if len(new_sample) == len(params.emo_dim_set):
+                        out += [new_sample]
+
             out = np.array(out)
             print(out.shape)
+            # print(out)
             assert out.shape[1:] == (len(params.emo_dim_set),)
             return out
             
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
-        print(full_subjectivities_global)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
         full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
@@ -200,7 +216,10 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
         subjectivities_pred = np.array(full_subjectivities_pred)[:,emo_dim]
         subjectivities_global = np.array(full_subjectivities_global)[:,emo_dim]
-        prediction_scores = np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(len(full_means))])
+        
+        # prediction_scores = np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(len(full_means))])
+        prediction_scores = calculate_prediction_scores(full_means, full_labels, emo_dim, params)
+
         assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape
 
         # NOTE uncalibrated measurements
@@ -224,7 +243,10 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
         # NOTE calibration target: prediction error
-        calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(len(full_means_val))])
+        
+        # calibration_target_train = np.array([uncertainty_utilities.ccc_score(full_means_val[i][:,emo_dim], full_labels_val[i][:,emo_dim]) for i in range(len(full_means_val))])
+        calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
+        
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         GsbUME_cal_err, _, GpebUME_cal_err, _, _ = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
