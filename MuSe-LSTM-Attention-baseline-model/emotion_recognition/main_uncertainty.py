@@ -139,7 +139,7 @@ def parse_params():
     parser.add_argument("--not_measure_uncertainty", action="store_true", help="whether measure uncertainty. (default: False)")
     
     parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
-    parser.add_argument("--load_subjectivity_from_file", action="store_false", help="default: True")
+    parser.add_argument("--load_subjectivity_from_file", action="store_true", help="default: False")
 
     parser.add_argument("--global_uncertainty_window", type=int, default=None)
     parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true", help="default: False")
