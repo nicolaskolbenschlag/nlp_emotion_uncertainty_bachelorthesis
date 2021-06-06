@@ -46,10 +46,10 @@ def calculate_prediction_scores(full_means, full_labels, emo_dim, params):
         window = params.global_uncertainty_window
         out = []
         for idx, sample in enumerate(full_means):
-            for i in range(0, len(sample[emo_dim]) + 1 - window, window):
-                if len(sample[emo_dim][i : i + window]) < window:
+            for i in range(0, len(sample[:,emo_dim]) + 1 - window, window):
+                if len(sample[:,emo_dim][i : i + window]) < window:
                     continue
-                ccc = uncertainty_utilities.ccc_score(sample[emo_dim][i : i + window], full_labels[idx][emo_dim][i : i + window])
+                ccc = uncertainty_utilities.ccc_score(sample[:,emo_dim][i : i + window], full_labels[idx][:,emo_dim][i : i + window])
                 out += [ccc]
         return np.array(out)
 
@@ -195,6 +195,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
                         else:
                             none_occurrence = True
                     
+                    # NOTE only if new_sample is not only nones for padding
                     if len(new_sample) == len(params.emo_dim_set):
                         out += [new_sample]
 
@@ -206,8 +207,11 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
             
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
+        assert full_subjectivities_pred.shape == full_subjectivities_global.shape
         full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
+        assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape
+
 
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
     GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []
@@ -220,7 +224,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         # prediction_scores = np.array([uncertainty_utilities.ccc_score(full_means[i][:,emo_dim], full_labels[i][:,emo_dim]) for i in range(len(full_means))])
         prediction_scores = calculate_prediction_scores(full_means, full_labels, emo_dim, params)
 
-        assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape
+        assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
 
         # NOTE uncalibrated measurements
         GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
