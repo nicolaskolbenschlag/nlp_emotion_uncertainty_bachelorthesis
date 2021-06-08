@@ -170,9 +170,12 @@ def build_from_scratch(params, filename: str):
     annotations_per_vid = get_annotations_per_sample(params)
     short_term = calculate_rolling_subjectivities(annotations_per_vid)
     globals = calculate_global_subjectivities(annotations_per_vid, params.global_uncertainty_window)
+    print("Subjectivities calculated.")
     
-    save_to_file(short_term, globals, filename)
-    print("Subjectivities calculated and saved to file.")
+    if params.save_subjectivity_to_file:
+        save_to_file(short_term, globals, filename)
+        print("Subjectivities saved to file.")
+
     return short_term, globals
 
 def calculate_subjectivities(params):

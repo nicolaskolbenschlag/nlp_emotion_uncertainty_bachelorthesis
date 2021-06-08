@@ -132,6 +132,13 @@ def parse_params():
 
     
     # NOTE uncertainty
+    parser = add_uncertainty_args(parser)
+    
+    # parse
+    args = parser.parse_args()
+    return args
+
+def add_uncertainty_args(parser):
     parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
     
     parser.add_argument("--predict_subjectivity", action="store_true", help="whether predict subjectivity. (default: False)")
@@ -140,14 +147,12 @@ def parse_params():
     
     parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
     parser.add_argument("--load_subjectivity_from_file", action="store_true", help="default: False")
+    parser.add_argument("--save_subjectivity_to_file", action="store_true", help="default: False")
 
     parser.add_argument("--global_uncertainty_window", type=int, default=None)
     parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true", help="default: False")
     
-    # parse
-    args = parser.parse_args()
-    return args
-
+    return parser
 
 def get_dataloaders(data, subjectivities_per_sample_rolling, subjectivities_per_sample_global, predict=False):
     sample_counts = []

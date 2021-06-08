@@ -4,6 +4,32 @@ import sklearn.isotonic
 
 import uncertainty_utilities
 
+def ence(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 3) -> float:
+    real_uncertainty = np.abs(real_uncertainty - 1) / 2
+    predicted_uncertainty = np.abs(predicted_uncertainty - 1) / 2
+
+    ence = 0.
+    norm = 0
+    bin_indicies = np.digitize(predicted_uncertainty, np.linspace(predicted_uncertainty.min(), predicted_uncertainty.max(), bins))
+    for j in range(1, bins + 1):
+        mask = bin_indicies == j
+        
+        if not mask.sum() > 0:
+            continue
+        norm += 1
+
+        rmse = np.sqrt(np.mean(real_uncertainty[mask]))
+        rmv = np.sqrt(np.mean(predicted_uncertainty[mask]))
+
+        ence_ = np.abs(rmv - rmse)
+        if rmv != 0.:
+            ence_ /= rmv
+
+        ence += ence_
+
+    ence /= norm
+    return ence
+
 def mean_absolute_error(x: np.array, y: np.array) -> float:
     return np.abs(x - y).mean()
 
@@ -118,19 +144,22 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
     assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
 
     if normalize:
-        subjectivities_pred -= subjectivities_pred.min()
-        subjectivities_pred /= subjectivities_pred.max()
-
-        subjectivities_global -= subjectivities_global.min()
-        subjectivities_global /= subjectivities_global.max()
-
-        prediction_scores -= prediction_scores.min()
-        prediction_scores /= prediction_scores.max()
+        
+        def normalize_to_correlation_space(array: np.array, min_: float = -1., max_: float = 1.):
+            out = array - array.min()
+            out /= out.max()
+            out = out * 2 - 1
+            assert out.shape == array.shape and out.min() == -1 and out.max() == 1
+            return out
+        
+        subjectivities_pred = normalize_to_correlation_space(subjectivities_pred)
+        subjectivities_global = normalize_to_correlation_space(subjectivities_global)
+        prediction_scores = normalize_to_correlation_space(prediction_scores)
 
     GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs = {}, {}, {}, {}, {}
 
-    metric_fns = [mean_absolute_error, uncertainty_utilities.ccc_score]
-    for i, metric in enumerate(["mae", "ccc"]):
+    metric_fns = [mean_absolute_error, uncertainty_utilities.ccc_score, ence]
+    for i, metric in enumerate(["mae", "ccc", "ence"]):
         metric_fn = metric_fns[i]
 
         # NOTE calculate global equivalent to sbUME: Global sbUME (GsbUME)
@@ -155,7 +184,12 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
     var["subj. true."] = np.var(subjectivities_global)
     var["pred. err."] = np.var(prediction_scores)
 
-    return GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var
+    Cvs = {}
+    Cvs["subj. pred."] = uncertainty_utilities.stds_coefficient_of_variation(subjectivities_pred)
+    Cvs["subj. true."] = uncertainty_utilities.stds_coefficient_of_variation(subjectivities_global)
+    Cvs["pred. err."] = uncertainty_utilities.stds_coefficient_of_variation(prediction_scores)
+
+    return GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var, Cvs
 
 def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalibrated: np.array, method: str) -> np.array:
     if method == "isotonic_regression":
@@ -177,6 +211,10 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     # NOTE full_subjectivities_pred represents the model's uncertainty, confidence respectively
     full_means, full_subjectivities_pred, full_labels, full_subjectivities_global = prediction_fn(model, test_loader, params)
     full_means_val, full_subjectivities_pred_val, full_labels_val, full_subjectivities_global_val = prediction_fn(model, val_loader, params)
+
+    # NOTE confirm valid prediction, by measuring ccc per sample
+    ccc = np.mean([uncertainty_utilities.ccc_score(full_means[i][:,0], full_labels[i][:,0]) for i in range(len(full_means))])
+    print(f"Confirmed prediction ccc-score: {ccc}")
 
     if not params.global_uncertainty_window is None:
         
@@ -215,7 +253,6 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
         assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape
 
-
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
     GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []
     GsbUMEs_cal_err, GpebUMEs_cal_err = [], []
@@ -229,7 +266,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
 
         # NOTE uncalibrated measurements
-        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
+        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var, Cv = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
         GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
 
         # NOTE re-calibration
@@ -245,14 +282,14 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
         # NOTE only obtain metrics that are affected by calibration
-        GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
+        GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj, Cv_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
         # NOTE calibration target: prediction error
         calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
         
         calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
-        GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
+        GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err, Cv_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
     
     print("Uncalibrated scores and benchmarking with random uncertainty quntification:")
@@ -260,16 +297,19 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
     print(f"GpebUME: {GpebUMEs}, rand. GpebUME: {GpebUME_rands}")
     print(f"true-subjectivity-vs.-prediction-error: {prediction_error_vs_subjectivity}")
     print(f"var: {var}")
+    print(f"Cv: {Cv}")
     
     print("\nCalibrated on true subjectivity:")
     print(f"GsbUME: {GsbUMEs_cal_subj}")
     print(f"GpebUME: {GpebUMEs_cal_subj}")
     print(f"var: {var_cal_subj}")
+    print(f"Cv: {Cv_cal_subj}")
 
     print("\nCalibrated on prediction score:")
     print(f"GsbUME: {GsbUMEs_cal_err}")
     print(f"GpebUME: {GpebUMEs_cal_err}")
     print(f"var: {var_cal_err}")
+    print(f"Cv: {Cv_cal_err}")
 
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)

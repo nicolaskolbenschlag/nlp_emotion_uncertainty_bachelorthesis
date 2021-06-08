@@ -6,6 +6,7 @@ from datetime import datetime
 from dateutil import tz
 import numpy as np
 import torch
+import main_uncertainty
 
 from train import train_model, evaluate, predict, evaluate_mc_dropout
 from model import Model
@@ -132,16 +133,8 @@ def parse_params():
 
     
     # NOTE uncertainty
-    parser.add_argument("--uncertainty_approach", type=str, choices=["ensemble_averaging"])
-    
-    parser.add_argument("--predict_subjectivity", action="store_true", help="whether predict subjectivity. (default: False)")
-    parser.add_argument("--loss_subjectivity", type=str, default="ccc", choices=["ccc", "mse"], help="loss function for subjectivity (default: ccc)")
-    parser.add_argument("--not_measure_uncertainty", action="store_true", help="whether measure uncertainty. (default: False)")
-    
-    parser.add_argument("--measure_uncertainty_globally", action="store_true", help="whether measure uncertainty globally. (default: False)")
-    parser.add_argument("--global_uncertainty_window", type=int, default=None)
-    parser.add_argument("--load_subjectivity_from_file", action="store_false", help="default: True")
-    parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true", help="default: False")
+    parser = main_uncertainty.add_uncertainty_args(parser)
+
     
     # parse
     args = parser.parse_args()
