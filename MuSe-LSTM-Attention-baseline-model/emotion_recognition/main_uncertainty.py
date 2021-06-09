@@ -151,6 +151,8 @@ def add_uncertainty_args(parser):
 
     parser.add_argument("--global_uncertainty_window", type=int, default=None)
     parser.add_argument("--normalize_uncalibrated_global_uncertainty_measurement", action="store_true", help="default: False")
+
+    parser.add_argument("--global_subjectivity_calibrator", type=str, choices=["isotonic_regression", "std_scaling"], default="isotonic_regression")
     
     return parser
 

@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import sklearn.isotonic
+import scipy.optimize
 
 import uncertainty_utilities
 
@@ -193,8 +194,22 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
 
 def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalibrated: np.array, method: str) -> np.array:
     if method == "isotonic_regression":
+        
         calibrator = sklearn.isotonic.IsotonicRegression(out_of_bounds="clip", y_min=-1, y_max=1).fit(val_uncalibrated, val_calibrated)
         return calibrator.predict(test_uncalibrated)
+
+    elif method == "std_scaling":
+        
+        def criterion(x):
+            regularization = (len(val_uncalibrated) / 2) * np.log(x)
+            overconfidence = (val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2)).sum()
+            loss = regularization + overconfidence
+            return loss
+
+        opt = scipy.optimize.minimize_scalar(criterion)
+        s = opt.x
+        return s * test_uncalibrated
+        
     else:
         raise NotImplementedError
 
@@ -280,7 +295,9 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         # print(calibration_target_train)
         # print(calibration_features)
 
-        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
+        calibrator = "isotonic_regression"
+
+        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
         # NOTE only obtain metrics that are affected by calibration
         GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj, Cv_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
@@ -288,7 +305,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         # NOTE calibration target: prediction error
         calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
         
-        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, "isotonic_regression")
+        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
         GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err, Cv_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
         GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
     
