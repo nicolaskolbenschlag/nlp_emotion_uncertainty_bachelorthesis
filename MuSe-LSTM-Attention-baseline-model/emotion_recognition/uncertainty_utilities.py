@@ -130,7 +130,7 @@ def outputs_mc_dropout(model, test_loader, params, n_ensemble_members = 5):
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta, subjectivities = batch_data
+            features, feature_lens, labels, meta, subjectivities, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -175,7 +175,7 @@ def outputs_random(model, test_loader, params):
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta, subjectivities = batch_data
+            features, feature_lens, labels, meta, subjectivities, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()
@@ -200,7 +200,7 @@ def outputs_quantile_regression(model, test_loader, params):
     full_means, full_vars, full_labels, full_subjectivities = [], [], [], []
     with torch.no_grad():
         for _, batch_data in enumerate(test_loader, 1):
-            features, feature_lens, labels, meta, subjectivities = batch_data
+            features, feature_lens, labels, meta, subjectivities, _ = batch_data
             if params.gpu is not None:
                 model.cuda()
                 features = features.cuda()

@@ -155,6 +155,9 @@ def get_dataloaders(data, subjectivities_per_sample_rolling, subjectivities_per_
     return data_loader
 
 def main(params):
+
+    assert params.uncertainty_approach == "ensemble_averaging"
+
     # load data
     print('Constructing dataset and data loader ...')
 

@@ -139,7 +139,7 @@ def parse_params():
     return args
 
 def add_uncertainty_args(parser):
-    parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout"])
+    parser.add_argument("--uncertainty_approach", type=str, choices=[None, "quantile_regression", "monte_carlo_dropout", "ensemble_averaging"])
     
     parser.add_argument("--predict_subjectivity", action="store_true", help="whether predict subjectivity. (default: False)")
     parser.add_argument("--loss_subjectivity", type=str, default="ccc", choices=["ccc", "mse"], help="loss function for subjectivity (default: ccc)")
