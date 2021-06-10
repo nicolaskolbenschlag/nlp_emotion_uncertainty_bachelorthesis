@@ -206,10 +206,10 @@ def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalib
 
     elif method == "std_scaling":
         
-        def criterion(x):
-            regularization = (len(val_uncalibrated) / 2) * np.log(x)
-            overconfidence = (val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2)).sum()
-            loss = regularization + overconfidence
+        def criterion(s):
+            regularization = (len(val_uncalibrated) / 2) * np.log(s)
+            overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+            loss = regularization - overconfidence
             return loss
 
         opt = scipy.optimize.minimize_scalar(criterion)
@@ -267,8 +267,6 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
             assert out.shape[1:] == (len(params.emo_dim_set),)
             return out
             
-        # print(full_subjectivities_pred)
-        print(full_subjectivities_global)
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
         assert full_subjectivities_pred.shape == full_subjectivities_global.shape, f"{full_subjectivities_pred.shape} != {full_subjectivities_global.shape}"
