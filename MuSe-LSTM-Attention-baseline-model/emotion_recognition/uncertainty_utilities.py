@@ -287,7 +287,7 @@ def calculate_uncertainty_metrics(params, labels: np.ndarray, means: np.ndarray,
                 if not benchmark:
                     pebUME = UME_abs_experimental(err, vars_[:,i], scaling_window)
                 else:
-                    pebUME = UME_abs_experimental(err, np.random.normal(err[:,i].mean(), err[:,i].std(), err[:,i].shape), scaling_window)
+                    pebUME = UME_abs_experimental(err, np.random.normal(err.mean(), err.std(), err.shape), scaling_window)
                 tmp_1_pebUME[window] = pebUME
             
             tmp_0_pebUME[scaling_window] = tmp_1_pebUME

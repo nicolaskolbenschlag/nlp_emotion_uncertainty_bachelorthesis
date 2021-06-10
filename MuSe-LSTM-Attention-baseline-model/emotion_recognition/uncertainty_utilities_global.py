@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import torch
 import sklearn.isotonic
 import scipy.optimize
@@ -40,8 +41,8 @@ def multiple_preds_to_predicted_subjectivity(params, preds, means):
     for dim in range(means.shape[1]):
         subj_dim = []
         
-        for i, pred_1 in enumerate(preds):
-            for pred_2 in preds[i+1:]:
+        for k, pred_1 in enumerate(preds):
+            for pred_2 in preds[k+1:]:
                 
                 if params.global_uncertainty_window is None:
                     ccc = uncertainty_utilities.ccc_score(pred_1[:,dim], pred_2[:,dim])
@@ -54,6 +55,11 @@ def multiple_preds_to_predicted_subjectivity(params, preds, means):
                         if len(pred_1[:,dim][i : i + window]) < window:
                             continue
                         tmp += [uncertainty_utilities.ccc_score(pred_1[:,dim][i : i + window], pred_2[:,dim][i : i + window])]
+                    
+                    if np.isnan(tmp[0]):
+                        tmp[0] = 0.
+                    tmp = pd.Series(tmp).interpolate().to_list()
+
                     subj_dim += [tmp]
         
         if params.global_uncertainty_window is None:
@@ -146,7 +152,7 @@ def calculate_metrics(subjectivities_pred, subjectivities_global, prediction_sco
 
     if normalize:
         
-        def normalize_to_correlation_space(array: np.array, min_: float = -1., max_: float = 1.):
+        def normalize_to_correlation_space(array: np.array):
             out = array - array.min()
             out /= out.max()
             out = out * 2 - 1
@@ -261,12 +267,14 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
             assert out.shape[1:] == (len(params.emo_dim_set),)
             return out
             
+        # print(full_subjectivities_pred)
+        # print(full_subjectivities_global)
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
-        assert full_subjectivities_pred.shape == full_subjectivities_global.shape
+        assert full_subjectivities_pred.shape == full_subjectivities_global.shape, f"{full_subjectivities_pred.shape} != {full_subjectivities_global.shape}"
         full_subjectivities_pred_val = flatten_subjectivities_of_subsamples(full_subjectivities_pred_val, params)
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
-        assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape
+        assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape, f"{full_subjectivities_pred_val.shape} != {full_subjectivities_global_val.shape}"
 
     GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
     GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []

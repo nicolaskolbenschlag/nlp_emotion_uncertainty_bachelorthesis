@@ -123,6 +123,10 @@ def calculate_global_subjectivities(annotations_per_vid, window: int):
                             if len(annotation_1[i : i + window]) < window:
                                 continue
                             subjectivity += [uncertainty_utilities.ccc_score(annotation_1[i : i + window], annotation_2[i : i + window])]
+                        
+                        if np.isnan(subjectivity[0]):
+                            subjectivity[0] = 0.
+                        subjectivity = pd.Series(subjectivity).interpolate().to_list()
                     
                     subjectivity_of_sample += [subjectivity]
 
