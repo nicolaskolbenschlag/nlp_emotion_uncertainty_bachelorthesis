@@ -268,7 +268,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
             return out
             
         # print(full_subjectivities_pred)
-        # print(full_subjectivities_global)
+        print(full_subjectivities_global)
         full_subjectivities_pred = flatten_subjectivities_of_subsamples(full_subjectivities_pred, params)
         full_subjectivities_global = flatten_subjectivities_of_subsamples(full_subjectivities_global, params)
         assert full_subjectivities_pred.shape == full_subjectivities_global.shape, f"{full_subjectivities_pred.shape} != {full_subjectivities_global.shape}"
@@ -276,65 +276,63 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
         assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape, f"{full_subjectivities_pred_val.shape} != {full_subjectivities_global_val.shape}"
 
-    GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
-    GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []
-    GsbUMEs_cal_err, GpebUMEs_cal_err = [], []
-    for emo_dim in range(full_means[0].shape[1]):
+    for calibrator in ["isotonic_regression", "std_scaling"]:
+        print(f"Calibrator: {calibrator}")
 
-        subjectivities_pred = np.array(full_subjectivities_pred)[:,emo_dim]
-        subjectivities_global = np.array(full_subjectivities_global)[:,emo_dim]
+        GsbUMEs, GsbUME_rands, GpebUMEs, GpebUME_rands, prediction_error_vs_subjectivity = [], [], [], [], []
+        GsbUMEs_cal_subj, GpebUMEs_cal_subj = [], []
+        GsbUMEs_cal_err, GpebUMEs_cal_err = [], []
+        for emo_dim in range(full_means[0].shape[1]):
+
+            subjectivities_pred = np.array(full_subjectivities_pred)[:,emo_dim]
+            subjectivities_global = np.array(full_subjectivities_global)[:,emo_dim]
+            
+            prediction_scores = calculate_prediction_scores(full_means, full_labels, emo_dim, params)
+
+            assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
+
+            # NOTE uncalibrated measurements
+            GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var, Cv = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
+            GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
+
+            # NOTE re-calibration
+            calibration_features_train = np.array(full_subjectivities_pred_val)[:,emo_dim]
+            calibration_features = subjectivities_pred
+
+            # NOTE calibration target: subjectivity among annotations
+            calibration_target_train = np.array(full_subjectivities_global_val)[:,emo_dim]
+
+            calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
+            # NOTE only obtain metrics that are affected by calibration
+            GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj, Cv_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
+            GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
+
+            # NOTE calibration target: prediction error
+            calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
+            
+            calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
+            GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err, Cv_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
+            GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
         
-        prediction_scores = calculate_prediction_scores(full_means, full_labels, emo_dim, params)
-
-        assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
-
-        # NOTE uncalibrated measurements
-        GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var, Cv = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
-        GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
-
-        # NOTE re-calibration
-        calibration_features_train = np.array(full_subjectivities_pred_val)[:,emo_dim]
-        calibration_features = subjectivities_pred
-
-        # NOTE calibration target: subjectivity among annotations
-        calibration_target_train = np.array(full_subjectivities_global_val)[:,emo_dim]
-
-        # print(calibration_features_train)
-        # print(calibration_target_train)
-        # print(calibration_features)
-
-        calibrator = "isotonic_regression"
-
-        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
-        # NOTE only obtain metrics that are affected by calibration
-        GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj, Cv_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
-        GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
-
-        # NOTE calibration target: prediction error
-        calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
+        print("Uncalibrated scores and benchmarking with random uncertainty quntification:")
+        print(f"GsbUME: {GsbUMEs}, rand. GsbUME: {GsbUME_rands}")
+        print(f"GpebUME: {GpebUMEs}, rand. GpebUME: {GpebUME_rands}")
+        print(f"true-subjectivity-vs.-prediction-error: {prediction_error_vs_subjectivity}")
+        print(f"var: {var}")
+        print(f"Cv: {Cv}")
         
-        calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
-        GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err, Cv_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
-        GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
-    
-    print("Uncalibrated scores and benchmarking with random uncertainty quntification:")
-    print(f"GsbUME: {GsbUMEs}, rand. GsbUME: {GsbUME_rands}")
-    print(f"GpebUME: {GpebUMEs}, rand. GpebUME: {GpebUME_rands}")
-    print(f"true-subjectivity-vs.-prediction-error: {prediction_error_vs_subjectivity}")
-    print(f"var: {var}")
-    print(f"Cv: {Cv}")
-    
-    print("\nCalibrated on true subjectivity:")
-    print(f"GsbUME: {GsbUMEs_cal_subj}")
-    print(f"GpebUME: {GpebUMEs_cal_subj}")
-    print(f"var: {var_cal_subj}")
-    print(f"Cv: {Cv_cal_subj}")
+        print("\nCalibrated on true subjectivity:")
+        print(f"GsbUME: {GsbUMEs_cal_subj}")
+        print(f"GpebUME: {GpebUMEs_cal_subj}")
+        print(f"var: {var_cal_subj}")
+        print(f"Cv: {Cv_cal_subj}")
 
-    print("\nCalibrated on prediction score:")
-    print(f"GsbUME: {GsbUMEs_cal_err}")
-    print(f"GpebUME: {GpebUMEs_cal_err}")
-    print(f"var: {var_cal_err}")
-    print(f"Cv: {Cv_cal_err}")
+        print("\nCalibrated on prediction score:")
+        print(f"GsbUME: {GsbUMEs_cal_err}")
+        print(f"GpebUME: {GpebUMEs_cal_err}")
+        print(f"var: {var_cal_err}")
+        print(f"Cv: {Cv_cal_err}")
+        print()
 
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)
