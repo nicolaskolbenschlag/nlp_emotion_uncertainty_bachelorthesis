@@ -3,6 +3,8 @@ import pandas as pd
 import torch
 import sklearn.isotonic
 import scipy.optimize
+import config
+import pickle
 
 import uncertainty_utilities
 
@@ -219,6 +221,10 @@ def calibrate(val_uncalibrated: np.array, val_calibrated: np.array, test_uncalib
     else:
         raise NotImplementedError
 
+def save_uncertainties_to_file(filename: str, data: dict) -> None:
+    filehandler = open(f"{config.DATA_FOLDER}/saved_uncertainties/{filename}.pkl", "wb")
+    pickle.dump(data, filehandler)
+
 def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val_loader):
     if params.uncertainty_approach == "monte_carlo_dropout":
         prediction_fn = outputs_mc_dropout_global
@@ -274,6 +280,8 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         full_subjectivities_global_val = flatten_subjectivities_of_subsamples(full_subjectivities_global_val, params)
         assert full_subjectivities_pred_val.shape == full_subjectivities_global_val.shape, f"{full_subjectivities_pred_val.shape} != {full_subjectivities_global_val.shape}"
 
+    data_to_store = {}
+
     for calibrator in ["isotonic_regression", "std_scaling"]:
         print(f"Calibrator: {calibrator}")
 
@@ -289,6 +297,14 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
             assert subjectivities_pred.shape == subjectivities_global.shape == prediction_scores.shape, "should be: {subjectivities_pred.shape} == {subjectivities_global.shape} == {prediction_scores.shape}"
 
+            if not emo_dim in data_to_store:
+                data_to_store[emo_dim] = {}
+                data_to_store[emo_dim]["subjectivities_pred_uncalibrated"] = subjectivities_pred
+                data_to_store[emo_dim]["subjectivities_global"] = subjectivities_global
+                data_to_store[emo_dim]["prediction_scores"] = prediction_scores
+                data_to_store[emo_dim]["subjectivities_pred_calibrated_on_subjectivity"] = {}
+                data_to_store[emo_dim]["subjectivities_pred_calibrated_on_prediction_score"] = {}
+
             # NOTE uncalibrated measurements
             GsbUME, GsbUME_rand, GpebUME, GpebUME_rand, vs, var, Cv = calculate_metrics(subjectivities_pred, subjectivities_global, prediction_scores, params.normalize_uncalibrated_global_uncertainty_measurement)
             GsbUMEs += [GsbUME]; GsbUME_rands += [GsbUME_rand]; GpebUMEs += [GpebUME]; GpebUME_rands += [GpebUME_rand]; prediction_error_vs_subjectivity += [vs]
@@ -299,16 +315,18 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
 
             # NOTE calibration target: subjectivity among annotations
             calibration_target_train = np.array(full_subjectivities_global_val)[:,emo_dim]
+            calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)            
+            data_to_store[emo_dim]["subjectivities_pred_calibrated_on_subjectivity"][calibrator] = calibration_target_pred
 
-            calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
             # NOTE only obtain metrics that are affected by calibration
             GsbUME_cal_subj, _, GpebUME_cal_subj, _, _, var_cal_subj, Cv_cal_subj = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
             GsbUMEs_cal_subj += [GsbUME_cal_subj]; GpebUMEs_cal_subj += [GpebUME_cal_subj]
 
             # NOTE calibration target: prediction error
             calibration_target_train = calculate_prediction_scores(full_means_val, full_labels_val, emo_dim, params)
-            
             calibration_target_pred = calibrate(calibration_features_train, calibration_target_train, calibration_features, calibrator)
+            data_to_store[emo_dim]["subjectivities_pred_calibrated_on_prediction_score"][calibrator] = calibration_target_pred
+
             GsbUME_cal_err, _, GpebUME_cal_err, _, _, var_cal_err, Cv_cal_err = calculate_metrics(calibration_target_pred, subjectivities_global, prediction_scores, False)
             GsbUMEs_cal_err += [GsbUME_cal_err]; GpebUMEs_cal_err += [GpebUME_cal_err]
         
@@ -331,6 +349,9 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         print(f"var: {var_cal_err}")
         print(f"Cv: {Cv_cal_err}")
         print()
+    
+    # NOTE store measurements of uncertainty to file
+    save_uncertainties_to_file(f"global_uncertainties_{params.global_uncertainty_window}_{'_'.join(params.emo_dim_set)}", data_to_store)
 
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)
