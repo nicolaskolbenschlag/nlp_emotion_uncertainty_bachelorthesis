@@ -351,7 +351,7 @@ def evaluate_uncertainty_measurement_global_help(params, model, test_loader, val
         print()
     
     # NOTE store measurements of uncertainty to file
-    save_uncertainties_to_file(f"global_uncertainties_{params.global_uncertainty_window}_{'_'.join(params.emo_dim_set)}", data_to_store)
+    save_uncertainties_to_file(f"global_uncertainties_{params.uncertainty_approach}_{params.global_uncertainty_window}_{'_'.join(params.emo_dim_set)}", data_to_store)
 
 def evaluate_uncertainty_measurement_global(params, model, test_loader, val_loader):
     print("-" * 20 + "TEST" + "-" * 20)
