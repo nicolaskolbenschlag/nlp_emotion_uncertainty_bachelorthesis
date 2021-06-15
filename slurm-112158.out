@@ -1,0 +1,8 @@
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 5 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement --load_subjectivity_from_file
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Subjectivities deserialized from file.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]

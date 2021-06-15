@@ -577,7 +577,7 @@ class TiltedCCCLoss(nn.Module):
         ccc_loss = 1.0 - ccc
         return ccc_loss
     
-    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False):
+    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False, only_uncertainty_nodes=False):
         """
         :param y_pred: (batch_size, seq_len)
         :param y_true: (batch_size, seq_len)
@@ -606,6 +606,7 @@ class TiltedCCCLoss(nn.Module):
             # error = torch.nan_to_num(error, nan=torch.mean(error[~torch.isnan(error)]))
             return error
         
+        # NOTE use middle quantile as prediction
         ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,1], y_true, mask)# NOTE (batch_size,1)
         ccc = torch.mean(ccc, dim=0)# NOTE (1,)
         losses = []
@@ -623,8 +624,9 @@ class TiltedCCCLoss(nn.Module):
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)# NOTE (1,)
             losses += [rolling_correlation_error]
         
-        # NOTE use middle quantile as prediction
-        losses = [losses[0], ccc, losses[1]]
+        # NOTE measure convergence if middle node not optimized
+        if not only_uncertainty_nodes:
+            losses = [losses[0], ccc, losses[1]]
 
         if print_output:
             print(f"tCCC output node {losses}")

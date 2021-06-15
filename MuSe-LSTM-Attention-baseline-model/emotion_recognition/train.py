@@ -124,7 +124,14 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
         loss = 0.0
         for i in range(len(params.loss_weights)):
             
-            if params.uncertainty_approach == "quantile_regression":
+            # NOTE for tCCC: stop training for middle node since certain epoch
+            stop_at_epoch = 31
+            if params.uncertainty_approach == "quantile_regression" and params.loss == "tiltedCCC" and epoch >= stop_at_epoch:
+                if epoch == stop_at_epoch:
+                    print(f"Stop fitting middle node after {epoch} epochs.")
+                branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth, only_uncertainty_nodes=True)
+
+            elif params.uncertainty_approach == "quantile_regression":
                 branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth)
             
             else:
@@ -351,10 +358,10 @@ def validate_quantile_regression(model, val_loader, criterion, params):
 
             # preds = preds.cpu().detach().squeeze(0).numpy()# NOTE: for non-tilted-losses
             
-            # preds = preds[:, :, 1:2]# NOTE: use 0.5 quantile for prediction
+            preds = preds[:, :, 1:2]# NOTE: use 0.5 quantile for prediction
             
             preds = preds.cpu().detach().squeeze(0).numpy()
-            preds = preds.mean(axis=1).reshape((preds.shape[0], 1))# NOTE: use mean of all quantiles as prediction
+            # preds = preds.mean(axis=1).reshape((preds.shape[0], 1))# NOTE: use mean of all quantiles as prediction
 
             full_preds.append(preds)
             full_labels.append(labels.cpu().detach().squeeze(0).numpy())
