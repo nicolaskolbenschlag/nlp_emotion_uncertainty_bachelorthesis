@@ -128,7 +128,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
             stop_at_epoch = 31
             if params.uncertainty_approach == "quantile_regression" and params.loss == "tiltedCCC" and epoch >= stop_at_epoch:
                 if epoch == stop_at_epoch:
-                    print(f"Stop fitting middle node after {epoch} epochs.")
+                    print(f"Stop fitting middle node after {epoch - 1} epochs.")
                 branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth, only_uncertainty_nodes=True)
 
             elif params.uncertainty_approach == "quantile_regression":

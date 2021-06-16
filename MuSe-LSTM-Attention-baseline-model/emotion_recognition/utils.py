@@ -598,12 +598,8 @@ class TiltedCCCLoss(nn.Module):
                 vy = y - torch.mean(y)
                 return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
 
-            error = [corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)]
-            # error = [error[0]] * (rolling_window - 1) + error
-            error = torch.Tensor(error)
-            error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])
-            
-            # error = torch.nan_to_num(error, nan=torch.mean(error[~torch.isnan(error)]))
+            error = torch.stack([corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)])
+            error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])            
             return error
         
         # NOTE use middle quantile as prediction

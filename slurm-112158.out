@@ -6,3 +6,18 @@ Samples in partitions: (3132, 62, 64)
 Input feature dim: 768.
 ==================================================
 Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+On Test: CCC  0.5993 | PCC  0.6123 | RMSE  0.1657
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+On Test: CCC  0.6043 | PCC  0.6123 | RMSE  0.1572
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.4489 [' 0.4489']| Loss: 0.5958 | PCC: 0.4500 ['0.4500'] | RMSE: 0.1740 ['0.1740']
+On Test: CCC  0.5918 | PCC  0.6051 | RMSE  0.1567
+==================================================
+Training model... [seed 317]
