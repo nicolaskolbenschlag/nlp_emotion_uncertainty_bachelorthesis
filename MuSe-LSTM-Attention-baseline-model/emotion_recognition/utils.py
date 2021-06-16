@@ -577,7 +577,7 @@ class TiltedCCCLoss(nn.Module):
         ccc_loss = 1.0 - ccc
         return ccc_loss
     
-    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False, only_uncertainty_nodes=False):
+    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False, only_uncertainty_nodes=False):        
         """
         :param y_pred: (batch_size, seq_len)
         :param y_true: (batch_size, seq_len)
@@ -599,11 +599,11 @@ class TiltedCCCLoss(nn.Module):
                 return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
 
             error = torch.stack([corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)])
-            error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])            
+            error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])
             return error
         
         # NOTE use middle quantile as prediction
-        ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,1], y_true, mask)# NOTE (batch_size,1)
+        ccc = TiltedCCCLoss.compute_ccc(y_pred[:,:,1], y_true, mask)# NOTE (batch_size,1)        
         ccc = torch.mean(ccc, dim=0)# NOTE (1,)
         losses = []
         # NOTE unlimited number of window sizes would be possible
@@ -612,22 +612,27 @@ class TiltedCCCLoss(nn.Module):
         for i, idx in enumerate(node_indicies):
             window = windows[i]
             rolling_correlation = torch.stack([rolling_correlation_coefficient(yt, yp[:,idx], window) for yt, yp in zip(y_true, y_pred)])
-            rolling_correlation_error = 1. - rolling_correlation# NOTE (batch_size,seq_len)
+            rolling_correlation_error = 1. - rolling_correlation# NOTE (batch_size,seq_len-window+1)
             # NOTE mean per sample
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=1)# NOTE (batch_size,)
             rolling_correlation_error = rolling_correlation_error.unsqueeze(1)# NOTE (batch_size,1)
             # NOTE overall mean
             rolling_correlation_error = torch.mean(rolling_correlation_error, dim=0)# NOTE (1,)
+
+            # rolling_correlation_error = rolling_correlation_error.detach()# TODO REMOVE LATER (only for debugging)
+
             losses += [rolling_correlation_error]
         
         # NOTE measure convergence if middle node not optimized
-        if not only_uncertainty_nodes:
-            losses = [losses[0], ccc, losses[1]]
+        if only_uncertainty_nodes:
+            ccc = ccc.detach()
 
-        if print_output:
-            print(f"tCCC output node {losses}")
+        losses = torch.cat([losses[0], ccc, losses[1]])
+
+        # if print_output:
+        print(f"tCCC output nodes: {losses}")
         
-        loss = torch.mean(torch.cat(losses))
+        loss = torch.mean(losses)
         return loss
 
 

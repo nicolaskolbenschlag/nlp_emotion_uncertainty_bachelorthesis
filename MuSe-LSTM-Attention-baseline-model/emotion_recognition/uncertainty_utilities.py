@@ -391,4 +391,4 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, None, full_subjectivities, "Benchmark", test_loader.dataset.partition, False, True)
     print(f"BENCHMARK:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")
 
-    uncertainty_utilities_global.save_uncertainties_to_file(f"global_uncertainties_{params.uncertainty_approach}_local_{'_'.join(params.emo_dim_set)}_{test_loader.dataset.partition}", data_to_store)
+    uncertainty_utilities_global.save_uncertainties_to_file(f"local_uncertainties_{params.uncertainty_approach}_{'_'.join(params.emo_dim_set)}_{test_loader.dataset.partition}", data_to_store)
