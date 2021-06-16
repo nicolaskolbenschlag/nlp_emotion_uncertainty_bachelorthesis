@@ -7,6 +7,7 @@ import typing
 import pandas as pd
 
 import calibration_utilities_deprecated
+import uncertainty_utilities_global
 
 def uncertainty_measurement_error_divide_by_predicted_uncertainty(real_uncertainty: np.array, predicted_uncertainty: np.ndarray, bins: int = 5) -> float:
     max_uncertainty = predicted_uncertainty.max()
@@ -344,7 +345,12 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     else:
         raise NotImplementedError
     
+    data_to_store = {}
+
     full_means, full_vars, full_labels, full_subjectivities = prediction_fn(model, test_loader, params)
+    data_to_store["subjectivities"] = full_subjectivities
+    data_to_store["subjectivities_pred"] = full_vars
+    
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     print(f"UNCALIBRATED\nsbUMEs: {sbUMEs}\npebUMES{pebUMEs}\nCvs: {Cvs}")
 
@@ -353,6 +359,8 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     print(f"Subjectivity vs. roll.-corr.-coef.: {SvCs}")
 
     full_means_val, full_vars_val, full_labels_val, full_subjectivities_val = prediction_fn(model, val_loader, params)
+    data_to_store["subjectivities_val"] = full_subjectivities_val
+    data_to_store["subjectivities_pred_val"] = full_vars_val
     
     for calibration_target in ["subjectivity", "rolling_error_3", "rolling_error_5"]:
     
@@ -373,6 +381,8 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
             calibration_target_ = np.abs(true_uncertainty - 1) / 2
             calibration_result  = calibration_utilities_deprecated.calibrate(calibration_features, calibration_target_, full_vars[:,i], "isotonic_regression")
             full_vars_calibrated[:,i] = calibration_result
+        
+        data_to_store[f"subjecivities_pred_cal_on_{calibration_target}"] = full_vars_calibrated
             
         sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars_calibrated, full_subjectivities, method + " (cal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
         print(f"CALIBRATED on {calibration_target}:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")
@@ -380,3 +390,5 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     # NOTE benchmarking
     sbUMEs_cal, pebUMEs_cal, Cvs_cal = calculate_uncertainty_metrics(params, full_labels, full_means, None, full_subjectivities, "Benchmark", test_loader.dataset.partition, False, True)
     print(f"BENCHMARK:\nsbUMEs: {sbUMEs_cal}\npebUMES{pebUMEs_cal}\nCvs: {Cvs_cal}\n")
+
+    uncertainty_utilities_global.save_uncertainties_to_file(f"global_uncertainties_{params.uncertainty_approach}_local_{'_'.join(params.emo_dim_set)}_{test_loader.dataset.partition}", data_to_store)
