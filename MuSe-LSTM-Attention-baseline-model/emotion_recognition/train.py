@@ -125,7 +125,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
         for i in range(len(params.loss_weights)):
             
             # NOTE for tCCC: stop training for middle node since certain epoch
-            stop_at_epoch = 3#30
+            stop_at_epoch = 30
             if params.uncertainty_approach == "quantile_regression" and params.loss == "tiltedCCC" and epoch > stop_at_epoch:
                 if epoch == stop_at_epoch + 1:
                     print(f"Stop fitting middle node after {stop_at_epoch} epochs.")
