@@ -125,10 +125,10 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
         for i in range(len(params.loss_weights)):
             
             # NOTE for tCCC: stop training for middle node since certain epoch
-            stop_at_epoch = 31
-            if params.uncertainty_approach == "quantile_regression" and params.loss == "tiltedCCC" and epoch >= stop_at_epoch:
-                if epoch == stop_at_epoch:
-                    print(f"Stop fitting middle node after {epoch - 1} epochs.")
+            stop_at_epoch = 3#30
+            if params.uncertainty_approach == "quantile_regression" and params.loss == "tiltedCCC" and epoch > stop_at_epoch:
+                if epoch == stop_at_epoch + 1:
+                    print(f"Stop fitting middle node after {stop_at_epoch} epochs.")
                 branch_loss = criterion(preds, labels[:, :, i], feature_lens, params.label_smooth, only_uncertainty_nodes=True)
 
             elif params.uncertainty_approach == "quantile_regression":
@@ -149,7 +149,7 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
             
         loss.backward()
         if params.clip > 0:
-            nn.utils.clip_grad_norm_(model.parameters(), max_norm=params.clip)
+            nn.utils.clip_grad_norm_(model.parameters(), max_norm=params.clip)        
         optimizer.step()
 
         total_loss += loss.item() * batch_size

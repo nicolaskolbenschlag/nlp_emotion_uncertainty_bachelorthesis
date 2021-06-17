@@ -577,7 +577,7 @@ class TiltedCCCLoss(nn.Module):
         ccc_loss = 1.0 - ccc
         return ccc_loss
     
-    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False, only_uncertainty_nodes=False):        
+    def forward(self, y_pred, y_true, seq_lens=None, label_smooth=None, print_output=False, only_uncertainty_nodes=False):
         """
         :param y_pred: (batch_size, seq_len)
         :param y_true: (batch_size, seq_len)
@@ -596,7 +596,13 @@ class TiltedCCCLoss(nn.Module):
             def corr(x, y):
                 vx = x - torch.mean(x)
                 vy = y - torch.mean(y)
-                return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
+                # return torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
+
+                out = torch.sum(vx * vy)
+                quotient = (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
+                if quotient != 0.:
+                    out = out / quotient
+                return out
 
             error = torch.stack([corr(y_true[i - rolling_window : i], y_pred[i - rolling_window : i]) for i in range(rolling_window, len(y_true) + 1)])
             error[torch.isnan(error)] = torch.mean(error[~torch.isnan(error)])
@@ -629,8 +635,8 @@ class TiltedCCCLoss(nn.Module):
 
         losses = torch.cat([losses[0], ccc, losses[1]])
 
-        # if print_output:
-        print(f"tCCC output nodes: {losses}")
+        if print_output:
+            print(f"tCCC output nodes: {losses}")
         
         loss = torch.mean(losses)
         return loss

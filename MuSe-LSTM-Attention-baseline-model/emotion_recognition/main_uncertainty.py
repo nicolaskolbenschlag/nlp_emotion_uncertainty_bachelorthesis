@@ -173,7 +173,6 @@ def main(params):
     # load data
     print('Constructing dataset and data loader ...')
 
-    ########################################
     data = utils.load_data(params, params.feature_set, params.emo_dim_set, params.normalize, params.label_preproc, params.norm_opts, params.segment_type, params.win_len, params.hop_len, save=params.cache, refresh=params.refresh, add_seg_id=params.add_seg_id, annotator=params.annotator)
     
     import subjectivity_utilities

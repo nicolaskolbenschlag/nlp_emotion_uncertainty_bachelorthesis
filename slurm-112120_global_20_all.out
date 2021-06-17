@@ -1,0 +1,1037 @@
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement --load_subjectivity_from_file
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Subjectivities deserialized from file.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+--------------------TEST--------------------
+Confirmed prediction ccc-score: 0.5162410660849408
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.48436040690070503, 'ccc': 0.0642835213809465, 'ence': 0.4480667757434011}], rand. GsbUME: [{'mae': 0.23730436534427277, 'ccc': 0.013659498446204166, 'ence': 0.09285182280169595}]
+GpebUME: [{'mae': 0.44511952424160695, 'ccc': 0.243297296485713, 'ence': 0.23100603556000124}], rand. GpebUME: [{'mae': 0.2721176596833479, 'ccc': 0.012643090217994833, 'ence': 0.1573537765627451}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5825972912294408, 'ccc': 0.03967840773167727, 'ence': 0.16700735054329321}]
+var: {'subj. pred.': 0.2479851687859804, 'subj. true.': 0.047397375, 'pred. err.': 0.06165216492186078}
+Cv: {'subj. pred.': -3.5624807324963226, 'subj. true.': -0.43708278461388494, 'pred. err.': 3.6404589561375853}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06306008078128575, 'ccc': 0.029923356920081672, 'ence': 0.07457989615527401}]
+GpebUME: [{'mae': 0.1457931061147051, 'ccc': 0.029412968532596808, 'ence': 0.01677069578119865}]
+var: {'subj. pred.': 0.00013692835037710006, 'subj. true.': 0.0069582327, 'pred. err.': 0.05663518393882555}
+Cv: {'subj. pred.': 0.27155454662622314, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5978798395919833}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07268077086679275, 'ccc': 0.1177570316208436, 'ence': 0.20110679887291627}]
+GpebUME: [{'mae': 0.1381878640316454, 'ccc': 0.17346681296462949, 'ence': 0.018240775076238645}]
+var: {'subj. pred.': 0.004308918595434236, 'subj. true.': 0.0069582327, 'pred. err.': 0.05663518393882555}
+Cv: {'subj. pred.': 1.056167982366473, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5978798395919833}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.48436040690070503, 'ccc': 0.0642835213809465, 'ence': 0.4480667757434011}], rand. GsbUME: [{'mae': 0.2362753466090751, 'ccc': 0.00710680166314993, 'ence': 0.08837754828277074}]
+GpebUME: [{'mae': 0.44511952424160695, 'ccc': 0.243297296485713, 'ence': 0.23100603556000124}], rand. GpebUME: [{'mae': 0.2710279912900935, 'ccc': 0.02368641315498767, 'ence': 0.15206434036428565}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5825972912294408, 'ccc': 0.03967840773167727, 'ence': 0.16700735054329321}]
+var: {'subj. pred.': 0.2479851687859804, 'subj. true.': 0.047397375, 'pred. err.': 0.06165216492186078}
+Cv: {'subj. pred.': -3.5624807324963226, 'subj. true.': -0.43708278461388494, 'pred. err.': 3.6404589561375853}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06850805038221118, 'ccc': 6.416325803000253e-12, 'ence': 0.13852006016309124}]
+GpebUME: [{'mae': 0.14856174528693253, 'ccc': 8.294097748315375e-12, 'ence': 0.04846935292949504}]
+var: {'subj. pred.': 1.0652224668838325e-23, 'subj. true.': 0.0069582327, 'pred. err.': 0.05663518393882555}
+Cv: {'subj. pred.': 0.8295288060378271, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5978798395919833}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.06850805038221118, 'ccc': 6.416325803000253e-12, 'ence': 0.13852006016309124}]
+GpebUME: [{'mae': 0.14856174528693253, 'ccc': 8.294097748315375e-12, 'ence': 0.04846935292949504}]
+var: {'subj. pred.': 1.0652224668838325e-23, 'subj. true.': 0.0069582327, 'pred. err.': 0.05663518393882555}
+Cv: {'subj. pred.': 0.8295288060378271, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5978798395919833}
+
+--------------------DEVEL--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+Confirmed prediction ccc-score: 0.38115349610422505
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.48938182664572644, 'ccc': 0.040312065113207535, 'ence': 0.24978766555829698}], rand. GsbUME: [{'mae': 0.21182833306984222, 'ccc': 0.005114162727141159, 'ence': 0.07942253563683117}]
+GpebUME: [{'mae': 0.45529671118260756, 'ccc': 0.17298149156373852, 'ence': 0.23072791358506825}], rand. GpebUME: [{'mae': 0.22832177380211674, 'ccc': -0.006895642644603311, 'ence': 0.11767392881143356}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6335890324257817, 'ccc': 0.024290405044816468, 'ence': 0.19665155823721514}]
+var: {'subj. pred.': 0.23729128908937616, 'subj. true.': 0.039491754, 'pred. err.': 0.04581020822674174}
+Cv: {'subj. pred.': -2.58906574394734, 'subj. true.': -0.33696727768754087, 'pred. err.': 6.896185865917026}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06100459001657005, 'ccc': 0.019201218467841334, 'ence': 0.018561221074425874}]
+GpebUME: [{'mae': 0.1181117869848823, 'ccc': 0.028136927607756674, 'ence': 0.060318397364931074}]
+var: {'subj. pred.': 0.00010813984879096062, 'subj. true.': 0.007725539, 'pred. err.': 0.041460142893771104}
+Cv: {'subj. pred.': 0.24933176346167502, 'subj. true.': 2.099205399517044, 'pred. err.': 3.719199904127456}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07014862046996163, 'ccc': 0.08699427357237637, 'ence': 0.05599182619063236}]
+GpebUME: [{'mae': 0.11456473353907343, 'ccc': 0.16317857334322686, 'ence': 0.0023304172265062634}]
+var: {'subj. pred.': 0.0037908968736417477, 'subj. true.': 0.007725539, 'pred. err.': 0.041460142893771104}
+Cv: {'subj. pred.': 1.1631719403188578, 'subj. true.': 2.099205399517044, 'pred. err.': 3.719199904127456}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.48938182664572644, 'ccc': 0.040312065113207535, 'ence': 0.24978766555829698}], rand. GsbUME: [{'mae': 0.21293515852443687, 'ccc': -0.003928490512873991, 'ence': 0.08224601815952087}]
+GpebUME: [{'mae': 0.45529671118260756, 'ccc': 0.17298149156373852, 'ence': 0.23072791358506825}], rand. GpebUME: [{'mae': 0.2319462732579089, 'ccc': 0.001218925196704125, 'ence': 0.1685483159065665}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6335890324257817, 'ccc': 0.024290405044816468, 'ence': 0.19665155823721514}]
+var: {'subj. pred.': 0.23729128908937616, 'subj. true.': 0.039491754, 'pred. err.': 0.04581020822674174}
+Cv: {'subj. pred.': -2.58906574394734, 'subj. true.': -0.33696727768754087, 'pred. err.': 6.896185865917026}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.052548720943059915, 'ccc': 5.392914826626386e-12, 'ence': 0.015194085080670468}]
+GpebUME: [{'mae': 0.1128476568501888, 'ccc': 8.022168590026318e-12, 'ence': 0.025056384899354616}]
+var: {'subj. pred.': 1.0163788228274033e-23, 'subj. true.': 0.007725539, 'pred. err.': 0.041460142893771104}
+Cv: {'subj. pred.': 0.9128061410569016, 'subj. true.': 2.099205399517044, 'pred. err.': 3.719199904127456}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.052548720943059915, 'ccc': 5.392914826626386e-12, 'ence': 0.015194085080670468}]
+GpebUME: [{'mae': 0.1128476568501888, 'ccc': 8.022168590026318e-12, 'ence': 0.025056384899354616}]
+var: {'subj. pred.': 1.0163788228274033e-23, 'subj. true.': 0.007725539, 'pred. err.': 0.041460142893771104}
+Cv: {'subj. pred.': 0.9128061410569016, 'subj. true.': 2.099205399517044, 'pred. err.': 3.719199904127456}
+
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+On Test: CCC  0.6063 | PCC  0.6208 | RMSE  0.1608
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.4312
+On ground-truth labels:		[Test CCC] for seed "314":	 0.6063
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-14-15-05_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[1_314_None_None].pth"./nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 5 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement --load_subjectivity_from_file
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Subjectivities deserialized from file.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 314]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4312 [' 0.4312']| Loss: 0.6175 | PCC: 0.4429 ['0.4429'] | RMSE: 0.1844 ['0.1844']
+On Test: CCC  0.5993 | PCC  0.6123 | RMSE  0.1657
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4431 [' 0.4431']| Loss: 0.6209 | PCC: 0.4516 ['0.4516'] | RMSE: 0.1921 ['0.1921']
+On Test: CCC  0.6043 | PCC  0.6123 | RMSE  0.1572
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.4489 [' 0.4489']| Loss: 0.5958 | PCC: 0.4500 ['0.4500'] | RMSE: 0.1740 ['0.1740']
+On Test: CCC  0.5918 | PCC  0.6051 | RMSE  0.1567
+==================================================
+Training model... [seed 317]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 317 | Best [Val CCC]: 0.4549 [' 0.4549']| Loss: 0.6081 | PCC: 0.4552 ['0.4552'] | RMSE: 0.1705 ['0.1705']
+On Test: CCC  0.5869 | PCC  0.5916 | RMSE  0.1664
+==================================================
+Training model... [seed 318]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 318 | Best [Val CCC]: 0.4311 [' 0.4311']| Loss: 0.6124 | PCC: 0.4329 ['0.4329'] | RMSE: 0.1718 ['0.1718']
+On Test: CCC  0.6114 | PCC  0.6155 | RMSE  0.1650
+==================================================
+--------------------TEST--------------------
+Confirmed prediction ccc-score: 0.5464048520499647
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.3906945602366754, 'ccc': 0.08230650497793386, 'ence': 0.20507422390622987}], rand. GsbUME: [{'mae': 0.24053466945530697, 'ccc': -0.017048262846058867, 'ence': 0.08853734663592705}]
+GpebUME: [{'mae': 0.45905947838301947, 'ccc': 0.21480268490541513, 'ence': 0.18325537519355853}], rand. GpebUME: [{'mae': 0.28347220409683693, 'ccc': 0.0034285603805800226, 'ence': 0.24880519294937856}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5912491461295089, 'ccc': 0.04149559554724206, 'ence': 0.17515146414000302}]
+var: {'subj. pred.': 0.1794707841053507, 'subj. true.': 0.047397375, 'pred. err.': 0.06865326717705741}
+Cv: {'subj. pred.': -1.622093194221987, 'subj. true.': -0.43708278461388494, 'pred. err.': 3.4025631045446505}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06308363850837756, 'ccc': 0.030934631225376704, 'ence': 0.010631247077225353}]
+GpebUME: [{'mae': 0.15442353385822474, 'ccc': 0.027770296354564263, 'ence': 0.06117663117440026}]
+var: {'subj. pred.': 0.00012869862618638858, 'subj. true.': 0.0069582327, 'pred. err.': 0.06419404364919057}
+Cv: {'subj. pred.': 0.2585632824000501, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5284859906734667}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07544266462854991, 'ccc': 0.11053695098013447, 'ence': 0.09366554992040484}]
+GpebUME: [{'mae': 0.14906807039716116, 'ccc': 0.16006304396873422, 'ence': 0.014422279811252886}]
+var: {'subj. pred.': 0.004389501612339774, 'subj. true.': 0.0069582327, 'pred. err.': 0.06419404364919057}
+Cv: {'subj. pred.': 0.8941039965313904, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5284859906734667}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.3906945602366754, 'ccc': 0.08230650497793386, 'ence': 0.20507422390622987}], rand. GsbUME: [{'mae': 0.23880382959551158, 'ccc': -0.00039493547234752526, 'ence': 0.09779511079580312}]
+GpebUME: [{'mae': 0.45905947838301947, 'ccc': 0.21480268490541513, 'ence': 0.18325537519355853}], rand. GpebUME: [{'mae': 0.28600061898040713, 'ccc': -0.0014017824949931778, 'ence': 0.16680592440946299}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5912491461295089, 'ccc': 0.04149559554724206, 'ence': 0.17515146414000302}]
+var: {'subj. pred.': 0.1794707841053507, 'subj. true.': 0.047397375, 'pred. err.': 0.06865326717705741}
+Cv: {'subj. pred.': -1.622093194221987, 'subj. true.': -0.43708278461388494, 'pred. err.': 3.4025631045446505}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06850805038247713, 'ccc': 5.388703262009907e-12, 'ence': 0.03241080312838398}]
+GpebUME: [{'mae': 0.15831097557348922, 'ccc': 6.52903474725539e-12, 'ence': 0.050249856745949}]
+var: {'subj. pred.': 7.437260707423423e-24, 'subj. true.': 0.0069582327, 'pred. err.': 0.06419404364919057}
+Cv: {'subj. pred.': 0.7966619271995546, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5284859906734667}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.06850805038247713, 'ccc': 5.388703262009907e-12, 'ence': 0.03241080312838398}]
+GpebUME: [{'mae': 0.15831097557348922, 'ccc': 6.52903474725539e-12, 'ence': 0.050249856745949}]
+var: {'subj. pred.': 7.437260707423423e-24, 'subj. true.': 0.0069582327, 'pred. err.': 0.06419404364919057}
+Cv: {'subj. pred.': 0.7966619271995546, 'subj. true.': 1.370725555775308, 'pred. err.': 2.5284859906734667}
+
+--------------------DEVEL--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+Confirmed prediction ccc-score: 0.4219437780138436
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.37949690448417206, 'ccc': 0.04881273579637505, 'ence': 0.20567840318061945}], rand. GsbUME: [{'mae': 0.21225096523172393, 'ccc': -0.008028004749656396, 'ence': 0.08639541942851815}]
+GpebUME: [{'mae': 0.4649126017335843, 'ccc': 0.12319419423636575, 'ence': 0.19011436197139284}], rand. GpebUME: [{'mae': 0.24094370812115343, 'ccc': 0.02842115630693037, 'ence': 0.14290557448190142}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6616414198807734, 'ccc': 0.02412760151443899, 'ence': 0.1982141295021914}]
+var: {'subj. pred.': 0.1468639447641188, 'subj. true.': 0.039491754, 'pred. err.': 0.04931823313275906}
+Cv: {'subj. pred.': -1.2585953085379744, 'subj. true.': -0.33696727768754087, 'pred. err.': 3.71229347511006}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06097125116864307, 'ccc': 0.024473703343503555, 'ence': 8.651271879735187e-09}]
+GpebUME: [{'mae': 0.12562050722737828, 'ccc': 0.021383878762611976, 'ence': 0.03005505201024317}]
+var: {'subj. pred.': 9.570743627032374e-05, 'subj. true.': 0.007725539, 'pred. err.': 0.046994636378291085}
+Cv: {'subj. pred.': 0.23364869267447957, 'subj. true.': 2.099205399517044, 'pred. err.': 3.539849567419639}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07321610496687053, 'ccc': 0.07822599112607939, 'ence': 0.076625904023577}]
+GpebUME: [{'mae': 0.1251893519838141, 'ccc': 0.12705573876881757, 'ence': 0.0}]
+var: {'subj. pred.': 0.0031879956957665784, 'subj. true.': 0.007725539, 'pred. err.': 0.046994636378291085}
+Cv: {'subj. pred.': 0.921975801681741, 'subj. true.': 2.099205399517044, 'pred. err.': 3.539849567419639}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.37949690448417206, 'ccc': 0.04881273579637505, 'ence': 0.20567840318061945}], rand. GsbUME: [{'mae': 0.21030199118661394, 'ccc': 0.03329241413254562, 'ence': 0.08190477082639992}]
+GpebUME: [{'mae': 0.4649126017335843, 'ccc': 0.12319419423636575, 'ence': 0.19011436197139284}], rand. GpebUME: [{'mae': 0.23855462084319143, 'ccc': -0.0012242739371533969, 'ence': 0.13960880032208345}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6616414198807734, 'ccc': 0.02412760151443899, 'ence': 0.1982141295021914}]
+var: {'subj. pred.': 0.1468639447641188, 'subj. true.': 0.039491754, 'pred. err.': 0.04931823313275906}
+Cv: {'subj. pred.': -1.2585953085379744, 'subj. true.': -0.33696727768754087, 'pred. err.': 3.71229347511006}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.052548720943235566, 'ccc': 4.011942296455959e-12, 'ence': 0.016468645287695146}]
+GpebUME: [{'mae': 0.12094681646820844, 'ccc': 5.12805155781768e-12, 'ence': 0.03662818174468364}]
+var: {'subj. pred.': 6.356907587911451e-24, 'subj. true.': 0.007725539, 'pred. err.': 0.046994636378291085}
+Cv: {'subj. pred.': 0.8803199317890611, 'subj. true.': 2.099205399517044, 'pred. err.': 3.539849567419639}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.052548720943235566, 'ccc': 4.011942296455959e-12, 'ence': 0.016468645287695146}]
+GpebUME: [{'mae': 0.12094681646820844, 'ccc': 5.12805155781768e-12, 'ence': 0.03662818174468364}]
+var: {'subj. pred.': 6.356907587911451e-24, 'subj. true.': 0.007725539, 'pred. err.': 0.046994636378291085}
+Cv: {'subj. pred.': 0.8803199317890611, 'subj. true.': 2.099205399517044, 'pred. err.': 3.539849567419639}
+
+On ground-truth labels:	Best	[Val CCC] for seed "317":	 0.4549
+On ground-truth labels:		[Test CCC] for seed "317":	 0.5869
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-14-23-40_[bert-4]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[5_317_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set vggish --emo_dim_set arousal --epochs 100 --refresh --n_seeds 5 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6098, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6961, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 0.70778).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.853, max 0.9452999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7745, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.7343999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 128.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:253: RuntimeWarning: invalid value encountered in double_scalars
+  ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4143 [' 0.4143']| Loss: 0.5886 | PCC: 0.4144 ['0.4144'] | RMSE: 0.1681 ['0.1681']
+On Test: CCC  0.1839 | PCC  0.2032 | RMSE  0.1962
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.4203 [' 0.4203']| Loss: 0.6135 | PCC: 0.4288 ['0.4288'] | RMSE: 0.1783 ['0.1783']
+On Test: CCC  0.0978 | PCC  0.1039 | RMSE  0.2193
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.3924 [' 0.3924']| Loss: 0.6014 | PCC: 0.3966 ['0.3966'] | RMSE: 0.1626 ['0.1626']
+On Test: CCC  0.1836 | PCC  0.2065 | RMSE  0.1830
+==================================================
+Training model... [seed 317]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 317 | Best [Val CCC]: 0.4119 [' 0.4119']| Loss: 0.5884 | PCC: 0.4143 ['0.4143'] | RMSE: 0.1792 ['0.1792']
+On Test: CCC  0.1636 | PCC  0.1758 | RMSE  0.1849
+==================================================
+Training model... [seed 318]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 318 | Best [Val CCC]: 0.4050 [' 0.4050']| Loss: 0.6236 | PCC: 0.4077 ['0.4077'] | RMSE: 0.1810 ['0.1810']
+On Test: CCC  0.1954 | PCC  0.2255 | RMSE  0.2022
+==================================================
+--------------------TEST--------------------
+Confirmed prediction ccc-score: 0.13752204158046444
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.2983611826073394, 'ccc': 0.05950675580674584, 'ence': 0.21907703036591966}], rand. GsbUME: [{'mae': 0.162434823984705, 'ccc': -0.010706031793606062, 'ence': 0.0595393614269298}]
+GpebUME: [{'mae': 0.4915406363493853, 'ccc': 0.06828655641160483, 'ence': 0.19410749483969317}], rand. GpebUME: [{'mae': 0.19483703183272036, 'ccc': 0.01160839293105813, 'ence': 0.13542438275897625}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6573668941117446, 'ccc': 0.015176020760111101, 'ence': 0.1758392321176656}]
+var: {'subj. pred.': 0.10763500604502453, 'subj. true.': 0.022791583, 'pred. err.': 0.03505295601183775}
+Cv: {'subj. pred.': -0.8160240659753105, 'subj. true.': -0.24232501334566134, 'pred. err.': 6.693655988955626}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.055124949872738215, 'ccc': 0.05649239685626807, 'ence': 0.02466074234860156}]
+GpebUME: [{'mae': 0.10421060178207965, 'ccc': 0.02919752168745333, 'ence': 0.03060793204645316}]
+var: {'subj. pred.': 0.0001910166462797957, 'subj. true.': 0.0041009877, 'pred. err.': 0.03246303001993913}
+Cv: {'subj. pred.': 0.2718653085925443, 'subj. true.': 2.038480099359269, 'pred. err.': 8.794723771751794}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.052906812496702066, 'ccc': 0.12925080844609277, 'ence': 0.044840221610669646}]
+GpebUME: [{'mae': 0.09154777583388958, 'ccc': 0.10825635344999346, 'ence': 0.02366418618837496}]
+var: {'subj. pred.': 0.0028068998304896496, 'subj. true.': 0.0041009877, 'pred. err.': 0.03246303001993913}
+Cv: {'subj. pred.': 1.4210446933514866, 'subj. true.': 2.038480099359269, 'pred. err.': 8.794723771751794}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.2983611826073394, 'ccc': 0.05950675580674584, 'ence': 0.21907703036591966}], rand. GsbUME: [{'mae': 0.16471238751655087, 'ccc': 0.00031185051321333686, 'ence': 0.06465142840104944}]
+GpebUME: [{'mae': 0.4915406363493853, 'ccc': 0.06828655641160483, 'ence': 0.19410749483969317}], rand. GpebUME: [{'mae': 0.19765445813281277, 'ccc': -0.017842741173314858, 'ence': 0.12657810475917933}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6573668941117446, 'ccc': 0.015176020760111101, 'ence': 0.1758392321176656}]
+var: {'subj. pred.': 0.10763500604502453, 'subj. true.': 0.022791583, 'pred. err.': 0.03505295601183775}
+Cv: {'subj. pred.': -0.8160240659753105, 'subj. true.': -0.24232501334566134, 'pred. err.': 6.693655988955626}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.040784629507676085, 'ccc': 5.6955563842673995e-12, 'ence': 0.030836337357651428}]
+GpebUME: [{'mae': 0.0823271619366942, 'ccc': 4.193136845697566e-12, 'ence': 0.01987332029821717}]
+var: {'subj. pred.': 4.4151296227416676e-24, 'subj. true.': 0.0041009877, 'pred. err.': 0.03246303001993913}
+Cv: {'subj. pred.': 0.8952255392373607, 'subj. true.': 2.038480099359269, 'pred. err.': 8.794723771751794}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.3531026507842465, 'ccc': -0.018968573640252045, 'ence': 0.3069057062293082}]
+GpebUME: [{'mae': 0.3583038199727322, 'ccc': -0.08198205594453196, 'ence': 0.3194244664553354}]
+var: {'subj. pred.': 0.08080946246806081, 'subj. true.': 0.0041009877, 'pred. err.': 0.03246303001993913}
+Cv: {'subj. pred.': -0.8952255392373609, 'subj. true.': 2.038480099359269, 'pred. err.': 8.794723771751794}
+
+--------------------DEVEL--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: invalid value encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: invalid value encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+Confirmed prediction ccc-score: 0.41152377914332894
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.40151667696299836, 'ccc': 0.08997997620518666, 'ence': 0.24094225126231808}], rand. GsbUME: [{'mae': 0.18992410309975669, 'ccc': 0.0033826014838098098, 'ence': 0.08401479779566294}]
+GpebUME: [{'mae': 0.471771372602724, 'ccc': 0.17547065038719936, 'ence': 0.2002278827979814}], rand. GpebUME: [{'mae': 0.24588361743125772, 'ccc': -0.0034186212734283916, 'ence': 0.14802848491100262}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6853546785934432, 'ccc': 0.026968419179772232, 'ence': 0.19952961207921519}]
+var: {'subj. pred.': 0.18093286374533196, 'subj. true.': 0.029599113, 'pred. err.': 0.05248529814991554}
+Cv: {'subj. pred.': -1.4443736384619572, 'subj. true.': -0.27602486135685733, 'pred. err.': 4.051601624407673}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06407462971813249, 'ccc': 0.12530524227720094, 'ence': 4.206366207327347e-08}]
+GpebUME: [{'mae': 0.13040734683680355, 'ccc': 0.06077626699436157, 'ence': 0.0567312453619691}]
+var: {'subj. pred.': 0.0004789647972442182, 'subj. true.': 0.0071658036, 'pred. err.': 0.050607463346724994}
+Cv: {'subj. pred.': 0.38973778772500933, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.7999424273569606}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07386212487802456, 'ccc': 0.22951487793316983, 'ence': 0.050251433375539535}]
+GpebUME: [{'mae': 0.11857201092933384, 'ccc': 0.22171807543211539, 'ence': 0.0}]
+var: {'subj. pred.': 0.006309792176774073, 'subj. true.': 0.0071658036, 'pred. err.': 0.050607463346724994}
+Cv: {'subj. pred.': 1.3417674735781264, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.7999424273569606}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.40151667696299836, 'ccc': 0.08997997620518666, 'ence': 0.24094225126231808}], rand. GsbUME: [{'mae': 0.1829530963521221, 'ccc': -0.006607270170960299, 'ence': 0.07703377113173178}]
+GpebUME: [{'mae': 0.471771372602724, 'ccc': 0.17547065038719936, 'ence': 0.2002278827979814}], rand. GpebUME: [{'mae': 0.2447862275425782, 'ccc': 0.007931920434324146, 'ence': 0.15016812140837105}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6853546785934432, 'ccc': 0.026968419179772232, 'ence': 0.19952961207921519}]
+var: {'subj. pred.': 0.18093286374533196, 'subj. true.': 0.029599113, 'pred. err.': 0.05248529814991554}
+Cv: {'subj. pred.': -1.4443736384619572, 'subj. true.': -0.27602486135685733, 'pred. err.': 4.051601624407673}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06536104402279393, 'ccc': 8.709214919742483e-12, 'ence': 0.040917217269713306}]
+GpebUME: [{'mae': 0.12005728302374416, 'ccc': 7.2346661282569575e-12, 'ence': 0.035510871648666224}]
+var: {'subj. pred.': 7.343124619690822e-24, 'subj. true.': 0.0071658036, 'pred. err.': 0.050607463346724994}
+Cv: {'subj. pred.': 0.8896892131001362, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.7999424273569606}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.47199042011408293, 'ccc': -0.033699433160807146, 'ence': 0.31191951197578}]
+GpebUME: [{'mae': 0.49121550343545495, 'ccc': -0.13009990585446246, 'ence': 0.29570970066147656}]
+var: {'subj. pred.': 0.13440012050760997, 'subj. true.': 0.0071658036, 'pred. err.': 0.050607463346724994}
+Cv: {'subj. pred.': -0.8896892131001363, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.7999424273569606}
+
+On ground-truth labels:	Best	[Val CCC] for seed "315":	 0.4203
+On ground-truth labels:		[Test CCC] for seed "315":	 0.0978
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-16-08-24_[vggish]_[arousal]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[5_315_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set vggish --emo_dim_set arousal --epochs 100 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6098, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6961, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 0.70778).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.853, max 0.9452999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7745, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.7343999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 128.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:254: RuntimeWarning: invalid value encountered in double_scalars
+  ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+
+.nfs000000000395055000001c9d'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001c9f'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001ca0'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001ca2'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001ca1'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001ca3'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001ca5'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001ca6'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001ca4'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001ca9'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001ca7'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001ca7'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001ca8'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001caa'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001cab'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001cad'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001cac'
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.4143 [' 0.4143']| Loss: 0.5886 | PCC: 0.4144 ['0.4144'] | RMSE: 0.1681 ['0.1681']
+--------------------TEST--------------------
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001cae'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001caf'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001cb0'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001cb1'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395053100001cb2'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395055000001cb5'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395054f00001cb4'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000395052f00001cb3'
+Confirmed prediction ccc-score: 0.13080978491178752
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.49865065115300644, 'ccc': 0.018516183841477574, 'ence': 0.2880881785437754}], rand. GsbUME: [{'mae': 0.1630811922234378, 'ccc': -0.006162576650564133, 'ence': 0.06415415186536126}]
+GpebUME: [{'mae': 0.46475984349965654, 'ccc': 0.05602694741227235, 'ence': 0.25343032189082}], rand. GpebUME: [{'mae': 0.18101445682843004, 'ccc': 0.0021323440672781895, 'ence': 0.12318058099037595}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6502541365677211, 'ccc': 0.012269767425019108, 'ence': 0.1787548161373896}]
+var: {'subj. pred.': 0.22944970889980967, 'subj. true.': 0.022791583, 'pred. err.': 0.0301094597186113}
+Cv: {'subj. pred.': -2.5869667657427717, 'subj. true.': -0.24232501334566134, 'pred. err.': 8.401292801279208}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.05686450145955209, 'ccc': 0.02476175982039679, 'ence': 0.016385017428476936}]
+GpebUME: [{'mae': 0.10144028925342825, 'ccc': 0.01750726518431189, 'ence': 0.04571634655399983}]
+var: {'subj. pred.': 0.00011601253528827666, 'subj. true.': 0.0041009877, 'pred. err.': 0.02713964404742573}
+Cv: {'subj. pred.': 0.20047649358684927, 'subj. true.': 2.038480099359269, 'pred. err.': 10.32036320888412}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.058388791357300796, 'ccc': 0.07262127594320782, 'ence': 0.055420847384727696}]
+GpebUME: [{'mae': 0.08981411613383662, 'ccc': 0.08401487514008898, 'ence': 0.039230646826748976}]
+var: {'subj. pred.': 0.0036420762519064442, 'subj. true.': 0.0041009877, 'pred. err.': 0.02713964404742573}
+Cv: {'subj. pred.': 1.4496202228684663, 'subj. true.': 2.038480099359269, 'pred. err.': 10.32036320888412}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.49865065115300644, 'ccc': 0.018516183841477574, 'ence': 0.2880881785437754}], rand. GsbUME: [{'mae': 0.16088934352966208, 'ccc': -0.0053762613924788465, 'ence': 0.08710220396286288}]
+GpebUME: [{'mae': 0.46475984349965654, 'ccc': 0.05602694741227235, 'ence': 0.25343032189082}], rand. GpebUME: [{'mae': 0.18180525515584808, 'ccc': 0.002736941452592624, 'ence': 0.13233192814652397}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6502541365677211, 'ccc': 0.012269767425019108, 'ence': 0.1787548161373896}]
+var: {'subj. pred.': 0.22944970889980967, 'subj. true.': 0.022791583, 'pred. err.': 0.0301094597186113}
+Cv: {'subj. pred.': -2.5869667657427717, 'subj. true.': -0.24232501334566134, 'pred. err.': 8.401292801279208}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.04078462950739243, 'ccc': 4.520067854663656e-12, 'ence': 0.028118146607604384}]
+GpebUME: [{'mae': 0.07692278174048411, 'ccc': 3.86653843417356e-12, 'ence': 0.006997652072168379}]
+var: {'subj. pred.': 9.98112989012648e-24, 'subj. true.': 0.0041009877, 'pred. err.': 0.02713964404742573}
+Cv: {'subj. pred.': 0.8937973415590682, 'subj. true.': 2.038480099359269, 'pred. err.': 10.32036320888412}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.5206611731391761, 'ccc': -0.00696832394228774, 'ence': 0.30790448282064253}]
+GpebUME: [{'mae': 0.5143227797470273, 'ccc': -0.03156233498799219, 'ence': 0.3444745462462892}]
+var: {'subj. pred.': 0.1826831396048932, 'subj. true.': 0.0041009877, 'pred. err.': 0.02713964404742573}
+Cv: {'subj. pred.': -0.8937973415590681, 'subj. true.': 2.038480099359269, 'pred. err.': 10.32036320888412}
+
+--------------------DEVEL--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: invalid value encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056600001cb8'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056500001cb9'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604e900001cb7'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604eb00001cb6'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056500001cbb'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604eb00001cbc'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604e900001cba'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056600001cbd'
+Confirmed prediction ccc-score: 0.4048135864006757
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.5360847593747324, 'ccc': 0.044564663512851835, 'ence': 0.2826507113028701}], rand. GsbUME: [{'mae': 0.18554052375857322, 'ccc': 0.01610133994531067, 'ence': 0.10060870443854585}]
+GpebUME: [{'mae': 0.4746629512576808, 'ccc': 0.20674697759597183, 'ence': 0.25713610183360885}], rand. GpebUME: [{'mae': 0.2269644883144424, 'ccc': -0.015166591442738391, 'ence': 0.10998904042313712}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6715059561109425, 'ccc': 0.026216730995003792, 'ence': 0.19044899314394523}]
+var: {'subj. pred.': 0.28249148311848954, 'subj. true.': 0.029599113, 'pred. err.': 0.04439193041174014}
+Cv: {'subj. pred.': -3.4088550744069326, 'subj. true.': -0.27602486135685733, 'pred. err.': 4.84943842724188}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06500028912424942, 'ccc': 0.0574315282898013, 'ence': 0.0017639249319244628}]
+GpebUME: [{'mae': 0.11905019956530506, 'ccc': 0.05920383173425758, 'ence': 0.051070388969380535}]
+var: {'subj. pred.': 0.00025164855026781464, 'subj. true.': 0.0071658036, 'pred. err.': 0.03991058536901344}
+Cv: {'subj. pred.': 0.2819335992505866, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.8126304015563295}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.07610713138899321, 'ccc': 0.15835283127085478, 'ence': 0.053396870505625284}]
+GpebUME: [{'mae': 0.10332519217779006, 'ccc': 0.2672664366113945, 'ence': 0.005502883188575944}]
+var: {'subj. pred.': 0.006549368073705888, 'subj. true.': 0.0071658036, 'pred. err.': 0.03991058536901344}
+Cv: {'subj. pred.': 1.5347138647551346, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.8126304015563295}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.5360847593747324, 'ccc': 0.044564663512851835, 'ence': 0.2826507113028701}], rand. GsbUME: [{'mae': 0.18820219397673546, 'ccc': -0.02210320893797756, 'ence': 0.06703586191107021}]
+GpebUME: [{'mae': 0.4746629512576808, 'ccc': 0.20674697759597183, 'ence': 0.25713610183360885}], rand. GpebUME: [{'mae': 0.22368000514540257, 'ccc': -0.013971756946197594, 'ence': 0.14350686709768587}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6715059561109425, 'ccc': 0.026216730995003792, 'ence': 0.19044899314394523}]
+var: {'subj. pred.': 0.28249148311848954, 'subj. true.': 0.029599113, 'pred. err.': 0.04439193041174014}
+Cv: {'subj. pred.': -3.4088550744069326, 'subj. true.': -0.27602486135685733, 'pred. err.': 4.84943842724188}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.0653610440225283, 'ccc': 7.583351333488306e-12, 'ence': 0.02034131110184393}]
+GpebUME: [{'mae': 0.10694925565563898, 'ccc': 1.1334037420671496e-11, 'ence': 0.026781852609801815}]
+var: {'subj. pred.': 1.2782668632021783e-23, 'subj. true.': 0.0071658036, 'pred. err.': 0.03991058536901344}
+Cv: {'subj. pred.': 0.9547027411842471, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.8126304015563295}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.5732568954806907, 'ccc': -0.018977158555873973, 'ence': 0.27498067146032223}]
+GpebUME: [{'mae': 0.5833179659280066, 'ccc': -0.11154091612190187, 'ence': 0.2856804576759165}]
+var: {'subj. pred.': 0.23395928756890808, 'subj. true.': 0.0071658036, 'pred. err.': 0.03991058536901344}
+Cv: {'subj. pred.': -0.9547027411842471, 'subj. true.': 1.5074854958765114, 'pred. err.': 3.8126304015563295}
+
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: invalid value encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056600001cbf'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs000000000396056500001cbe'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604e900001cc0'
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 265, in _run_finalizers
+    finalizer()
+  File "/usr/local/lib/python3.7/multiprocessing/util.py", line 189, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.7/shutil.py", line 485, in rmtree
+    _rmtree_safe_fd(fd, path, onerror)
+  File "/usr/local/lib/python3.7/shutil.py", line 443, in _rmtree_safe_fd
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "/usr/local/lib/python3.7/shutil.py", line 441, in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+OSError: [Errno 16] Device or resource busy: '.nfs00000000039604eb00001cc1'
+On Test: CCC  0.1828 | PCC  0.2025 | RMSE  0.1936
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.4143
+On ground-truth labels:		[Test CCC] for seed "314":	 0.1828
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-17-07-09_[vggish]_[arousal]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[1_314_None_None].pth".
