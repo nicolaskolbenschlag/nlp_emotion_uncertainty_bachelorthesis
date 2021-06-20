@@ -354,6 +354,15 @@ def evaluate_uncertainty_measurement_help(model, test_loader, params, val_loader
     sbUMEs, pebUMEs, Cvs = calculate_uncertainty_metrics(params, full_labels, full_means, full_vars, full_subjectivities, method + "(uncal.)", test_loader.dataset.partition, params.uncertainty_approach != None)
     print(f"UNCALIBRATED\nsbUMEs: {sbUMEs}\npebUMES{pebUMEs}\nCvs: {Cvs}")
 
+    # NOTE calculate and store rolling prediction scores
+    rolling_prediction_scores_3 = np.empty_like(full_subjectivities)
+    rolling_prediction_scores_5 = np.empty_like(full_subjectivities)
+    for i in range(full_means.shape[1]):
+        rolling_prediction_scores_3[:,i] = rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], 3)
+        rolling_prediction_scores_5[:,i] = rolling_correlation_coefficient(full_labels[:,i], full_means[:,i], 5)
+    data_to_store["rolling_prediction_scores_3"] = rolling_prediction_scores_3
+    data_to_store["rolling_prediction_scores_5"] = rolling_prediction_scores_5
+
     # NOTE compare subjectivity and rolling correlation error
     SvCs = subjectivity_vs_rolling_correlation_error(full_subjectivities, full_labels, full_means)
     print(f"Subjectivity vs. roll.-corr.-coef.: {SvCs}")
