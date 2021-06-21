@@ -136,8 +136,9 @@ def train(model, train_loader, criterion, optimizer, epoch, params):
             
             else:
                 branch_loss = criterion(preds[:, :, i], labels[:, :, i], feature_lens, params.label_smooth)
-
-            loss = loss + params.loss_weights[i] * branch_loss
+            
+            if not params.predict_subjectivity or epoch <= stop_at_epoch:
+                loss = loss + params.loss_weights[i] * branch_loss
 
             #########################
             if params.predict_subjectivity:
