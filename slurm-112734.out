@@ -1,0 +1,1237 @@
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 1 --seed 43 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity --loss_subjectivity ccc
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 43]
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.056971844]
+ccc: [-0.08641093100688137]
+var_label: [0.027240597]
+var_pred: [0.009579565]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.4880562]
+ccc: [-0.011258185584762496]
+var_label: [0.027240597]
+var_pred: [0.01577287]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.4393864]
+ccc: [-0.030324404904003028]
+var_label: [0.027240597]
+var_pred: [0.04229285]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.061264705]
+ccc: [-0.15027328359997968]
+var_label: [0.027240597]
+var_pred: [0.020505683]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.058479056]
+ccc: [-0.05528880112060408]
+var_label: [0.027240597]
+var_pred: [0.012002406]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.060635008]
+ccc: [0.04895098589957999]
+var_label: [0.027240597]
+var_pred: [0.0038752921]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.059394307]
+ccc: [-0.21447734836201351]
+var_label: [0.027240597]
+var_pred: [0.018671662]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.056744672]
+ccc: [-0.1863036638509014]
+var_label: [0.027240597]
+var_pred: [0.012300309]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.040148728]
+ccc: [0.0022347762983830222]
+var_label: [0.027240597]
+var_pred: [0.0039193537]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036641773]
+ccc: [0.0828165816404264]
+var_label: [0.027240597]
+var_pred: [0.0030293262]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.053490758]
+ccc: [0.02350580343245453]
+var_label: [0.027240597]
+var_pred: [0.0038843853]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.0798799]
+ccc: [0.026086604751408074]
+var_label: [0.027240597]
+var_pred: [0.0037866558]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.0706739]
+ccc: [0.023781561420996616]
+var_label: [0.027240597]
+var_pred: [0.0033273052]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.052691694]
+ccc: [0.005766838137291627]
+var_label: [0.027240597]
+var_pred: [0.0032065597]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.046441406]
+ccc: [0.023165431774663455]
+var_label: [0.027240597]
+var_pred: [0.0041340077]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06543882]
+ccc: [-0.01590410586319259]
+var_label: [0.027240597]
+var_pred: [0.0042107925]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.04514149]
+ccc: [0.01702927912163332]
+var_label: [0.027240597]
+var_pred: [0.0041336333]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.057056744]
+ccc: [-0.01646119753261754]
+var_label: [0.027240597]
+var_pred: [0.004307629]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07082409]
+ccc: [-0.034043910801057606]
+var_label: [0.027240597]
+var_pred: [0.0045712586]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07506619]
+ccc: [0.0005237876986781345]
+var_label: [0.027240597]
+var_pred: [0.0054861493]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06606016]
+ccc: [-0.03870779536500776]
+var_label: [0.027240597]
+var_pred: [0.005970138]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06414466]
+ccc: [0.0014792500558748933]
+var_label: [0.027240597]
+var_pred: [0.0050839228]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.05864126]
+ccc: [0.0031565825462411346]
+var_label: [0.027240597]
+var_pred: [0.006021826]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06846712]
+ccc: [0.01225454529347081]
+var_label: [0.027240597]
+var_pred: [0.0057405345]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.060663473]
+ccc: [-0.0068169452218652575]
+var_label: [0.027240597]
+var_pred: [0.0070058443]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.060941648]
+ccc: [-0.0581828514341077]
+var_label: [0.027240597]
+var_pred: [0.008288085]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06608048]
+ccc: [-0.03080862742549614]
+var_label: [0.027240597]
+var_pred: [0.00760228]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.055857874]
+ccc: [0.004520218694858842]
+var_label: [0.027240597]
+var_pred: [0.0068636653]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.052275885]
+ccc: [-0.02078325075955553]
+var_label: [0.027240597]
+var_pred: [0.0079365615]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07016212]
+ccc: [0.006467951491468031]
+var_label: [0.027240597]
+var_pred: [0.009651099]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.087358214]
+ccc: [-0.011879305438393255]
+var_label: [0.027240597]
+var_pred: [0.010407258]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06160974]
+ccc: [0.008518123561470217]
+var_label: [0.027240597]
+var_pred: [0.009482058]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06074456]
+ccc: [0.028885968436566736]
+var_label: [0.027240597]
+var_pred: [0.009135987]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.05847394]
+ccc: [0.002507966899854776]
+var_label: [0.027240597]
+var_pred: [0.009576276]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06648377]
+ccc: [-0.02632312854327956]
+var_label: [0.027240597]
+var_pred: [0.010447353]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07920736]
+ccc: [-0.0046517117212084265]
+var_label: [0.027240597]
+var_pred: [0.0111625455]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06751487]
+ccc: [0.014721341173147834]
+var_label: [0.027240597]
+var_pred: [0.011753655]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06504682]
+ccc: [-0.01492992023131454]
+var_label: [0.027240597]
+var_pred: [0.01114347]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.055088315]
+ccc: [-0.008906328522699918]
+var_label: [0.027240597]
+var_pred: [0.010377534]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06220235]
+ccc: [0.006782700501180977]
+var_label: [0.027240597]
+var_pred: [0.011120068]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.061628096]
+ccc: [0.019786888210129236]
+var_label: [0.027240597]
+var_pred: [0.011790245]
+-----------------------------------------------
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 43 | Best [Val CCC]: 0.4066 [' 0.4066']| Loss: 0.6381 | PCC: 0.4076 ['0.4076'] | RMSE: 0.1853 ['0.1853']
+-----Evaluation of subjectivity prediction-----
+mse: [0.04162181]
+ccc: [-0.006464127686112918]
+var_label: [0.027858062]
+var_pred: [0.012842367]
+-----------------------------------------------
+On Test: CCC  0.5335 | PCC  0.5663 | RMSE  0.2222
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "43":	 0.4066
+On ground-truth labels:		[Test CCC] for seed "43":	 0.5335
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-23-00-00_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[1_43_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set bert-4 --emo_dim_set valence --epochs 100 --refresh --n_seeds 1 --seed 43 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity --loss_subjectivity mse
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 768.
+==================================================
+Training model... [seed 43]
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036056615]
+ccc: [0.014684866547812786]
+var_label: [0.027240597]
+var_pred: [0.000551532]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.055225156]
+ccc: [-0.00033033868002260963]
+var_label: [0.027240597]
+var_pred: [0.00017580428]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.030049158]
+ccc: [-0.03305039474114399]
+var_label: [0.027240597]
+var_pred: [0.00042321952]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.052867636]
+ccc: [-0.028964185764948153]
+var_label: [0.027240597]
+var_pred: [0.0007817113]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.032011673]
+ccc: [-0.0006234999745558492]
+var_label: [0.027240597]
+var_pred: [0.00016765085]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.03784401]
+ccc: [0.04720279810807068]
+var_label: [0.027240597]
+var_pred: [0.0014823127]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.03181674]
+ccc: [-0.012522006551058097]
+var_label: [0.027240597]
+var_pred: [0.0005227282]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036705736]
+ccc: [-0.007548775040028099]
+var_label: [0.027240597]
+var_pred: [0.00046579904]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.035456926]
+ccc: [0.024048693666042818]
+var_label: [0.027240597]
+var_pred: [0.00047135836]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038094312]
+ccc: [-0.015562161649162467]
+var_label: [0.027240597]
+var_pred: [0.000546651]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036538422]
+ccc: [-0.03221611248307636]
+var_label: [0.027240597]
+var_pred: [0.00058153964]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036682963]
+ccc: [-0.01752073316074997]
+var_label: [0.027240597]
+var_pred: [0.00028092563]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038155444]
+ccc: [-0.002847004152469924]
+var_label: [0.027240597]
+var_pred: [0.00018990805]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.03671482]
+ccc: [0.0031065166266517875]
+var_label: [0.027240597]
+var_pred: [0.0001598053]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.035120327]
+ccc: [0.03798687421600152]
+var_label: [0.027240597]
+var_pred: [0.00025852164]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036643367]
+ccc: [0.037412906809691046]
+var_label: [0.027240597]
+var_pred: [0.00017466534]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.040324375]
+ccc: [0.019991254589768675]
+var_label: [0.027240597]
+var_pred: [0.00013350045]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.033025764]
+ccc: [-0.01687576936880586]
+var_label: [0.027240597]
+var_pred: [0.000196467]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.035657413]
+ccc: [-0.01246058338978616]
+var_label: [0.027240597]
+var_pred: [0.00025996397]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.041566588]
+ccc: [0.0044659069138147925]
+var_label: [0.027240597]
+var_pred: [0.0002952183]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.035991967]
+ccc: [0.021405250623437427]
+var_label: [0.027240597]
+var_pred: [0.0002602594]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037507027]
+ccc: [0.013586434273948827]
+var_label: [0.027240597]
+var_pred: [0.00018153565]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037975997]
+ccc: [0.009007178756465282]
+var_label: [0.027240597]
+var_pred: [0.00017454187]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037368726]
+ccc: [0.03898178600859771]
+var_label: [0.027240597]
+var_pred: [0.00033498602]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036364313]
+ccc: [0.008898012746923598]
+var_label: [0.027240597]
+var_pred: [0.00017764026]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038848568]
+ccc: [-0.02419907672124849]
+var_label: [0.027240597]
+var_pred: [0.00030273254]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038631007]
+ccc: [0.0077231280901326835]
+var_label: [0.027240597]
+var_pred: [0.00027280027]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036863655]
+ccc: [0.025576594515962465]
+var_label: [0.027240597]
+var_pred: [0.00019635199]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.040049322]
+ccc: [0.0087046029234415]
+var_label: [0.027240597]
+var_pred: [0.00017267284]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037568066]
+ccc: [0.0016618179521919255]
+var_label: [0.027240597]
+var_pred: [0.00016648826]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038030226]
+ccc: [0.009020001570478109]
+var_label: [0.027240597]
+var_pred: [0.00017409831]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.039566662]
+ccc: [0.012142613378307895]
+var_label: [0.027240597]
+var_pred: [0.00018401358]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.0395815]
+ccc: [0.013848660272989867]
+var_label: [0.027240597]
+var_pred: [0.00018541214]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037858285]
+ccc: [0.014929687026154853]
+var_label: [0.027240597]
+var_pred: [0.00017713178]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.036863968]
+ccc: [0.014290139114225515]
+var_label: [0.027240597]
+var_pred: [0.00016788537]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.037991125]
+ccc: [0.013627632748034291]
+var_label: [0.027240597]
+var_pred: [0.00016364852]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.03840116]
+ccc: [0.012889831269504319]
+var_label: [0.027240597]
+var_pred: [0.00016064252]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.038491927]
+ccc: [0.01167759056615423]
+var_label: [0.027240597]
+var_pred: [0.0001560256]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.03880482]
+ccc: [0.010950268530079658]
+var_label: [0.027240597]
+var_pred: [0.00015267197]
+-----------------------------------------------
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 43 | Best [Val CCC]: 0.4421 [' 0.4421']| Loss: 0.6218 | PCC: 0.4644 ['0.4644'] | RMSE: 0.2088 ['0.2088']
+-----Evaluation of subjectivity prediction-----
+mse: [0.028677473]
+ccc: [-0.007568962161071561]
+var_label: [0.027858062]
+var_pred: [0.00016374781]
+-----------------------------------------------
+On Test: CCC  0.2563 | PCC  0.4925 | RMSE  0.2520
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "43":	 0.4421
+On ground-truth labels:		[Test CCC] for seed "43":	 0.2563
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-23-05-42_[bert-4]_[valence]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[1_43_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set vggish --emo_dim_set arousal --epochs 100 --refresh --n_seeds 1 --seed 43 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity --loss_subjectivity ccc --load_subjectivity_from_file
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Subjectivities deserialized from file.
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 128.
+==================================================
+Training model... [seed 43]
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.027925922]
+ccc: [-0.07527293894687596]
+var_label: [0.024414446]
+var_pred: [0.0014452859]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.16730309]
+ccc: [-0.05455241388874698]
+var_label: [0.024414446]
+var_pred: [0.01224033]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.1789148]
+ccc: [-0.05614949543788466]
+var_label: [0.024414446]
+var_pred: [0.011328769]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.108240776]
+ccc: [-0.03600711317604972]
+var_label: [0.024414446]
+var_pred: [0.0062212776]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.1754074]
+ccc: [-0.045104366093507715]
+var_label: [0.024414446]
+var_pred: [0.0149859255]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.35284436]
+ccc: [-0.03210866250372042]
+var_label: [0.024414446]
+var_pred: [0.021461297]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.23114729]
+ccc: [-0.011479978587481246]
+var_label: [0.024414446]
+var_pred: [0.0038607349]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.17566054]
+ccc: [-0.02214344554052166]
+var_label: [0.024414446]
+var_pred: [0.0040634763]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.10061955]
+ccc: [-0.07309067193590896]
+var_label: [0.024414446]
+var_pred: [0.006453821]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14602871]
+ccc: [-0.02183250111944338]
+var_label: [0.024414446]
+var_pred: [0.0041875797]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14487804]
+ccc: [-0.03258081676365498]
+var_label: [0.024414446]
+var_pred: [0.005960348]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11046229]
+ccc: [-0.053117233728680754]
+var_label: [0.024414446]
+var_pred: [0.0077950465]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.16568291]
+ccc: [-0.013639496831773738]
+var_label: [0.024414446]
+var_pred: [0.0033711002]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.116000615]
+ccc: [-0.01822147360360392]
+var_label: [0.024414446]
+var_pred: [0.0034789753]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.1029121]
+ccc: [-0.042693902026591186]
+var_label: [0.024414446]
+var_pred: [0.0048671006]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.16931109]
+ccc: [-0.009826931240120932]
+var_label: [0.024414446]
+var_pred: [0.0037087665]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12648213]
+ccc: [-0.007144548679426456]
+var_label: [0.024414446]
+var_pred: [0.0034807113]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14207748]
+ccc: [-0.010188043024787012]
+var_label: [0.024414446]
+var_pred: [0.0033724594]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.13997936]
+ccc: [-0.006933152495595309]
+var_label: [0.024414446]
+var_pred: [0.0031613961]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12556902]
+ccc: [-0.013543077992512307]
+var_label: [0.024414446]
+var_pred: [0.003388613]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14283195]
+ccc: [-0.017691486400893502]
+var_label: [0.024414446]
+var_pred: [0.004099805]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.111839585]
+ccc: [-0.018546719559846585]
+var_label: [0.024414446]
+var_pred: [0.0039146245]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12532774]
+ccc: [-0.018179714057696493]
+var_label: [0.024414446]
+var_pred: [0.0043324735]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12300297]
+ccc: [-0.0301177431407605]
+var_label: [0.024414446]
+var_pred: [0.00454784]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12045127]
+ccc: [-0.029725305373417724]
+var_label: [0.024414446]
+var_pred: [0.0048308615]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14296739]
+ccc: [-0.023113340685356153]
+var_label: [0.024414446]
+var_pred: [0.005228868]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11114881]
+ccc: [-0.030543571427312947]
+var_label: [0.024414446]
+var_pred: [0.0056349663]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.141865]
+ccc: [-0.02575715846894682]
+var_label: [0.024414446]
+var_pred: [0.005496209]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11000544]
+ccc: [-0.03896624057943943]
+var_label: [0.024414446]
+var_pred: [0.0057859803]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.1450919]
+ccc: [-0.029763590318953672]
+var_label: [0.024414446]
+var_pred: [0.0058671865]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12686382]
+ccc: [-0.03124555587416872]
+var_label: [0.024414446]
+var_pred: [0.005452852]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11554704]
+ccc: [-0.032268983370488245]
+var_label: [0.024414446]
+var_pred: [0.005566032]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14411846]
+ccc: [-0.031602152918795555]
+var_label: [0.024414446]
+var_pred: [0.006684809]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.116514266]
+ccc: [-0.038487562811226304]
+var_label: [0.024414446]
+var_pred: [0.0077122445]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14681906]
+ccc: [-0.02695260607235493]
+var_label: [0.024414446]
+var_pred: [0.0075241886]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11271199]
+ccc: [-0.032188440265402914]
+var_label: [0.024414446]
+var_pred: [0.007649028]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.11801883]
+ccc: [-0.030382194898303554]
+var_label: [0.024414446]
+var_pred: [0.008298683]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.13456444]
+ccc: [-0.02187801999555676]
+var_label: [0.024414446]
+var_pred: [0.00873813]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.10753518]
+ccc: [-0.017935135190904433]
+var_label: [0.024414446]
+var_pred: [0.008403517]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12747742]
+ccc: [-0.02095259046952738]
+var_label: [0.024414446]
+var_pred: [0.0070496057]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.13461179]
+ccc: [-0.029199585292407175]
+var_label: [0.024414446]
+var_pred: [0.0076723117]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.121423595]
+ccc: [-0.03032748604402772]
+var_label: [0.024414446]
+var_pred: [0.008658824]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.119757496]
+ccc: [-0.024025438523866297]
+var_label: [0.024414446]
+var_pred: [0.008960922]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.12712385]
+ccc: [-0.01528862092425211]
+var_label: [0.024414446]
+var_pred: [0.0079083275]
+-----------------------------------------------
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 43 | Best [Val CCC]: 0.4032 [' 0.4032']| Loss: 0.6109 | PCC: 0.4091 ['0.4091'] | RMSE: 0.1856 ['0.1856']
+-----Evaluation of subjectivity prediction-----
+mse: [0.036569964]
+ccc: [-0.003933355679316938]
+var_label: [0.027858062]
+var_pred: [0.005852456]
+-----------------------------------------------
+On Test: CCC  0.1350 | PCC  0.1515 | RMSE  0.2057
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "43":	 0.4032
+On ground-truth labels:		[Test CCC] for seed "43":	 0.1350
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-23-11-03_[vggish]_[arousal]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[1_43_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set vggish --emo_dim_set arousal --epochs 100 --refresh --n_seeds 1 --seed 43 --attn --rnn_bi --loss ccc --not_measure_uncertainty --predict_subjectivity --loss_subjectivity mse --load_subjectivity_from_file
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Subjectivities deserialized from file.
+Samples in partitions: (3122, 62, 64)
+Input feature dim: 128.
+==================================================
+Training model... [seed 43]
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.14860666]
+ccc: [0.00981467754771925]
+var_label: [0.024414446]
+var_pred: [0.0006762807]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.06855518]
+ccc: [-0.011458452086946755]
+var_label: [0.024414446]
+var_pred: [0.00038420703]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09043944]
+ccc: [-0.0020215518261012602]
+var_label: [0.024414446]
+var_pred: [0.0001976881]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.0783814]
+ccc: [-0.0028720874616936236]
+var_label: [0.024414446]
+var_pred: [0.00017806924]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.10362612]
+ccc: [-1.915479819067176e-05]
+var_label: [0.024414446]
+var_pred: [0.00023876611]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08846689]
+ccc: [0.012108409216263178]
+var_label: [0.024414446]
+var_pred: [0.0003987578]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08122636]
+ccc: [-0.0037380075337223708]
+var_label: [0.024414446]
+var_pred: [0.00022816996]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09264143]
+ccc: [-0.0023642117286596194]
+var_label: [0.024414446]
+var_pred: [0.00029794069]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09192476]
+ccc: [0.0010984785484763548]
+var_label: [0.024414446]
+var_pred: [0.00058373506]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08980952]
+ccc: [0.006642200551225304]
+var_label: [0.024414446]
+var_pred: [0.0007264441]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08065041]
+ccc: [0.011892475627841886]
+var_label: [0.024414446]
+var_pred: [0.0007954552]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09848264]
+ccc: [-0.012874568063189627]
+var_label: [0.024414446]
+var_pred: [0.000573671]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09011485]
+ccc: [-0.029700980371322537]
+var_label: [0.024414446]
+var_pred: [0.0011504348]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09925979]
+ccc: [-0.04434419796694834]
+var_label: [0.024414446]
+var_pred: [0.0025390624]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08137441]
+ccc: [0.04366188481047142]
+var_label: [0.024414446]
+var_pred: [0.002908886]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07607708]
+ccc: [0.03538404836184019]
+var_label: [0.024414446]
+var_pred: [0.0022222563]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.10244233]
+ccc: [0.029271241099015768]
+var_label: [0.024414446]
+var_pred: [0.0014346638]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.09883307]
+ccc: [0.016329441083404412]
+var_label: [0.024414446]
+var_pred: [0.0007125197]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.085887365]
+ccc: [0.020576948888535368]
+var_label: [0.024414446]
+var_pred: [0.00066291436]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.07744634]
+ccc: [0.016995279384396426]
+var_label: [0.024414446]
+var_pred: [0.00053504854]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08312498]
+ccc: [0.0012785548575694992]
+var_label: [0.024414446]
+var_pred: [0.00037931104]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.094383456]
+ccc: [0.003820883204896714]
+var_label: [0.024414446]
+var_pred: [0.00066169025]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.08824407]
+ccc: [0.00655325938012102]
+var_label: [0.024414446]
+var_pred: [0.00090059714]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.081951246]
+ccc: [0.006592420903846763]
+var_label: [0.024414446]
+var_pred: [0.00086200784]
+-----------------------------------------------
+Subjectivity validation set:
+-----Evaluation of subjectivity prediction-----
+mse: [0.082242176]
+ccc: [0.007608682989301968]
+var_label: [0.024414446]
+var_pred: [0.0007009031]
+-----------------------------------------------
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 43 | Best [Val CCC]: 0.3741 [' 0.3741']| Loss: 0.6309 | PCC: 0.3755 ['0.3755'] | RMSE: 0.1812 ['0.1812']
+-----Evaluation of subjectivity prediction-----
+mse: [0.030056784]
+ccc: [-0.010532794224217393]
+var_label: [0.027858062]
+var_pred: [0.00038657224]
+-----------------------------------------------
+On Test: CCC  0.1067 | PCC  0.1274 | RMSE  0.2252
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "43":	 0.3741
+On ground-truth labels:		[Test CCC] for seed "43":	 0.1067
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-06-23-14-27_[vggish]_[arousal]_[NOSEG]_[lstm_64_1_True]_[True_1_4]_[0.005_1024_0.0_0.0_0.0]_None_[1_43_None_None].pth".
+slurmstepd: Exceeded step memory limit at some point.
+slurmstepd: Exceeded job memory limit at some point.
