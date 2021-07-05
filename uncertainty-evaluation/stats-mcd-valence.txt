@@ -1,0 +1,41 @@
+GLOBAL UNCERTAINTIES
+global_uncertainties_monte_carlo_dropout_20_valence_devel
+												ENCE	MAE	CCC	Cv true	Cv pred	Var true	Var pred
+subjectivities_uncalibrated						0.1178	0.2807	0.0302	2.0992	0.9128	0.0077	0.0711
+subjectivities_uncalibrated [BM]				0.0372	0.094	-0.0071	2.0992	2.0113	0.0077	0.0077
+
+subjectivities_calibrated_with_ir				0.0001	0.061	0.0192	2.0992	0.2493	0.0077	0.0001
+subjectivities_calibrated_with_ir [BM]			0.0372	0.094	-0.0071	2.0992	2.0113	0.0077	0.0077
+
+subjectivities_calibrated_with_std				0.0197	0.0525	0.0	2.0992	0.9128	0.0077	0.0
+subjectivities_calibrated_with_std [BM]			0.0372	0.094	-0.0071	2.0992	2.0113	0.0077	0.0077
+
+prediction_scores_uncalibrated					0.1053	0.2751	0.1766	3.7192	0.9128	0.0415	0.0711
+prediction_scores_uncalibrated [BM]				0.083	0.2175	-0.0028	3.7192	3.8073	0.0415	0.0411
+
+prediction_scores_calibrated_with_ir			0.002	0.1146	0.1632	3.7192	1.1632	0.0415	0.0038
+prediction_scores_calibrated_with_ir [BM]		0.083	0.2175	-0.0028	3.7192	3.8073	0.0415	0.0411
+
+prediction_scores_calibrated_with_std			0.0173	0.1128	0.0	3.7192	0.9128	0.0415	0.0
+prediction_scores_calibrated_with_std [BM]		0.083	0.2175	-0.0028	3.7192	3.8073	0.0415	0.0411
+
+global_uncertainties_monte_carlo_dropout_20_valence_test
+												ENCE	MAE	CCC	Cv true	Cv pred	Var true	Var pred
+subjectivities_uncalibrated						0.1295	0.2974	0.0373	1.3707	0.8295	0.007	0.0745
+subjectivities_uncalibrated [BM]				0.0362	0.0921	-0.0222	1.3707	1.359	0.007	0.0069
+
+subjectivities_calibrated_with_ir				0.0093	0.0631	0.0299	1.3707	0.2716	0.007	0.0001
+subjectivities_calibrated_with_ir [BM]			0.0362	0.0921	-0.0222	1.3707	1.359	0.007	0.0069
+
+subjectivities_calibrated_with_std				0.0288	0.0685	0.0	1.3707	0.8295	0.007	0.0
+subjectivities_calibrated_with_std [BM]			0.0362	0.0921	-0.0222	1.3707	1.359	0.007	0.0069
+
+prediction_scores_uncalibrated					0.1075	0.2832	0.2406	2.5979	0.8295	0.0566	0.0745
+prediction_scores_uncalibrated [BM]				0.096	0.2566	0.0068	2.5979	2.5355	0.0566	0.0543
+
+prediction_scores_calibrated_with_ir			0.0145	0.1382	0.1735	2.5979	1.0562	0.0566	0.0043
+prediction_scores_calibrated_with_ir [BM]		0.096	0.2566	0.0068	2.5979	2.5355	0.0566	0.0543
+
+prediction_scores_calibrated_with_std			0.0285	0.1486	0.0	2.5979	0.8295	0.0566	0.0
+prediction_scores_calibrated_with_std [BM]		0.096	0.2566	0.0068	2.5979	2.5355	0.0566	0.0543
+

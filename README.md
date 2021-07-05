@@ -127,7 +127,7 @@ Arousal & loss MSE:
 
 ### Global Uncertainty
 
-These commands store the measured uncertainty, for **later investigation** to files (`MuSe-LSTM-Attention-baseline-model/output/data/saved_uncertainties`). Use `extensive_uncertainty_statistics.py` to obtain metrics or `reliability_diagram.py` for plots.
+These commands store the measured uncertainty, for **later investigation** to files (`MuSe-LSTM-Attention-baseline-model/output/data/saved_uncertainties`). Use `uncertainty-evaluation/extensive_uncertainty_statistics.py` to obtain metrics or `uncertainty-evaluation/reliability_diagram.py` for plots.
 
 #### Ensemble Averaging
 
