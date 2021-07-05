@@ -14,13 +14,13 @@ Usually true uncertainty is defined as the prediction error, so we want the mode
 
 1. Aleatory (Data) Uncertainty:
 
-* Caused by noise in the sample, as it leads to non-determination of an estimation problem.
-* Imagine the landing point of an arrow.
+    * Caused by noise in the sample, as it leads to non-determination of an estimation problem.
+    * Imagine the landing point of an arrow.
 
 2. Epistemic (Model/Knowledge) Uncertainty:
 
-* Appears if the model lacks in knowledge on a sample.
-* E.g., the image of a ship, fed into a cat-vs.-dog-classifier
+    * Appears if the model lacks in knowledge on a sample.
+    * E.g., the image of a ship, fed into a cat-vs.-dog-classifier
 
 ## Measuring Predictive Uncertainty
 
@@ -28,12 +28,12 @@ The first step for getting appropriate measuremets of predictive uncertainty. Th
 
 ### Bayesian Modelling
 
-1. Obtain multiple forecasts for yො (with possibly different outcomes).
+1. Obtain multiple forecasts (with possibly different outcomes).
 2. Use the mean of them as final prediction and the variance among them as measurement for uncertainty.
 3. Approaches:
 
-* Monte Carlo Dropout: Enable dropout during inference.
-* Ensemble Averaging: Train multiple model from varying starting point (seeds).
+    * Monte Carlo Dropout: Enable dropout during inference.
+    * Ensemble Averaging: Train multiple model from varying starting point (seeds).
 
 ## Aim of this work
 
@@ -53,19 +53,19 @@ Prediction of the emotional state, here described by valence (sentiment) and aro
 
 The [MuSe CaR dataset](https://www.muse-challenge.org/) contains YouTube videos of car reviews contiguously (one label per time step) annotated by valence and arousal. For each sample, there are available 5 annotations by different human annotators. Further, there exists a *ground-truth* calculated, from the multiple annotations, by fusion techniques.
 
-## Replacing Variance by Correlation
+### Replacing Variance by Correlation
 
 The annotation procedure, used for the data set of our experiments, the human annotators used joysticks (only up or down) to create the contiguous labelling over time. So when determining their annotation, they were actually forced to evaluate each time step relatively to the last one. More important than the actual value for the emotional state is the relative movement between two (or more) opinions on it, because time steps aren’t rated isolated.
 
-## True Uncertainty
+### True Uncertainty
 
 We adapted the idea of comparing true uncertainty and predicted/quantified uncertainty and thought about ways for properly quantification of true uncertainty for the task of continuous emotion recognition.
 
-### Predictive Performance
+#### Predictive Performance
 
 First, we defined true uncertainty as the **prediction error**. The prediction error is *where we **want** uncertainty to appear*. This intuition is usually used in related papers. It is crucial in any application, because you need to know, if you can trust your model's confidence.
 
-### Subjectivity among Raters
+#### Subjectivity among Raters
 
 Of course, there can be multiple factors that cause predictive uncertainty, but we believe **disagreement among annotators** should be a main driver, respectively it is *where we would **expect** uncertainty to come from*. So it can be used as reference object to evaluate the feasibility of a method for quantifiying predictive uncertainty and as an indicator to learn more about the sources of uncertainty in this particular prediction task.
 
@@ -79,7 +79,7 @@ What we expect (or at least hope) to observe is that, the model's uncertainty co
 
 ## Running the Code
 
-`MuSe-LSTM-Attention-baseline-model\emotion_recognition\config.py` needs to be configured according to local files.
+`MuSe-LSTM-Attention-baseline-model/emotion_recognition/config.py` needs to be configured according to local files.
 
 Requirements: `pip install -r requirements.txt`
 
