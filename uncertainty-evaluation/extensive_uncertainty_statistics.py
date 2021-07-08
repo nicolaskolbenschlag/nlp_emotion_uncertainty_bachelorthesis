@@ -144,7 +144,7 @@ def calculate_and_print_statistics(uncertainties: dict) -> None:
 
 if __name__ == "__main__":
     file = open("stats.txt", "w")
-    # sys.stdout = file
+    sys.stdout = file
 
     base_dir = "C:/Users/Nicolas Kolbenschlag/Documents/Studium/6. Semester SS21/Bachelorarbeit/Sicherungen/uncertainties"
 
@@ -154,6 +154,8 @@ if __name__ == "__main__":
 
     files = ["global_uncertainties_ensemble_averaging_20_arousal_devel", "global_uncertainties_ensemble_averaging_20_arousal_test"]
     # files = ["global_uncertainties_monte_carlo_dropout_20_arousal_devel", "global_uncertainties_monte_carlo_dropout_20_arousal_test"]
+
+    files = ["global_uncertainties_ensemble_averaging_10_arousal_devel", "global_uncertainties_ensemble_averaging_10_arousal_test"]
 
     for filename in files:
         print(filename)

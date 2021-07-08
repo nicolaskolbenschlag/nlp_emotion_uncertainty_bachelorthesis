@@ -56,7 +56,12 @@ def plot_predictive_performance():
     plt.show()
 
 def plot_reliability_diagram_well_calibrated():
-    plt.plot([0,1], [0,1], color="orange", ls="--")
+
+    bins = np.linspace(0, 1, 10)
+    accs = [b + np.random.uniform(-b / 3, b / 3) for b in bins]
+    plt.bar(bins, accs, width=0.1, alpha=1, edgecolor="black", color="b")
+
+    plt.plot([0,1], [0,1], color="gray", ls="--", linewidth=5)
     
     
     plt.xlabel("Predicted Confidence", fontsize=14)
@@ -65,6 +70,6 @@ def plot_reliability_diagram_well_calibrated():
     plt.show()
 
 if __name__ == "__main__":
-    plot_multiple_rators()
+    # plot_multiple_rators()
     # plot_predictive_performance()
-    # plot_reliability_diagram_well_calibrated()
+    plot_reliability_diagram_well_calibrated()

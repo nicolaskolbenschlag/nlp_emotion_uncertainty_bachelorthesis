@@ -162,9 +162,11 @@ if __name__ == "__main__":
     base_dir = "C:/Users/Nicolas Kolbenschlag/Documents/Studium/6. Semester SS21/Bachelorarbeit/Sicherungen/uncertainties"
     
     # filename = base_dir + "/global_uncertainties_ensemble_averaging_20_arousal_{}.pkl"
-    filename = base_dir + "/global_uncertainties_ensemble_averaging_20_valence_{}.pkl"
+    # filename = base_dir + "/global_uncertainties_ensemble_averaging_20_valence_{}.pkl"
 
     # filename = base_dir + "/global_uncertainties_monte_carlo_dropout_20_arousal_{}.pkl"
     # filename = base_dir + "/global_uncertainties_monte_carlo_dropout_20_valence_{}.pkl"
+
+    filename = base_dir + "/global_uncertainties_ensemble_averaging_10_arousal_{}.pkl"
     
     plot_all_uncertainties(filename, normalize=False)
