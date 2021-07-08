@@ -64,8 +64,8 @@ PATH_TO_LABELS_RAW = base_1 + "c1_muse_wild/label_segments/raw_annotations"
 PATH_TO_TRANSCRIPTIONS = base_1 + "c1_muse_wild/transcription_segments/"
 ANNOTATOR_MAPPING = base_1 + "c1_muse_wild/annotator_id_mapping.json"
 
-USE_2021_FEATURES = True
-if USE_2021_FEATURES:
+USE_2021_LABELS = True
+if USE_2021_LABELS:
     base_dir_2021 = base_0 + "../EmCaR/8_MuSe2021/data/c1_muse_wilder/"
     # PATH_TO_ALIGNED_FEATURES = base_dir_2021 + "feature_segments/"
     PATH_TO_LABELS = base_dir_2021 + "label_segments/"    
