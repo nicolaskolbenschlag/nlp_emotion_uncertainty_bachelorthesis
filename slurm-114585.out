@@ -1,0 +1,228 @@
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty.py --feature_set fasttext --emo_dim_set valence --epochs 100 --refresh --n_seeds 1 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach monte_carlo_dropout --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 300.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:254: RuntimeWarning: invalid value encountered in double_scalars
+  ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.2246 [' 0.2246']| Loss: 0.7872 | PCC: 0.2265 ['0.2265'] | RMSE: 0.2195 ['0.2195']
+--------------------TEST--------------------
+Confirmed prediction ccc-score: 0.2975167073888566
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.4246500625204249, 'ccc': 0.033773315664625096, 'ence': 0.21920305160359388}], rand. GsbUME: [{'mae': 0.23843179206324186, 'ccc': 0.0019228144834969848, 'ence': 0.08411421235132288}]
+GpebUME: [{'mae': 0.4658534902554665, 'ccc': 0.11549385679722775, 'ence': 0.2345047190297623}], rand. GpebUME: [{'mae': 0.2143730300900059, 'ccc': -0.004451811292956598, 'ence': 0.13528474087607786}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5502752484512242, 'ccc': 0.022444602107758064, 'ence': 0.18882465826619232}]
+var: {'subj. pred.': 0.21005209645699552, 'subj. true.': 0.047397375, 'pred. err.': 0.04064210125725819}
+Cv: {'subj. pred.': -2.001144998760652, 'subj. true.': -0.43708278461388494, 'pred. err.': 5.915545661518418}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06348769621274228, 'ccc': 0.00915841168292429, 'ence': 0.005058029717138924}]
+GpebUME: [{'mae': 0.11496866333133236, 'ccc': 0.015336395013723896, 'ence': 0.019763738944932815}]
+var: {'subj. pred.': 6.199389088799269e-05, 'subj. true.': 0.0069582327, 'pred. err.': 0.03910991021815008}
+Cv: {'subj. pred.': 0.18435407575147686, 'subj. true.': 1.370725555775308, 'pred. err.': 5.054708473444}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.06584086423149912, 'ccc': 0.026225772666434864, 'ence': 0.02598763157586689}]
+GpebUME: [{'mae': 0.10481215775309388, 'ccc': 0.05998223292613707, 'ence': 0.020878696268323338}]
+var: {'subj. pred.': 0.0008611252302820739, 'subj. true.': 0.0069582327, 'pred. err.': 0.03910991021815008}
+Cv: {'subj. pred.': 1.3002322581124215, 'subj. true.': 1.370725555775308, 'pred. err.': 5.054708473444}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.4246500625204249, 'ccc': 0.033773315664625096, 'ence': 0.21920305160359388}], rand. GsbUME: [{'mae': 0.23437692628909568, 'ccc': 0.00602464265945761, 'ence': 0.1102715275354978}]
+GpebUME: [{'mae': 0.4658534902554665, 'ccc': 0.11549385679722775, 'ence': 0.2345047190297623}], rand. GpebUME: [{'mae': 0.21176531955035272, 'ccc': 0.0004261142688165268, 'ence': 0.08063448549954744}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.5502752484512242, 'ccc': 0.022444602107758064, 'ence': 0.18882465826619232}]
+var: {'subj. pred.': 0.21005209645699552, 'subj. true.': 0.047397375, 'pred. err.': 0.04064210125725819}
+Cv: {'subj. pred.': -2.001144998760652, 'subj. true.': -0.43708278461388494, 'pred. err.': 5.915545661518418}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.0685080503826666, 'ccc': 2.5740376237108774e-12, 'ence': 0.023382020946810952}]
+GpebUME: [{'mae': 0.10514883808466302, 'ccc': 5.73417402395022e-12, 'ence': 0.02334898263316268}]
+var: {'subj. pred.': 8.683238248485359e-24, 'subj. true.': 0.0069582327, 'pred. err.': 0.03910991021815008}
+Cv: {'subj. pred.': 0.9048468494276709, 'subj. true.': 1.370725555775308, 'pred. err.': 5.054708473444}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.0685080503826666, 'ccc': 2.5740376237108774e-12, 'ence': 0.023382020946810952}]
+GpebUME: [{'mae': 0.10514883808466302, 'ccc': 5.73417402395022e-12, 'ence': 0.02334898263316268}]
+var: {'subj. pred.': 8.683238248485359e-24, 'subj. true.': 0.0069582327, 'pred. err.': 0.03910991021815008}
+Cv: {'subj. pred.': 0.9048468494276709, 'subj. true.': 1.370725555775308, 'pred. err.': 5.054708473444}
+
+--------------------DEVEL--------------------
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+Confirmed prediction ccc-score: 0.21161457006474654
+Calibrator: isotonic_regression
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.4196251096885973, 'ccc': 0.032200619504742574, 'ence': 0.2625834169034938}], rand. GsbUME: [{'mae': 0.212130719860166, 'ccc': 0.013692162125947146, 'ence': 0.08472236909007512}]
+GpebUME: [{'mae': 0.49092653259368374, 'ccc': 0.0673680112003096, 'ence': 0.23184080799745163}], rand. GpebUME: [{'mae': 0.20687905828100572, 'ccc': -0.004666335689267658, 'ence': 0.1373393683132409}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6394516032876464, 'ccc': 0.009974913741748194, 'ence': 0.2298513852195541}]
+var: {'subj. pred.': 0.19890547466751604, 'subj. true.': 0.039491754, 'pred. err.': 0.03664131034546183}
+Cv: {'subj. pred.': -1.5972976173042066, 'subj. true.': -0.33696727768754087, 'pred. err.': 5.523075500826104}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.06128984961018432, 'ccc': 0.009374255730029419, 'ence': 0.012175182925090932}]
+GpebUME: [{'mae': 0.10661615741916064, 'ccc': 0.009926750173205554, 'ence': 0.009257987585904388}]
+var: {'subj. pred.': 6.268186817245911e-05, 'subj. true.': 0.007725539, 'pred. err.': 0.03404352553387546}
+Cv: {'subj. pred.': 0.18929207469530218, 'subj. true.': 2.099205399517044, 'pred. err.': 8.342003308480306}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.05599398927910662, 'ccc': 0.028193984154354947, 'ence': 0.03175284149599028}]
+GpebUME: [{'mae': 0.09537631923604638, 'ccc': 0.041796659420578176, 'ence': 0.01034004110100596}]
+var: {'subj. pred.': 0.0007784568614375165, 'subj. true.': 0.007725539, 'pred. err.': 0.03404352553387546}
+Cv: {'subj. pred.': 1.431805121277252, 'subj. true.': 2.099205399517044, 'pred. err.': 8.342003308480306}
+
+Calibrator: std_scaling
+Uncalibrated scores and benchmarking with random uncertainty quntification:
+GsbUME: [{'mae': 0.4196251096885973, 'ccc': 0.032200619504742574, 'ence': 0.2625834169034938}], rand. GsbUME: [{'mae': 0.20962393868015763, 'ccc': -0.008797760535707433, 'ence': 0.08662164940583672}]
+GpebUME: [{'mae': 0.49092653259368374, 'ccc': 0.0673680112003096, 'ence': 0.23184080799745163}], rand. GpebUME: [{'mae': 0.20229059581141087, 'ccc': 0.0010146507915500746, 'ence': 0.11742883243927987}]
+true-subjectivity-vs.-prediction-error: [{'mae': 0.6394516032876464, 'ccc': 0.009974913741748194, 'ence': 0.2298513852195541}]
+var: {'subj. pred.': 0.19890547466751604, 'subj. true.': 0.039491754, 'pred. err.': 0.03664131034546183}
+Cv: {'subj. pred.': -1.5972976173042066, 'subj. true.': -0.33696727768754087, 'pred. err.': 5.523075500826104}
+
+Calibrated on true subjectivity:
+GsbUME: [{'mae': 0.05254872094325598, 'ccc': 3.2191195826781153e-12, 'ence': 0.04360118477875811}]
+GpebUME: [{'mae': 0.09377444230947259, 'ccc': 4.019491214287041e-12, 'ence': 0.011286538724312132}]
+var: {'subj. pred.': 8.143744093548487e-24, 'subj. true.': 0.007725539, 'pred. err.': 0.03404352553387546}
+Cv: {'subj. pred.': 0.9778479791168075, 'subj. true.': 2.099205399517044, 'pred. err.': 8.342003308480306}
+
+Calibrated on prediction score:
+GsbUME: [{'mae': 0.05254872094325598, 'ccc': 3.2191195826781153e-12, 'ence': 0.04360118477875811}]
+GpebUME: [{'mae': 0.09377444230947259, 'ccc': 4.019491214287041e-12, 'ence': 0.011286538724312132}]
+var: {'subj. pred.': 8.143744093548487e-24, 'subj. true.': 0.007725539, 'pred. err.': 0.03404352553387546}
+Cv: {'subj. pred.': 0.9778479791168075, 'subj. true.': 2.099205399517044, 'pred. err.': 8.342003308480306}
+
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:212: RuntimeWarning: divide by zero encountered in log
+  regularization = (len(val_uncalibrated) / 2) * np.log(s)
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: divide by zero encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities_global.py:213: RuntimeWarning: invalid value encountered in true_divide
+  overconfidence = ((val_calibrated ** 2) / (2 * (s ** 2) * (val_uncalibrated ** 2))).sum()
+On Test: CCC  0.3658 | PCC  0.3680 | RMSE  0.2112
+==================================================
+On ground-truth labels:	Best	[Val CCC] for seed "314":	 0.2246
+On ground-truth labels:		[Test CCC] for seed "314":	 0.3658
+----------------------------------------------------------------------------------------------------
+Delete model "/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/output/model/2021-07-10-19-02_[fasttext]_[valence]_[NOSEG]_[lstm_64_2_True]_[True_1_4]_[0.005_1024_0.5_0.5_0.5]_None_[1_314_None_None].pth".
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/main_uncertainty_ensemble.py --feature_set fasttext --emo_dim_set valence --epochs 100 --refresh --n_seeds 5 --seed 314 --attn --rnn_bi --loss ccc --uncertainty_approach ensemble_averaging --attn_dr .5 --out_dr .5 --rnn_n_layers 2 --rnn_dr .5 --measure_uncertainty_globally --global_uncertainty_window 20 --normalize_uncalibrated_global_uncertainty_measurement
+Constructing dataset and data loader ...
+Constructing data from scratch ...
+Calculating subjectivities among annotators from sratch...
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.6726, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -1.0, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.7353, max 0.80704).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9549, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.9706, max 0.9218999999999999).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.39030000000000004, max 0.4687).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.98725, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.8137000000000001, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 9: 9
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 10: 10
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 11: 11
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 12: 12
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 13: 13
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 14: 14
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+No label preprocessing (min -0.58476, max 1.0).
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 16: 16
+Found cached annotator 2 video mapping.
+Constructing data from scratch ...
+Exception for annotator 17: 17
+Subjectivities calculated.
+Samples in partitions: (3132, 62, 64)
+Input feature dim: 300.
+==================================================
+Training model... [seed 314]
+/nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:254: RuntimeWarning: invalid value encountered in double_scalars
+  ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
