@@ -78,9 +78,9 @@ def load_global_uncertainties(filename: str) -> dict:
     subjectivities_pred_cal_on_prediction_score_std_scaling = data["subjectivities_pred_calibrated_on_prediction_score"]["std_scaling"]
 
     benchmark_subjectivities = benchmark(subjectivities_true)
-    uncertainties["subjectivities_uncalibrated"] = (subjectivities_true, subjectivities_pred_uncal, benchmark_subjectivities)
-    uncertainties["subjectivities_calibrated_with_ir"] = (subjectivities_true, subjectivities_pred_cal_on_subjectivity_isotonic, benchmark_subjectivities)
-    uncertainties["subjectivities_calibrated_with_std"] = (subjectivities_true, subjectivities_pred_cal_on_subjectivity_std_scaling, benchmark_subjectivities)
+    # uncertainties["subjectivities_uncalibrated"] = (subjectivities_true, subjectivities_pred_uncal, benchmark_subjectivities)
+    # uncertainties["subjectivities_calibrated_with_ir"] = (subjectivities_true, subjectivities_pred_cal_on_subjectivity_isotonic, benchmark_subjectivities)
+    # uncertainties["subjectivities_calibrated_with_std"] = (subjectivities_true, subjectivities_pred_cal_on_subjectivity_std_scaling, benchmark_subjectivities)
 
     benchmark_prediction_scores = benchmark(prediction_scores)
     uncertainties["prediction_scores_uncalibrated"] = (prediction_scores, subjectivities_pred_uncal, benchmark_prediction_scores)
@@ -144,7 +144,7 @@ def calculate_and_print_statistics(uncertainties: dict) -> None:
 
 if __name__ == "__main__":
     file = open("stats.txt", "w")
-    sys.stdout = file
+    # sys.stdout = file
 
     base_dir = "C:/Users/Nicolas Kolbenschlag/Documents/Studium/6. Semester SS21/Bachelorarbeit/Sicherungen/uncertainties"
 
@@ -155,7 +155,9 @@ if __name__ == "__main__":
     files = ["global_uncertainties_ensemble_averaging_20_arousal_devel", "global_uncertainties_ensemble_averaging_20_arousal_test"]
     # files = ["global_uncertainties_monte_carlo_dropout_20_arousal_devel", "global_uncertainties_monte_carlo_dropout_20_arousal_test"]
 
-    files = ["global_uncertainties_ensemble_averaging_10_arousal_devel", "global_uncertainties_ensemble_averaging_10_arousal_test"]
+    # files = ["global_uncertainties_ensemble_averaging_10_arousal_devel", "global_uncertainties_ensemble_averaging_10_arousal_test"]
+    
+    # files = ["global_uncertainties_monte_carlo_dropout_20_valence_fasttext_devel", "global_uncertainties_monte_carlo_dropout_20_valence_fasttext_test"]
 
     for filename in files:
         print(filename)

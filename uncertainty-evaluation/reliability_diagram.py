@@ -84,8 +84,8 @@ def plot_diagram(confidence_true: np.array, confidence_pred: np.array, title: st
         ax.bar(bin_pred, bin_true + 1, bottom=-1, width=.15, edgecolor="black", color=main_color, alpha=alpha, zorder=3)
 
     sigma = r"$\sigma^2$"
-    ECE_patch = matplotlib.patches.Patch(color=main_color, label=f"ENCE = {round(ence, 2)} {sigma} = {round(var, 4)}")
-    ECE_optimal_fit_patch = matplotlib.patches.Patch(color="orange", label=f"ENCE = {round(ence_optimal_fit, 2)} (perfect calibration)")
+    ECE_patch = matplotlib.patches.Patch(color=main_color, label=f"gENCE = {round(ence, 2)} {sigma} = {round(var, 4)}")
+    ECE_optimal_fit_patch = matplotlib.patches.Patch(color="orange", label=f"gENCE = {round(ence_optimal_fit, 2)} (perfect calibration)")
     ax.legend(handles=[ECE_patch, ECE_optimal_fit_patch], prop={"size": 12})
 
     ax.tick_params(axis="x", labelsize=12)
@@ -165,8 +165,8 @@ if __name__ == "__main__":
     # filename = base_dir + "/global_uncertainties_ensemble_averaging_20_valence_{}.pkl"
 
     # filename = base_dir + "/global_uncertainties_monte_carlo_dropout_20_arousal_{}.pkl"
-    # filename = base_dir + "/global_uncertainties_monte_carlo_dropout_20_valence_{}.pkl"
+    filename = base_dir + "/global_uncertainties_monte_carlo_dropout_20_valence_{}.pkl"
 
-    filename = base_dir + "/global_uncertainties_ensemble_averaging_10_arousal_{}.pkl"
+    # filename = base_dir + "/global_uncertainties_ensemble_averaging_10_arousal_{}.pkl"
     
     plot_all_uncertainties(filename, normalize=False)

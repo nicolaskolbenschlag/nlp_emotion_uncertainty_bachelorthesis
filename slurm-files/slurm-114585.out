@@ -226,3 +226,23 @@ Input feature dim: 300.
 Training model... [seed 314]
 /nas/student/NicolasKolbenschlag/emotion_uncertainty_bachelorarbeit/MuSe-LSTM-Attention-baseline-model/emotion_recognition/uncertainty_utilities.py:254: RuntimeWarning: invalid value encountered in double_scalars
   ccc = 2. * covariance / (x_var + y_var + (x_mean - y_mean) ** 2)
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 314 | Best [Val CCC]: 0.2246 [' 0.2246']| Loss: 0.7872 | PCC: 0.2265 ['0.2265'] | RMSE: 0.2195 ['0.2195']
+On Test: CCC  0.3654 | PCC  0.3675 | RMSE  0.2211
+==================================================
+Training model... [seed 315]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 315 | Best [Val CCC]: 0.2608 [' 0.2608']| Loss: 0.7859 | PCC: 0.2638 ['0.2638'] | RMSE: 0.2136 ['0.2136']
+On Test: CCC  0.3595 | PCC  0.3653 | RMSE  0.2164
+==================================================
+Training model... [seed 316]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 316 | Best [Val CCC]: 0.2306 [' 0.2306']| Loss: 0.7985 | PCC: 0.2482 ['0.2482'] | RMSE: 0.2168 ['0.2168']
+On Test: CCC  0.3479 | PCC  0.3486 | RMSE  0.2126
+==================================================
+Training model... [seed 317]
+Note: target can not be optimized for 15 consecutive epochs, early stop the training process!
+Seed 317 | Best [Val CCC]: 0.2360 [' 0.2360']| Loss: 0.7688 | PCC: 0.2385 ['0.2385'] | RMSE: 0.2027 ['0.2027']
+On Test: CCC  0.3319 | PCC  0.3348 | RMSE  0.2104
+==================================================
+Training model... [seed 318]

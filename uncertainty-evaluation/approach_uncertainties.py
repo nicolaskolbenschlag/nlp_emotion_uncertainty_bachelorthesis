@@ -28,10 +28,13 @@ def plot_multiple_rators():
         plt.plot(rater, color="gray", alpha=.5, linewidth=2)
     
     plt.plot(mean, label="Mean", color="red")
-    plt.fill_between(range(len(mean)), mean - uncertainty, mean + uncertainty, label="Subjectivity = Uncertainty", color="orange", alpha=.2)
+    plt.fill_between(range(len(mean)), mean - uncertainty, mean + uncertainty, label=r"Subjectivity $\frac{|S-1|}{2}$", color="orange", alpha=.2)
     
     plt.xlabel("Time", fontsize=12)
     plt.ylabel("Emotional state", fontsize=12)
+
+    plt.gca().set_xticklabels([])
+    plt.gca().set_yticklabels([])
 
     plt.legend(prop={"size": 10})
     plt.show()
@@ -44,13 +47,17 @@ def plot_predictive_performance():
     uncertainty = np.concatenate([[np.nan] * 2, np.abs(confidence - 1) / 2], axis=0) * 2
 
     plt.plot(label, color="red", alpha=.5, label="Label")
-    plt.plot(prediction, color="blue", alpha=.5, label="Prediction")
+    # plt.plot(prediction, color="blue", alpha=.5, label="Prediction")
+    plt.plot(prediction, color="blue", label="Prediction")
     
     # plt.plot(mean, label="Mean", color="red")
-    plt.fill_between(range(len(label)), prediction - uncertainty, prediction + uncertainty, label="Rolling Prediction Error = Uncertainty", color="lightblue")
+    plt.fill_between(range(len(label)), prediction - uncertainty, prediction + uncertainty, label=r"Predictive Performance $\frac{|P-1|}{2}$", color="lightblue")
     
     plt.xlabel("Time", fontsize=12)
     plt.ylabel("Emotional state", fontsize=12)
+
+    plt.gca().set_xticklabels([])
+    plt.gca().set_yticklabels([])
 
     plt.legend(prop={"size": 10})
     plt.show()
@@ -70,6 +77,6 @@ def plot_reliability_diagram_well_calibrated():
     plt.show()
 
 if __name__ == "__main__":
-    # plot_multiple_rators()
+    plot_multiple_rators()
     # plot_predictive_performance()
-    plot_reliability_diagram_well_calibrated()
+    # plot_reliability_diagram_well_calibrated()
